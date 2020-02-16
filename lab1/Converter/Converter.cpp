@@ -27,7 +27,7 @@ std::string Converter::testConvert(std::string sourceNotation, std::string destN
         throw ConverterException("Not enough length of value");
     }
 
-    int valueTenNotation = convertToTenNot(value, 18);
+    int valueTenNotation = convertToTenNot(value, 16);
     std::string resValue = convertFromTenNotTo(valueTenNotation, 2);
 
     return !isNegative ? resValue : "-" + resValue;
@@ -35,21 +35,29 @@ std::string Converter::testConvert(std::string sourceNotation, std::string destN
 
 int Converter::convertToTenNot(std::string value, int srcNot)
 {
-    int resNumber = 0;
+    float resNumber = 0;
     int currNum;
+    int powModificator = value.find_first_of('.', 0);
+    powModificator = powModificator == -1 ? value.length() : powModificator;
 
     for (int i = 0; i < value.length(); i++)
     {
+        if (value[i] == '.')
+        {
+            powModificator += 1;
+            continue;
+        }
+
         if (value[i] >= 'A')
         {
-            currNum = (int)'F' - 55;
+            currNum = (int)value[i] - 55;
         }
         else
         {
             currNum = (int)value[i] - 48;
         }
 
-        int resPow = pow(srcNot, value.length() - (i + 1));
+        float resPow = pow(srcNot, powModificator - (i + 1));
         if (resPow < 0)
         {
             throw ConverterException("Overflow happend while converting");
@@ -57,8 +65,6 @@ int Converter::convertToTenNot(std::string value, int srcNot)
 
         resNumber += currNum * resPow;
     }
-
-    std::cout << resNumber << std::endl;
 
     return resNumber;
 }

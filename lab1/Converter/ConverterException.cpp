@@ -1,4 +1,4 @@
-#include "./ConverterException.h"
+#include "./ConverterException.hpp"
 
 ConverterException::ConverterException(std::string msg)
 {

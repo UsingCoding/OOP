@@ -8,4 +8,4 @@ build:
 
 .PHONY: run
 run:
-	./$(mainFile) 16 10 -1F
+	./$(mainFile) 16 10 11.F
