@@ -4,8 +4,8 @@ mainFile = main
 
 .PHONY: build
 build:
-	g++ $(mainFile).cpp -o $(mainFile)
+	g++ $(mainFile).cpp Converter/Converter.cpp -o $(mainFile)
 
 .PHONY: run
 run:
-	./$(mainFile)
+	./$(mainFile) 16 10 14
