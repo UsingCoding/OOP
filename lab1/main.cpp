@@ -12,7 +12,7 @@ int main(int argc, char const *argv[])
 
     try
     {
-        converter->testConvert(argv[1], argv[2], argv[3]);
+        std::cout << converter->testConvert(argv[1], argv[2], argv[3]) << std::endl;
     }
     catch(ConverterException e)
     {

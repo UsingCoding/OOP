@@ -18,11 +18,19 @@ int Converter::convert(std::string sourceNotation, std::string destNotation, std
     // std::string resValue = convertFromTenNotTo(valueTenNotation, destNot);
 }
 
-int Converter::testConvert(std::string sourceNotation, std::string destNotation, std::string value)
+std::string Converter::testConvert(std::string sourceNotation, std::string destNotation, std::string value)
 {
+    bool isNegative = proceedNegative(&value);
+
+    if (value.length() <= 0)
+    {
+        throw ConverterException("Not enough length of value");
+    }
+
     int valueTenNotation = convertToTenNot(value, 18);
     std::string resValue = convertFromTenNotTo(valueTenNotation, 2);
-    std::cout << resValue << std::endl;
+
+    return !isNegative ? resValue : "-" + resValue;
 }
 
 int Converter::convertToTenNot(std::string value, int srcNot)
@@ -88,4 +96,14 @@ std::string Converter::convertFromTenNotTo(int value, int destNot)
     }
 
     return resString;
+}
+
+bool Converter::proceedNegative(std::string* value)
+{
+    if ((*value)[0] != '-')
+    {
+        return false;
+    }
+
+    (*value).erase(0, 1);
 }
