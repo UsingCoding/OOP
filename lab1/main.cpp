@@ -10,7 +10,16 @@ int main(int argc, char const *argv[])
         std::cout << "Missing arguments" << std::endl;
     }
 
-    converter->testConvert(argv[1], argv[2], argv[3]);
+    try
+    {
+        converter->testConvert(argv[1], argv[2], argv[3]);
+    }
+    catch(ConverterException e)
+    {
+        std::cerr << e.getMsg() << '\n';
+    }
+
+
     // converter->convert(argv[1], argv[2], argv[3]);
 
     return 0;

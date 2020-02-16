@@ -40,10 +40,14 @@ int Converter::convertToTenNot(std::string value, int srcNot)
         {
             currNum = (int)value[i] - 48;
         }
-        // std::cout << currNum << std::endl;
-        // int resPow = pow(srcNot, value.length() - (i + 1));
-        // std::cout << resPow << std::endl;
-        resNumber += currNum * pow(srcNot, value.length() - (i + 1));
+
+        int resPow = pow(srcNot, value.length() - (i + 1));
+        if (resPow < 0)
+        {
+            throw ConverterException("Overflow happend while converting");
+        }
+
+        resNumber += currNum * resPow;
     }
 
     std::cout << resNumber << std::endl;

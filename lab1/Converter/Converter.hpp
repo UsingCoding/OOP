@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
-#include <exception>
-#include <stdexcept>
+#include "ConverterException.h"
 
 class Converter
 {
@@ -16,14 +15,4 @@ public:
     int convert(std::string sourceNotation, std::string destNotation, std::string value);
 
     int testConvert(std::string sourceNotation, std::string destNotation, std::string value);
-};
-
-
-class ConverterException
-{
-private:
-    const std::string msg;
-public:
-    ConverterException();
-    std::string getMsg();
 };
