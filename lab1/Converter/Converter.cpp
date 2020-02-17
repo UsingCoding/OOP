@@ -4,21 +4,7 @@
 #include <stack>
 #include <vector>
 
-Converter::Converter()
-{}
-
-int Converter::convert(std::string sourceNotation, std::string destNotation, std::string value)
-{
-    bool wasError;
-
-    // int srcNot = stringToInt(&sourceNotation, 10, &wasError);
-    // int destNot = stringToInt(&destNotation, 10, &wasError);
-
-    // int valueTenNotation = convertToTenNot(value, srcNot);
-    // std::string resValue = convertFromTenNotTo(valueTenNotation, destNot);
-}
-
-std::string Converter::testConvert(std::string sourceNotation, std::string destNotation, std::string value)
+std::string Converter::convert(std::string sourceNotation, std::string destNotation, std::string value)
 {
     bool isNegative = proceedNegative(&value);
 
@@ -27,8 +13,17 @@ std::string Converter::testConvert(std::string sourceNotation, std::string destN
         throw ConverterException("Not enough length of value");
     }
 
-    int valueTenNotation = convertToTenNot(value, 16);
-    std::string resValue = convertFromTenNotTo(valueTenNotation, 2);
+    int srcNot = std::stoi(sourceNotation);
+    int destNot = std::stoi(destNotation);
+
+    if (!(2 <= srcNot && srcNot <= 36) || !(2 <= destNot && destNot <= 36))
+    {
+        throw ConverterException("Incorrect notation");
+    }
+
+
+    int valueTenNotation = convertToTenNot(value, srcNot);
+    std::string resValue = convertFromTenNotTo(valueTenNotation, destNot);
 
     return !isNegative ? resValue : "-" + resValue;
 }
@@ -50,14 +45,14 @@ int Converter::convertToTenNot(std::string value, int srcNot)
 
         if (value[i] >= 'A')
         {
-            currNum = (int)value[i] - 55;
+            currNum = (int)value[i] - Converter::MODIFICATOR_FOR_LETTERS;
         }
         else
         {
-            currNum = (int)value[i] - 48;
+            currNum = (int)value[i] - Converter::MODIFICATOR_FOR_NUMBERS;
         }
 
-        float resPow = pow(srcNot, powModificator - (i + 1));
+        int resPow = pow(srcNot, powModificator - (i + 1));
         if (resPow < 0)
         {
             throw ConverterException("Overflow happend while converting");
@@ -78,9 +73,9 @@ std::string Converter::convertFromTenNotTo(int value, int destNot)
     while (true)
     {
         currNum = value % destNot;
-        if (currNum > 9)
+        if (currNum > Converter::MAX_DIGIT)
         {
-            currNum = currNum + 55;
+            currNum = currNum + Converter::MODIFICATOR_FOR_LETTERS;
         }
         else
         {
