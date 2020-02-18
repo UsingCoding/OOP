@@ -1,4 +1,5 @@
 all: build run
+test: build test-only
 
 mainFile = main
 
@@ -9,3 +10,7 @@ build:
 .PHONY: run
 run:
 	./$(mainFile) 16 2 1F
+
+.PHONY: test-only
+test-only:
+	dart ./Tests/test.dart
