@@ -20,10 +20,6 @@ int main(int argc, char const *argv[])
     {
         std::cerr << converterException.getMsg() << '\n';
     }
-    catch(std::exception exception)
-    {
-        std::cout << "Error in notations" << std::endl;
-    }
 
     return 0;
 }

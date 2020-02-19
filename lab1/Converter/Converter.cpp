@@ -13,19 +13,34 @@ std::string Converter::convert(std::string sourceNotation, std::string destNotat
         throw ConverterException("Not enough length of value");
     }
 
-    int srcNot = std::stoi(sourceNotation);
-    int destNot = std::stoi(destNotation);
+    int srcNot;
+    int destNot;
 
-    if (!(2 <= srcNot && srcNot <= 36) || !(2 <= destNot && destNot <= 36))
-    {
-        throw ConverterException("Incorrect notation");
-    }
+    parseNotations(&sourceNotation, &destNotation, &srcNot, &destNot);
 
 
     int valueTenNotation = convertToTenNot(value, srcNot);
     std::string resValue = convertFromTenNotTo(valueTenNotation, destNot);
 
     return !isNegative ? resValue : "-" + resValue;
+}
+
+void Converter::parseNotations(std::string* sourceNotation, std::string* destNotation, int* srcNot, int* destNot)
+{
+    try
+    {
+        *srcNot = std::stoi(*sourceNotation);
+        *destNot = std::stoi(*destNotation);
+    }
+    catch(std::exception exception)
+    {
+        throw ConverterException("Some bad symbol in notation");
+    }
+
+    if (!(2 <= *srcNot && *srcNot <= 36) || !(2 <= *destNot && *destNot <= 36))
+    {
+        throw ConverterException("Incorrect notation");
+    }
 }
 
 int Converter::convertToTenNot(std::string value, int srcNot)
