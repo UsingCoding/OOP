@@ -23,8 +23,6 @@ Future<void> main() async {
 		}
   }
 
-  print(test1);
-
   for (var testData in test1) {
 	  if (testData['currRes'] != '') {
 		  print("""

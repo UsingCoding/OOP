@@ -18,7 +18,6 @@ std::string Converter::convert(std::string sourceNotation, std::string destNotat
 
     parseNotations(&sourceNotation, &destNotation, &srcNot, &destNot);
 
-
     int valueTenNotation = convertToTenNot(value, srcNot);
     std::string resValue = convertFromTenNotTo(valueTenNotation, destNot);
 
@@ -96,7 +95,6 @@ std::string Converter::convertFromTenNotTo(int value, int destNot)
         {
             currNum = currNum + '0';
         }
-
 
         vectorString.push_back(currNum);
         value = value / destNot;
