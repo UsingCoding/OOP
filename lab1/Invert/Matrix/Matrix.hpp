@@ -17,7 +17,7 @@ private:
     int calcOffset(int currOffset);
 public:
     Matrix(std::vector<std::vector<int>>* m);
+    // Matrix(int* m[SIZE][SIZE]);
     int calcDeterminant();
-    Matrix getCompanionMatrix();
-    void test();
+    Matrix* getCompanionMatrix();
 };

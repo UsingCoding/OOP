@@ -1,6 +1,7 @@
 #include "./Matrix.hpp"
 #include <iostream>
 #include <cmath>
+#include <vector>
 
 Matrix::Matrix(std::vector<std::vector<int>>* m)
 {
@@ -13,6 +14,11 @@ Matrix::Matrix(std::vector<std::vector<int>>* m)
     }
 
 }
+
+// Matrix::Matrix(int* m[SIZE][SIZE])
+// {
+//     coefs = (*m);
+// }
 
 int Matrix::calcDeterminant()
 {
@@ -27,11 +33,13 @@ int Matrix::calcDeterminant()
     );
 }
 
-Matrix Matrix::getCompanionMatrix()
+Matrix* Matrix::getCompanionMatrix()
 {
-    int m[SIZE][SIZE];
+    // int m[SIZE][SIZE];
+    std::vector<std::vector<int>> m;
     for (size_t i = 0; i < SIZE; i++)
     {
+        m.push_back(std::vector<int>{0, 0, 0});
         for (size_t j = 0; j < SIZE; j++)
         {
             m[i][j] = pow(-1, i + j) * calcMinorDeterminant(MatrixPoint{(int) i,(int) j});
@@ -39,11 +47,17 @@ Matrix Matrix::getCompanionMatrix()
 
     }
 
-}
+    for (size_t i = 0; i < SIZE; i++)
+    {
+        for (size_t j = 0; j < SIZE; j++)
+        {
+            std::cout << m[j][i] << ' ';
+        }
+        std::cout << std::endl;
 
-void Matrix::test()
-{
-    std::cout << calcMinorDeterminant(MatrixPoint{0, 2}) << std::endl;
+    }
+
+    return new Matrix(&m);
 }
 
 int Matrix::calcOffset(int currOffset)
