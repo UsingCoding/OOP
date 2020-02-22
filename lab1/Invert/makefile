@@ -5,8 +5,7 @@ mainFile = main
 
 .PHONY: build
 build:
-	# g++ $(mainFile).cpp Matrix/Matrix.cpp -o $(mainFile)
-	g++ $(mainFile).cpp -o $(mainFile)
+	g++ $(mainFile).cpp Matrix/Matrix.cpp -o $(mainFile)
 
 .PHONY: run
 run:

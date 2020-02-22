@@ -5,7 +5,8 @@
 
 int main(int argc, char const *argv[])
 {
-    Matrix<int> matrix;
-    std::cout << matrix.calcDeterminant() << std::endl;
+    std::vector<std::vector<int>> m = {{1, 2, 3}, {0, 4, 2}, {5, 2, 1}};
+    Matrix *matrix = new Matrix(&(m));
+    std::cout << matrix->calcDeterminant() << std::endl;
     return 0;
 }
