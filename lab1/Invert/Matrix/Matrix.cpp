@@ -43,7 +43,7 @@ Matrix Matrix::getCompanionMatrix()
 
 void Matrix::test()
 {
-    std::cout << calcMinorDeterminant(MatrixPoint{2, 1}) << std::endl;
+    std::cout << calcMinorDeterminant(MatrixPoint{0, 2}) << std::endl;
 }
 
 int Matrix::calcOffset(int currOffset)
@@ -58,9 +58,12 @@ int Matrix::calcOffset(int currOffset)
 
 int Matrix::calcMinorDeterminant(const MatrixPoint & matrixPoint)
 {
-    if ((matrixPoint.x == SIZE || matrixPoint.x == 0) && (matrixPoint.y == SIZE || matrixPoint.y == 0))
+    if ((matrixPoint.x == SIZE - 1 || matrixPoint.x == 0) && (matrixPoint.y == SIZE - 1 || matrixPoint.y == 0))
     {
-        return coefs[calcOffset(matrixPoint.x + 1)][calcOffset(matrixPoint.y + 1)] * coefs[calcOffset(matrixPoint.x + 2)][calcOffset(matrixPoint.y + 2)] - coefs[calcOffset(matrixPoint.x + 1)][calcOffset(matrixPoint.y + 2)] * coefs[calcOffset(matrixPoint.x + 2)][calcOffset(matrixPoint.y + 1)];
+        return coefs[calcOffset(matrixPoint.y + 1)][calcOffset(matrixPoint.x + 1)] *
+        coefs[calcOffset(matrixPoint.y + 2)][calcOffset(matrixPoint.x + 2)] -
+        coefs[calcOffset(matrixPoint.y + 2)][calcOffset(matrixPoint.x + 1)] *
+        coefs[calcOffset(matrixPoint.y + 1)][calcOffset(matrixPoint.x + 2)];
     }
 
     if ((matrixPoint.x == 1 && matrixPoint.y == 1))
@@ -68,17 +71,9 @@ int Matrix::calcMinorDeterminant(const MatrixPoint & matrixPoint)
         return coefs[0][0] * coefs[2][2] - coefs[0][2] * coefs[2][0];
     }
 
-    std::cout << coefs[calcOffset(matrixPoint.x + 1)][calcOffset(matrixPoint.y + 1)] << std::endl;
-    std::cout << std::endl;
-    std::cout << calcOffset(matrixPoint.x + 1) << std::endl;
-    std::cout << calcOffset(matrixPoint.y + 1) << std::endl;
-    std::cout << "Property: " << coefs[calcOffset(matrixPoint.x + 1)][calcOffset(matrixPoint.y + 1)] << std::endl;
-
-    std::cout << "Jebug ends" << std::endl;
-
     return -1 * (
-        coefs[calcOffset(matrixPoint.x + 1)][calcOffset(matrixPoint.y + 1)] *
-        coefs[calcOffset(matrixPoint.x + 2)][calcOffset(matrixPoint.y + 2)] -
-        coefs[calcOffset(matrixPoint.x + 1)][calcOffset(matrixPoint.y + 2)] *
-        coefs[calcOffset(matrixPoint.x + 2)][calcOffset(matrixPoint.y + 1)]);
+        coefs[calcOffset(matrixPoint.y + 1)][calcOffset(matrixPoint.x + 1)] *
+        coefs[calcOffset(matrixPoint.y + 2)][calcOffset(matrixPoint.x + 2)] -
+        coefs[calcOffset(matrixPoint.y + 2)][calcOffset(matrixPoint.x + 1)] *
+        coefs[calcOffset(matrixPoint.y + 1)][calcOffset(matrixPoint.x + 2)]);
 }
