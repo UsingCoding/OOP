@@ -2,8 +2,9 @@
 #include <iostream>
 #include <cmath>
 #include <vector>
+#include <fstream>
 
-Matrix::Matrix(std::vector<std::vector<int>>* m)
+Matrix::Matrix(std::vector<std::vector<float>>* m)
 {
     for (size_t i = 0; i < SIZE; i++)
     {
@@ -15,12 +16,24 @@ Matrix::Matrix(std::vector<std::vector<int>>* m)
 
 }
 
-// Matrix::Matrix(int* m[SIZE][SIZE])
-// {
-//     coefs = (*m);
-// }
+Matrix* Matrix::getInverseMatrix()
+{
+    float deter = calcDeterminant();
 
-int Matrix::calcDeterminant()
+    if ((int) deter == 0)
+    {
+        return nullptr;
+    }
+
+
+    Matrix* matrix = getCompanionMatrix();
+
+    *matrix *= 1.0 / deter;
+
+    return matrix;
+}
+
+float Matrix::calcDeterminant()
 {
     return (
         coefs[0][0] * coefs[1][1] * coefs[2][2] +
@@ -35,28 +48,16 @@ int Matrix::calcDeterminant()
 
 Matrix* Matrix::getCompanionMatrix()
 {
-    // int m[SIZE][SIZE];
-    std::vector<std::vector<int>> m;
+    std::vector<std::vector<float>> m;
     for (size_t i = 0; i < SIZE; i++)
     {
-        m.push_back(std::vector<int>{0, 0, 0});
+        m.push_back(std::vector<float>{0, 0, 0});
         for (size_t j = 0; j < SIZE; j++)
         {
             m[i][j] = pow(-1, i + j) * calcMinorDeterminant(MatrixPoint{(int) i,(int) j});
         }
 
     }
-
-    for (size_t i = 0; i < SIZE; i++)
-    {
-        for (size_t j = 0; j < SIZE; j++)
-        {
-            std::cout << m[j][i] << ' ';
-        }
-        std::cout << std::endl;
-
-    }
-
     return new Matrix(&m);
 }
 
@@ -70,7 +71,7 @@ int Matrix::calcOffset(int currOffset)
     return currOffset;
 }
 
-int Matrix::calcMinorDeterminant(const MatrixPoint & matrixPoint)
+float Matrix::calcMinorDeterminant(const MatrixPoint & matrixPoint)
 {
     if ((matrixPoint.x == SIZE - 1 || matrixPoint.x == 0) && (matrixPoint.y == SIZE - 1 || matrixPoint.y == 0))
     {
@@ -90,4 +91,28 @@ int Matrix::calcMinorDeterminant(const MatrixPoint & matrixPoint)
         coefs[calcOffset(matrixPoint.y + 2)][calcOffset(matrixPoint.x + 2)] -
         coefs[calcOffset(matrixPoint.y + 2)][calcOffset(matrixPoint.x + 1)] *
         coefs[calcOffset(matrixPoint.y + 1)][calcOffset(matrixPoint.x + 2)]);
+}
+
+
+void Matrix::operator *= (float coef)
+{
+    for (size_t i = 0; i < SIZE; i++)
+    {
+        for (size_t j = 0; j < SIZE; j++)
+        {
+            coefs[i][j] *= coef;
+        }
+    }
+}
+
+void Matrix::printMatrix()
+{
+    for (size_t i = 0; i < SIZE; i++)
+    {
+        for (size_t j = 0; j < SIZE; j++)
+        {
+            std::cout << coefs[i][j] << ' ';
+        }
+        std::cout << std::endl;
+    }
 }

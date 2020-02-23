@@ -3,21 +3,25 @@
 
 class Matrix
 {
-private:
+public:
     const static int SIZE = 3;
 
+    Matrix(std::vector<std::vector<float>>* m);
+    float calcDeterminant();
+    Matrix* getCompanionMatrix();
+    void operator *= (float coef);
+
+    Matrix* getInverseMatrix();
+    void printMatrix();
+
+private:
     struct MatrixPoint
     {
         int x;
         int y;
     };
 
-    int coefs[SIZE][SIZE];
-    int calcMinorDeterminant(const MatrixPoint & matrixPoint);
+    float coefs[SIZE][SIZE];
+    float calcMinorDeterminant(const MatrixPoint & matrixPoint);
     int calcOffset(int currOffset);
-public:
-    Matrix(std::vector<std::vector<int>>* m);
-    // Matrix(int* m[SIZE][SIZE]);
-    int calcDeterminant();
-    Matrix* getCompanionMatrix();
 };

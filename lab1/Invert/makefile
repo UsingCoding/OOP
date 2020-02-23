@@ -5,11 +5,11 @@ mainFile = main
 
 .PHONY: build
 build:
-	g++ $(mainFile).cpp Matrix/Matrix.cpp -o $(mainFile)
+	g++ $(mainFile).cpp Matrix/Matrix.cpp Command/ReadWrite/Impl.cpp -o $(mainFile)
 
 .PHONY: run
 run:
-	./$(mainFile)
+	./$(mainFile) Tests/Inputs/input1.txt
 
 .PHONY: test-only
 test-only:

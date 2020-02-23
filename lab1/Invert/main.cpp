@@ -1,14 +1,30 @@
 #include <iostream>
 #include <typeinfo>
-#include "./Matrix/Matrix.hpp"
 #include <vector>
+#include <fstream>
+#include "./Matrix/Matrix.hpp"
+#include "./Command/ReadWrite/ReadMatrix.hpp"
 
 int main(int argc, char const *argv[])
 {
-    std::vector<std::vector<int>> m = {{1, 2, 3}, {0, 4, 2}, {5, 2, 1}};
-    Matrix *matrix = new Matrix(&(m));
-    // Matrix *matrix = new Matrix(&(int {{1, 2, 3}, {0, 4, 2}, {5, 2, 1}}));
-    std::cout << matrix->calcDeterminant() << std::endl;
-    matrix->getCompanionMatrix();
+    if (argc < 2)
+    {
+        std::cout << "Not enough arguments" << std::endl;
+    }
+
+    std::ifstream fin;
+    fin.open(argv[1]);
+
+    if (!fin.is_open())
+    {
+        std::cout << "Failed to open file" << std::endl;
+    }
+
+    Matrix* matrix = ReadMatrix::execute(&fin);
+
+    Matrix* m = matrix->getInverseMatrix();
+
+    m->printMatrix();
+
     return 0;
 }
