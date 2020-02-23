@@ -18,6 +18,7 @@ int main(int argc, char const *argv[])
     if (!fin.is_open())
     {
         std::cout << "Failed to open file" << std::endl;
+        return 1;
     }
 
     Matrix* matrix = ReadMatrix::execute(&fin);

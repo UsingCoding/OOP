@@ -111,7 +111,12 @@ void Matrix::printMatrix()
     {
         for (size_t j = 0; j < SIZE; j++)
         {
-            std::cout << coefs[i][j] << ' ';
+            std::cout << coefs[i][j];
+            if (j != SIZE -1)
+            {
+                std::cout << ' ';
+            }
+
         }
         std::cout << std::endl;
     }

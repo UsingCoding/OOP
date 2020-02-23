@@ -13,5 +13,4 @@ run:
 
 .PHONY: test-only
 test-only:
-	# dart ./Tests/test.dart
-	echo 'No test specified'
+	dart ./Tests/test.dart

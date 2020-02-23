@@ -1,40 +1,69 @@
 import 'dart:io';
+import 'dart:math';
 
-Future<void> main() async {
-  List<Map<String, String>> test1 = [
-    {
-      'input': '16 2 1F',
-	  'number': '1',
-      'awaitResult': '11111',
-      'currRes': '',
-    },
-    {
-      'input': '20 10 FF',
-	  'number': '2',
-      'awaitResult': '315',
-      'currRes': '',
-    }
+class Main {
+  final testFiles = [
+    'Tests/Outputs/output1.txt'
   ];
 
-  for (var testData in test1) {
-    ProcessResult res = await Process.run('./main', testData['input'].split(' '));
-    if (res.exitCode != 0 || (res.stdout as String).trim() != testData['awaitResult']) {
-			testData['currRes'] = (res.stdout as String).trim();
-		}
+  final inputFiles = [
+    'Tests/Inputs/input1.txt'
+  ];
+
+  final failedTests = [];
+
+  Future<String> _readTestDataFromFile(String fileName) async
+  {
+    final output = File('Tests/Outputs/output1.txt');
+    return (await output.readAsString()).trim();
   }
 
-  for (var testData in test1) {
-	  if (testData['currRes'] != '') {
-		  print("""
-Test #${testData['number']} failed with:
-Input: ${testData['input']}
-Await result: ${testData['awaitResult']}
-Curr result: ${testData['currRes']}""");
-	  }
-	  else{
-	  	print("Test #${testData['number']} passed");
-	  }
+  Future<ProcessResult> _runProcess(List<String> args) async
+  {
+    return await Process.run('./main', args);
+  }
 
-	  print("------------------");
+  bool _compare(String original, String rawData)
+  {
+    if (original != rawData) {
+      return false;
+    }
+    return true;
+  }
+
+  void _printResults()
+  {
+    print("Passed tests: ${testFiles.length - failedTests.length}");
+
+
+    if (failedTests.length == 0) {
+      return;
+    }
+
+    print("Failed test");
+    failedTests.forEach((testNum) {
+      print(testNum + 1);
+    });
+  }
+  void execute() async
+  {
+    for (var i = 0; i < min(testFiles.length, inputFiles.length); i++) {
+      final testData = await _readTestDataFromFile(testFiles[i]);
+      final res = await _runProcess([inputFiles[i]]);
+
+      if (res.exitCode != 0) {
+        failedTests.add(i);
+        continue;
+      }
+
+      if (!_compare(testData, (res.stdout as String).trim()))
+      {
+        failedTests.add(i);
+      }
+    }
+
+    _printResults();
   }
 }
+
+main() => Main().execute();
