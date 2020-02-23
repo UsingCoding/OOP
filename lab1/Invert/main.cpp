@@ -22,8 +22,15 @@ int main(int argc, char const *argv[])
     }
 
     Matrix* matrix = ReadMatrix::execute(&fin);
+    fin.close();
 
     Matrix* m = matrix->getInverseMatrix();
+
+    if (m == nullptr)
+    {
+        std::cout << "Can`t find inverse matrix" << std::endl;
+        return 0;
+    }
 
     m->printMatrix();
 

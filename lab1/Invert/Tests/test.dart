@@ -2,25 +2,36 @@ import 'dart:io';
 import 'dart:math';
 
 class Main {
+
+  final PATH_TO_INPUTS = 'Tests/Inputs';
+  final PATH_TO_OUTPUTS = 'Tests/Outputs';
+  final MAIN_FILE = './main';
+
   final testFiles = [
-    'Tests/Outputs/output1.txt'
+    'output1.txt',
+    'output2.txt',
+    'output3.txt',
+    'output4.txt'
   ];
 
   final inputFiles = [
-    'Tests/Inputs/input1.txt'
+    'input1.txt',
+    'input2.txt',
+    'input3.txt',
+    'input4.txt'
   ];
 
-  final failedTests = [];
+  final List<int> failedTests = [];
 
   Future<String> _readTestDataFromFile(String fileName) async
   {
-    final output = File('Tests/Outputs/output1.txt');
+    final output = File(PATH_TO_OUTPUTS + '/' + fileName);
     return (await output.readAsString()).trim();
   }
 
   Future<ProcessResult> _runProcess(List<String> args) async
   {
-    return await Process.run('./main', args);
+    return await Process.run(MAIN_FILE, args);
   }
 
   bool _compare(String original, String rawData)
@@ -41,15 +52,15 @@ class Main {
     }
 
     print("Failed test");
-    failedTests.forEach((testNum) {
-      print(testNum + 1);
+    failedTests.forEach((int testNum) {
+      print("#" + (testNum + 1).toString());
     });
   }
   void execute() async
   {
     for (var i = 0; i < min(testFiles.length, inputFiles.length); i++) {
       final testData = await _readTestDataFromFile(testFiles[i]);
-      final res = await _runProcess([inputFiles[i]]);
+      final res = await _runProcess([PATH_TO_INPUTS + '/' + inputFiles[i]]);
 
       if (res.exitCode != 0) {
         failedTests.add(i);
