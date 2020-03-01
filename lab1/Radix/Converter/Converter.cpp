@@ -19,6 +19,7 @@ std::string Converter::convert(std::string sourceNotation, std::string destNotat
     parseNotations(&sourceNotation, &destNotation, &srcNot, &destNot);
 
     int valueTenNotation = convertToTenNot(value, srcNot);
+    std::cout << valueTenNotation << std::endl;
     std::string resValue = convertFromTenNotTo(valueTenNotation, destNot);
 
     return !isNegative ? resValue : "-" + resValue;
@@ -44,6 +45,18 @@ void Converter::parseNotations(std::string* sourceNotation, std::string* destNot
 
 int Converter::convertToTenNot(std::string value, int srcNot)
 {
+    if (srcNot == TEN_NOT)
+    {
+        try
+        {
+            return std::stoi(value);
+        }
+        catch(const std::exception& e)
+        {
+            throw ConverterException("Wrong number passed");
+        }
+    }
+
     float resNumber = 0;
     int currNum;
     int powModificator = value.find_first_of('.', 0);
