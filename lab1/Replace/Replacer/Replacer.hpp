@@ -17,5 +17,4 @@ public:
     ~Replacer();
 
     void execute();
-    void executeSecondV();
 };

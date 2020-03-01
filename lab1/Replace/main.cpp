@@ -23,7 +23,7 @@ int main(int argc, char const *argv[])
     }
 
     Replacer *replacer = new Replacer(&fin, &fout, argv[3], argv[4]);
-    replacer->executeSecondV();
+    replacer->execute();
 
     delete replacer;
 

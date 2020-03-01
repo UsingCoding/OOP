@@ -9,8 +9,8 @@ build:
 
 .PHONY: run
 run:
-	./$(mainFile) Tests/Inputs/input2.txt Tests/Outputs/output2.txt search research
+	./$(mainFile) Tests/Inputs/input1.txt Tests/output.txt replace ""
 
 .PHONY: test-only
 test-only:
-	# dart ./Tests/test.dart
+	dart ./Tests/main.dart
