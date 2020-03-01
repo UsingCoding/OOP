@@ -133,4 +133,5 @@ bool Converter::proceedNegative(std::string* value)
     }
 
     (*value).erase(0, 1);
+    return true;
 }

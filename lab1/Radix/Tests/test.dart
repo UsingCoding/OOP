@@ -7,16 +7,22 @@ Future<void> main() async {
   List<Map<String, String>> test1 = [
     {
       'input': '16 2 1F',
-	  'number': '1',
+	    'number': '1',
       'awaitResult': '11111',
       'currRes': '',
     },
     {
       'input': '20 10 FF',
-	  'number': '2',
+	    'number': '2',
       'awaitResult': '315',
       'currRes': '',
-    }
+    },
+    {
+      'input': '10 2 2147483647',
+	    'number': '3',
+      'awaitResult': '1111111111111111111111111111111',
+      'currRes': '',
+    },
   ];
 
   for (var testData in test1) {
