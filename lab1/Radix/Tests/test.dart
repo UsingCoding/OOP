@@ -1,6 +1,9 @@
 import 'dart:io';
 
 Future<void> main() async {
+
+  exit(42);
+
   List<Map<String, String>> test1 = [
     {
       'input': '16 2 1F',
