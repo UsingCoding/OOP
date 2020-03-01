@@ -9,7 +9,7 @@ build:
 
 .PHONY: run
 run:
-	./$(mainFile) Tests/Inputs/input.txt output.txt replace ""
+	./$(mainFile) Tests/Inputs/input2.txt Tests/Outputs/output2.txt search research
 
 .PHONY: test-only
 test-only:

@@ -18,16 +18,11 @@ void Replacer::execute()
 {
     char ch;
     std::string buffer = "";
+    std::string line;
 
     while ((*fin).get(ch))
     {
-        // std::cout << ch << std::endl;
-        // if (ch == '\n')
-        // {
-        //     break;
-        // }
-
-        if (offset == searchStr.length())
+        if (offset == searchStr.length() && searchStr.length() != 0)
         {
             offset = 0;
             buffer = "";
@@ -41,6 +36,13 @@ void Replacer::execute()
             continue;
         }
 
+        if (searchStr.length() != 0 && ch == searchStr[0])
+        {
+            *fout << buffer;
+            buffer = ch;
+            offset = 1;
+            continue;
+        }
 
         if (buffer != "")
         {
