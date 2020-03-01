@@ -1,9 +1,6 @@
 import 'dart:io';
 
 Future<void> main() async {
-
-  exit(42);
-
   List<Map<String, String>> test1 = [
     {
       'input': '16 2 1F',
@@ -21,6 +18,30 @@ Future<void> main() async {
       'input': '10 2 2147483647',
 	    'number': '3',
       'awaitResult': '1111111111111111111111111111111',
+      'currRes': '',
+    },
+    {
+      'input': '10 2 -2147483647',
+	    'number': '4',
+      'awaitResult': '-1111111111111111111111111111111',
+      'currRes': '',
+    },
+    {
+      'input': 'F 2 47',
+	    'number': '5',
+      'awaitResult': 'Some bad symbol in notation',
+      'currRes': '',
+    },
+    {
+      'input': '2 10 47',
+	    'number': '5',
+      'awaitResult': 'Incorrect number for this notation',
+      'currRes': '',
+    },
+    {
+      'input': '36 10 36',
+	    'number': '5',
+      'awaitResult': '114',
       'currRes': '',
     },
   ];

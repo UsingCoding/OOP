@@ -19,7 +19,6 @@ std::string Converter::convert(std::string sourceNotation, std::string destNotat
     parseNotations(&sourceNotation, &destNotation, &srcNot, &destNot);
 
     int valueTenNotation = convertToTenNot(value, srcNot);
-    std::cout << valueTenNotation << std::endl;
     std::string resValue = convertFromTenNotTo(valueTenNotation, destNot);
 
     return !isNegative ? resValue : "-" + resValue;
@@ -59,17 +58,10 @@ int Converter::convertToTenNot(std::string value, int srcNot)
 
     float resNumber = 0;
     int currNum;
-    int powModificator = value.find_first_of('.', 0);
-    powModificator = powModificator == -1 ? value.length() : powModificator;
+    int powModificator = value.length();
 
     for (int i = 0; i < value.length(); i++)
     {
-        if (value[i] == '.')
-        {
-            powModificator += 1;
-            continue;
-        }
-
         if (value[i] >= 'A')
         {
             currNum = (int)value[i] - Converter::MODIFICATOR_FOR_LETTERS;
@@ -77,6 +69,11 @@ int Converter::convertToTenNot(std::string value, int srcNot)
         else
         {
             currNum = (int)value[i] - Converter::MODIFICATOR_FOR_NUMBERS;
+            if (currNum >= srcNot)
+            {
+                throw ConverterException("Incorrect number for this notation");
+            }
+
         }
 
         int resPow = pow(srcNot, powModificator - (i + 1));
