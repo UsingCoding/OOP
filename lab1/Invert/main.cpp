@@ -34,5 +34,8 @@ int main(int argc, char const *argv[])
 
     m->printMatrix();
 
+    delete matrix;
+    delete m;
+
     return 0;
 }
