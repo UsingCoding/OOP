@@ -4,57 +4,39 @@
 #include <stack>
 #include <vector>
 
-std::string Converter::convert(std::string sourceNotation, std::string destNotation, std::string value)
+std::string Converter::Convert(std::string sourceNotation, std::string destNotation, std::string value)
 {
     if (value.length() <= 0)
     {
         throw ConverterException("Not enough length of value");
     }
 
-    bool isNeg = isNegative(value);
+    bool isNeg = IsNegative(value);
 
     if (isNeg)
     {
         value.erase(0, 1);
     }
 
-    int srcNot = parseInt(sourceNotation);
-    int destNot = parseInt(destNotation);
+    int srcNot = ParseInt(sourceNotation);
+    int destNot = ParseInt(destNotation);
 
     if (!(2 <= srcNot && srcNot <= 36) || !(2 <= destNot && destNot <= 36))
     {
         throw ConverterException("Incorrect notation");
     }
 
-    int valueTenNotation = convertToDecNot(value, srcNot);
-    std::string resValue = convertFromDecNotTo(valueTenNotation, destNot);
+    int valueTenNotation = ConvertToDecNot(value, srcNot);
+    std::string resValue = ConvertFromDecNotTo(valueTenNotation, destNot);
 
     return !isNeg ? resValue : "-" + resValue;
 }
 
-void Converter::parseNotations(std::string* sourceNotation, std::string* destNotation, int* srcNot, int* destNot)
-{
-    try
-    {
-        *srcNot = std::stoi(*sourceNotation);
-        *destNot = std::stoi(*destNotation);
-    }
-    catch(std::exception exception)
-    {
-        throw ConverterException("Some bad symbol in notation");
-    }
-
-    if (!(2 <= *srcNot && *srcNot <= 36) || !(2 <= *destNot && *destNot <= 36))
-    {
-        throw ConverterException("Incorrect notation");
-    }
-}
-
-int Converter::convertToDecNot(std::string value, int srcNot)
+int Converter::ConvertToDecNot(std::string value, int srcNot)
 {
     if (srcNot == TEN_NOT)
     {
-        return parseInt(value);
+        return ParseInt(value);
     }
 
     float resNumber = 0;
@@ -88,10 +70,10 @@ int Converter::convertToDecNot(std::string value, int srcNot)
     return resNumber;
 }
 
-std::string Converter::convertFromDecNotTo(int value, int destNot)
+std::string Converter::ConvertFromDecNotTo(int value, int destNot)
 {
     std::vector<char> vectorString;
-    std::string resString;
+    std::string result;
     char currNum;
 
     while (true)
@@ -116,13 +98,13 @@ std::string Converter::convertFromDecNotTo(int value, int destNot)
 
     for (int i = vectorString.size() - 1; i >= 0; i--)
     {
-        resString += vectorString[i];
+        result += vectorString[i];
     }
 
-    return resString;
+    return result;
 }
 
-bool Converter::isNegative(std::string const & value)
+bool Converter::IsNegative(std::string const & value)
 {
     if (value[0] != '-')
     {
@@ -131,7 +113,7 @@ bool Converter::isNegative(std::string const & value)
     return true;
 }
 
-int Converter::parseInt(std::string const & value)
+int Converter::ParseInt(std::string const & value)
 {
     try
     {

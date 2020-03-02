@@ -14,7 +14,7 @@ int main(int argc, char const *argv[])
 
     try
     {
-        std::cout << converter.convert(argv[1], argv[2], argv[3]) << std::endl;
+        std::cout << converter.Convert(argv[1], argv[2], argv[3]) << std::endl;
     }
     catch (ConverterException converterException)
     {
