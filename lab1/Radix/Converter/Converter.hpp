@@ -5,10 +5,11 @@
 class Converter
 {
 private:
-    std::string convertFromTenNotTo(int value, int destNot);
-    int convertToTenNot(std::string value, int srcNot);
-    bool proceedNegative(std::string* value);
+    std::string convertFromDecNotTo(int value, int destNot);
+    int convertToDecNot(std::string value, int srcNot);
     void parseNotations(std::string* sourceNotation, std::string* destNotation, int* srcNot, int* destNot);
+    bool isNegative(std::string const & value);
+    int parseInt(std::string const & value);
 
     const int MODIFICATOR_FOR_LETTERS = 55;
     const int MODIFICATOR_FOR_NUMBERS = 48;

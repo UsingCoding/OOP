@@ -44,6 +44,18 @@ Future<void> main() async {
       'awaitResult': '114',
       'currRes': '',
     },
+    {
+      'input': '36 10 0',
+	    'number': '6',
+      'awaitResult': '0',
+      'currRes': '',
+    },
+    {
+      'input': '2 10 2F',
+	    'number': '7',
+      'awaitResult': 'Incorrect number for this notation',
+      'currRes': '',
+    },
   ];
 
   for (var testData in test1) {

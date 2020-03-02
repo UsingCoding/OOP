@@ -6,22 +6,30 @@
 
 std::string Converter::convert(std::string sourceNotation, std::string destNotation, std::string value)
 {
-    bool isNegative = proceedNegative(&value);
-
     if (value.length() <= 0)
     {
         throw ConverterException("Not enough length of value");
     }
 
-    int srcNot;
-    int destNot;
+    bool isNeg = isNegative(value);
 
-    parseNotations(&sourceNotation, &destNotation, &srcNot, &destNot);
+    if (isNeg)
+    {
+        value.erase(0, 1);
+    }
 
-    int valueTenNotation = convertToTenNot(value, srcNot);
-    std::string resValue = convertFromTenNotTo(valueTenNotation, destNot);
+    int srcNot = parseInt(sourceNotation);
+    int destNot = parseInt(destNotation);
 
-    return !isNegative ? resValue : "-" + resValue;
+    if (!(2 <= srcNot && srcNot <= 36) || !(2 <= destNot && destNot <= 36))
+    {
+        throw ConverterException("Incorrect notation");
+    }
+
+    int valueTenNotation = convertToDecNot(value, srcNot);
+    std::string resValue = convertFromDecNotTo(valueTenNotation, destNot);
+
+    return !isNeg ? resValue : "-" + resValue;
 }
 
 void Converter::parseNotations(std::string* sourceNotation, std::string* destNotation, int* srcNot, int* destNot)
@@ -42,27 +50,19 @@ void Converter::parseNotations(std::string* sourceNotation, std::string* destNot
     }
 }
 
-int Converter::convertToTenNot(std::string value, int srcNot)
+int Converter::convertToDecNot(std::string value, int srcNot)
 {
     if (srcNot == TEN_NOT)
     {
-        try
-        {
-            return std::stoi(value);
-        }
-        catch(const std::exception& e)
-        {
-            throw ConverterException("Wrong number passed");
-        }
+        return parseInt(value);
     }
 
     float resNumber = 0;
     int currNum;
-    int powModificator = value.length();
 
     for (int i = 0; i < value.length(); i++)
     {
-        if (value[i] >= 'A')
+        if (value[i] >= 'A' && value[i] <= 'Z')
         {
             currNum = (int)value[i] - Converter::MODIFICATOR_FOR_LETTERS;
         }
@@ -76,7 +76,7 @@ int Converter::convertToTenNot(std::string value, int srcNot)
 
         }
 
-        int resPow = pow(srcNot, powModificator - (i + 1));
+        int resPow = pow(srcNot, value.length() - (i + 1));
         if (resPow < 0)
         {
             throw ConverterException("Overflow happend while converting");
@@ -88,7 +88,7 @@ int Converter::convertToTenNot(std::string value, int srcNot)
     return resNumber;
 }
 
-std::string Converter::convertFromTenNotTo(int value, int destNot)
+std::string Converter::convertFromDecNotTo(int value, int destNot)
 {
     std::vector<char> vectorString;
     std::string resString;
@@ -122,13 +122,23 @@ std::string Converter::convertFromTenNotTo(int value, int destNot)
     return resString;
 }
 
-bool Converter::proceedNegative(std::string* value)
+bool Converter::isNegative(std::string const & value)
 {
-    if ((*value)[0] != '-')
+    if (value[0] != '-')
     {
         return false;
     }
-
-    (*value).erase(0, 1);
     return true;
+}
+
+int Converter::parseInt(std::string const & value)
+{
+    try
+    {
+        return std::stoi(value);
+    }
+    catch(std::exception exception)
+    {
+        throw ConverterException("Some bad symbol in number");
+    }
 }
