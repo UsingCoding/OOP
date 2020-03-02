@@ -3,7 +3,7 @@
 #include <vector>
 #include <fstream>
 #include "./Matrix/Matrix.hpp"
-#include "./Command/ReadWrite/ReadMatrix.hpp"
+#include "./Command/Read/ReadMatrix.hpp"
 
 int main(int argc, char const *argv[])
 {
@@ -21,10 +21,10 @@ int main(int argc, char const *argv[])
         return 1;
     }
 
-    Matrix* matrix = ReadMatrix::execute(&fin);
+    Matrix* matrix = ReadMatrix::Execute(&fin);
     fin.close();
 
-    Matrix* m = matrix->getInverseMatrix();
+    Matrix* m = matrix->GetInverseMatrix();
 
     if (m == nullptr)
     {
@@ -32,7 +32,7 @@ int main(int argc, char const *argv[])
         return 0;
     }
 
-    m->printMatrix();
+    m->PrintMatrix();
 
     delete matrix;
     delete m;

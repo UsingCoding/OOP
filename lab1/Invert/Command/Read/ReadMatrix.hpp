@@ -5,5 +5,5 @@
 class ReadMatrix
 {
 public:
-    static Matrix* execute(std::ifstream* fin);
+    static Matrix* Execute(std::ifstream* fin);
 };

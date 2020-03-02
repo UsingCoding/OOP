@@ -16,9 +16,9 @@ Matrix::Matrix(std::vector<std::vector<float>>* m)
 
 }
 
-Matrix* Matrix::getInverseMatrix()
+Matrix* Matrix::GetInverseMatrix()
 {
-    float deter = calcDeterminant();
+    float deter = CalcDeterminant();
 
     if ((int) deter == 0)
     {
@@ -26,14 +26,14 @@ Matrix* Matrix::getInverseMatrix()
     }
 
 
-    Matrix* matrix = getCompanionMatrix();
+    Matrix* matrix = GetCompanionMatrix();
 
     *matrix *= 1.0 / deter;
 
     return matrix;
 }
 
-float Matrix::calcDeterminant()
+float Matrix::CalcDeterminant()
 {
     return (
         coefs[0][0] * coefs[1][1] * coefs[2][2] +
@@ -46,7 +46,7 @@ float Matrix::calcDeterminant()
     );
 }
 
-Matrix* Matrix::getCompanionMatrix()
+Matrix* Matrix::GetCompanionMatrix()
 {
     std::vector<std::vector<float>> m;
     for (size_t i = 0; i < SIZE; i++)
@@ -54,14 +54,14 @@ Matrix* Matrix::getCompanionMatrix()
         m.push_back(std::vector<float>{0, 0, 0});
         for (size_t j = 0; j < SIZE; j++)
         {
-            m[i][j] = pow(-1, i + j) * calcMinorDeterminant(MatrixPoint{(int) i,(int) j});
+            m[i][j] = pow(-1, i + j) * CalcMinorDeterminant(MatrixPoint{(int) i,(int) j});
         }
 
     }
     return new Matrix(&m);
 }
 
-int Matrix::calcOffset(int currOffset)
+int Matrix::CalcOffset(int currOffset)
 {
     if (currOffset > SIZE - 1)
     {
@@ -71,14 +71,14 @@ int Matrix::calcOffset(int currOffset)
     return currOffset;
 }
 
-float Matrix::calcMinorDeterminant(const MatrixPoint & matrixPoint)
+float Matrix::CalcMinorDeterminant(const MatrixPoint & matrixPoint)
 {
     if ((matrixPoint.x == SIZE - 1 || matrixPoint.x == 0) && (matrixPoint.y == SIZE - 1 || matrixPoint.y == 0))
     {
-        return coefs[calcOffset(matrixPoint.y + 1)][calcOffset(matrixPoint.x + 1)] *
-        coefs[calcOffset(matrixPoint.y + 2)][calcOffset(matrixPoint.x + 2)] -
-        coefs[calcOffset(matrixPoint.y + 2)][calcOffset(matrixPoint.x + 1)] *
-        coefs[calcOffset(matrixPoint.y + 1)][calcOffset(matrixPoint.x + 2)];
+        return coefs[CalcOffset(matrixPoint.y + 1)][CalcOffset(matrixPoint.x + 1)] *
+        coefs[CalcOffset(matrixPoint.y + 2)][CalcOffset(matrixPoint.x + 2)] -
+        coefs[CalcOffset(matrixPoint.y + 2)][CalcOffset(matrixPoint.x + 1)] *
+        coefs[CalcOffset(matrixPoint.y + 1)][CalcOffset(matrixPoint.x + 2)];
     }
 
     if ((matrixPoint.x == 1 && matrixPoint.y == 1))
@@ -87,10 +87,10 @@ float Matrix::calcMinorDeterminant(const MatrixPoint & matrixPoint)
     }
 
     return -1 * (
-        coefs[calcOffset(matrixPoint.y + 1)][calcOffset(matrixPoint.x + 1)] *
-        coefs[calcOffset(matrixPoint.y + 2)][calcOffset(matrixPoint.x + 2)] -
-        coefs[calcOffset(matrixPoint.y + 2)][calcOffset(matrixPoint.x + 1)] *
-        coefs[calcOffset(matrixPoint.y + 1)][calcOffset(matrixPoint.x + 2)]);
+        coefs[CalcOffset(matrixPoint.y + 1)][CalcOffset(matrixPoint.x + 1)] *
+        coefs[CalcOffset(matrixPoint.y + 2)][CalcOffset(matrixPoint.x + 2)] -
+        coefs[CalcOffset(matrixPoint.y + 2)][CalcOffset(matrixPoint.x + 1)] *
+        coefs[CalcOffset(matrixPoint.y + 1)][CalcOffset(matrixPoint.x + 2)]);
 }
 
 
@@ -105,7 +105,7 @@ void Matrix::operator *= (float coef)
     }
 }
 
-void Matrix::printMatrix()
+void Matrix::PrintMatrix()
 {
     for (size_t i = 0; i < SIZE; i++)
     {

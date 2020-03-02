@@ -7,12 +7,12 @@ public:
     const static int SIZE = 3;
 
     Matrix(std::vector<std::vector<float>>* m);
-    float calcDeterminant();
-    Matrix* getCompanionMatrix();
+    float CalcDeterminant();
+    Matrix* GetCompanionMatrix();
     void operator *= (float coef);
 
-    Matrix* getInverseMatrix();
-    void printMatrix();
+    Matrix* GetInverseMatrix();
+    void PrintMatrix();
 
 private:
     struct MatrixPoint
@@ -22,6 +22,6 @@ private:
     };
 
     float coefs[SIZE][SIZE];
-    float calcMinorDeterminant(const MatrixPoint & matrixPoint);
-    int calcOffset(int currOffset);
+    float CalcMinorDeterminant(const MatrixPoint & matrixPoint);
+    int CalcOffset(int currOffset);
 };

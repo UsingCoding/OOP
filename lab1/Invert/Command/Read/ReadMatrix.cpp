@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-Matrix* ReadMatrix::execute(std::ifstream* fin)
+Matrix* ReadMatrix::Execute(std::ifstream* fin)
 {
     std::vector<std::vector<float>> m;
     float currCoef;
