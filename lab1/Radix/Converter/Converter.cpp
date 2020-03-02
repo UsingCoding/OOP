@@ -72,7 +72,7 @@ int Converter::ConvertToDecNot(std::string value, int srcNot)
 
 std::string Converter::ConvertFromDecNotTo(int value, int destNot)
 {
-    std::vector<char> vectorString;
+    std::string buffer = "";
     std::string result;
     char currNum;
 
@@ -88,7 +88,7 @@ std::string Converter::ConvertFromDecNotTo(int value, int destNot)
             currNum = currNum + '0';
         }
 
-        vectorString.push_back(currNum);
+        buffer += currNum;
         value = value / destNot;
         if (value == 0)
         {
@@ -96,9 +96,9 @@ std::string Converter::ConvertFromDecNotTo(int value, int destNot)
         }
     }
 
-    for (int i = vectorString.size() - 1; i >= 0; i--)
+    for (int i = buffer.size() - 1; i >= 0; i--)
     {
-        result += vectorString[i];
+        result += buffer[i];
     }
 
     return result;
