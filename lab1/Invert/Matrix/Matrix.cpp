@@ -25,7 +25,6 @@ Matrix* Matrix::GetInverseMatrix()
         return nullptr;
     }
 
-
     Matrix* matrix = GetCompanionMatrix();
 
     *matrix *= 1.0 / deter;
@@ -105,19 +104,18 @@ void Matrix::operator *= (float coef)
     }
 }
 
-void Matrix::PrintMatrix()
+std::ostream& operator<< (std::ostream &out, const Matrix matrix)
 {
-    for (size_t i = 0; i < SIZE; i++)
+    for (size_t i = 0; i < Matrix::SIZE; i++)
     {
-        for (size_t j = 0; j < SIZE; j++)
+        for (size_t j = 0; j < Matrix::SIZE; j++)
         {
-            std::cout << coefs[i][j];
-            if (j != SIZE -1)
+            out << matrix.coefs[i][j];
+            if (j != Matrix::SIZE -1)
             {
-                std::cout << ' ';
+                out << ' ';
             }
-
         }
-        std::cout << std::endl;
+        out << std::endl;
     }
 }

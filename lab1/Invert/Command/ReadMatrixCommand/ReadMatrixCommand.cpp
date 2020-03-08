@@ -1,9 +1,16 @@
-#include "./ReadMatrix.hpp"
-
+#include "./ReadMatrixCommand.hpp"
 #include <iostream>
 
-Matrix* ReadMatrix::Execute(std::ifstream* fin)
+Matrix* ReadMatrixCommand::Execute(std::string fileName)
 {
+    std::ifstream fin;
+    fin.open(fileName);
+
+    if (!fin.is_open())
+    {
+        throw CommandException("File not found");
+    }
+
     std::vector<std::vector<float>> m;
     float currCoef;
 
@@ -12,10 +19,11 @@ Matrix* ReadMatrix::Execute(std::ifstream* fin)
         m.push_back(std::vector<float>{});
         for (size_t j = 0; j < Matrix::SIZE; j++)
         {
-            (*fin) >> currCoef;
+            fin >> currCoef;
             m[i].push_back(currCoef);
         }
     }
 
+    fin.close();
     return new Matrix(&m);
 }

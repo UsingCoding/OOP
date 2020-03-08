@@ -3,26 +3,29 @@
 #include <vector>
 #include <fstream>
 #include "./Matrix/Matrix.hpp"
-#include "./Command/Read/ReadMatrix.hpp"
+#include "./Command/ReadMatrixCommand/ReadMatrixCommand.hpp"
+#include "./Command/WriteMatrixCommand/WriteMatrixCommand.hpp"
+#include "./Command/CommandException.hpp"
 
 int main(int argc, char const *argv[])
 {
     if (argc < 2)
     {
         std::cout << "Not enough arguments" << std::endl;
-    }
-
-    std::ifstream fin;
-    fin.open(argv[1]);
-
-    if (!fin.is_open())
-    {
-        std::cout << "Failed to open file" << std::endl;
         return 1;
     }
 
-    Matrix* matrix = ReadMatrix::Execute(&fin);
-    fin.close();
+    Matrix* matrix;
+
+    try
+    {
+        matrix = ReadMatrixCommand::Execute(argv[1]);
+    }
+    catch(const CommandException& e)
+    {
+        std::cerr << e.GetMessage() << std::endl;
+        return 0;
+    }
 
     Matrix* m = matrix->GetInverseMatrix();
 
@@ -32,7 +35,7 @@ int main(int argc, char const *argv[])
         return 0;
     }
 
-    m->PrintMatrix();
+    WriteMatrixCommand::Execute(std::cout, m);
 
     delete matrix;
     delete m;
