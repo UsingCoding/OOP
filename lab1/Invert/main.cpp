@@ -1,7 +1,6 @@
 #include <iostream>
 #include <typeinfo>
 #include <vector>
-#include <fstream>
 #include "./Matrix/Matrix.hpp"
 #include "./Command/ReadMatrixCommand/ReadMatrixCommand.hpp"
 #include "./Command/WriteMatrixCommand/WriteMatrixCommand.hpp"
@@ -24,7 +23,7 @@ int main(int argc, char const *argv[])
     catch(const CommandException& e)
     {
         std::cerr << e.GetMessage() << std::endl;
-        return 0;
+        return 1;
     }
 
     Matrix* m = matrix->GetInverseMatrix();
@@ -32,7 +31,7 @@ int main(int argc, char const *argv[])
     if (m == nullptr)
     {
         std::cout << "Can`t find inverse matrix" << std::endl;
-        return 0;
+        return 1;
     }
 
     WriteMatrixCommand::Execute(std::cout, m);
