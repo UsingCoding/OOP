@@ -11,14 +11,16 @@ class Main {
     'output1.txt',
     'output2.txt',
     'output3.txt',
-    'output4.txt'
+    'output4.txt',
+    'output5.txt'
   ];
 
   final inputFiles = [
     'input1.txt',
     'input2.txt',
     'input3.txt',
-    'input4.txt'
+    'input4.txt',
+    'input5.txt'
   ];
 
   final List<int> failedTests = [];
@@ -62,12 +64,7 @@ class Main {
       final testData = await _readTestDataFromFile(testFiles[i]);
       final res = await _runProcess([PATH_TO_INPUTS + '/' + inputFiles[i]]);
 
-      if (res.exitCode != 0) {
-        failedTests.add(i);
-        continue;
-      }
-
-      if (!_compare(testData, (res.stdout as String).trim()))
+      if (!_compare(testData, (res.stdout as String).trim()) && !_compare(testData, (res.stderr as String).trim()))
       {
         failedTests.add(i);
       }

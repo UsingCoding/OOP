@@ -1,5 +1,7 @@
 #include "./ReadMatrix3x3Command.hpp"
 #include <iostream>
+#include "../CommandException.hpp"
+#include <fstream>
 
 Matrix3x3* ReadMatrixCommand::Execute(std::string fileName)
 {
@@ -20,6 +22,13 @@ Matrix3x3* ReadMatrixCommand::Execute(std::string fileName)
         for (size_t j = 0; j < Matrix3x3::SIZE; j++)
         {
             fin >> currCoef;
+
+            if (fin.eof())
+            {
+                throw CommandException("Not enough matrix coefficients");
+            }
+
+            // std::cout << currCoef << " " << std::endl;
             m[i].push_back(currCoef);
         }
     }

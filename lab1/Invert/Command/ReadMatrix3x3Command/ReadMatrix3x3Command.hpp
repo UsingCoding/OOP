@@ -1,7 +1,5 @@
 #pragma once
 #include "../../Matrix3x3/Matrix3x3.hpp"
-#include "../CommandException.hpp"
-#include <fstream>
 
 class ReadMatrixCommand
 {

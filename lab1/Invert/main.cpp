@@ -21,7 +21,6 @@ int main(int argc, char const *argv[])
     catch(const CommandException& e)
     {
         std::cerr << e.GetMessage() << std::endl;
-        delete matrix3x3;
         return 1;
     }
 
