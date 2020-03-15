@@ -30,11 +30,5 @@ bool OpenFiles(std::ifstream *fin, std::ofstream *fout, std::string firstFileNam
     (*fin).open(firstFileName);
     (*fout).open(secondFileName);
 
-    if (!(*fin).is_open() || !(*fout).is_open())
-    {
-        std::cout << "Error to open " << (!(*fin).is_open() ? firstFileName : secondFileName) << std::endl;
-        return false;
-    }
-
-    return true;
+    return (*fin).is_open() && (*fout).is_open();
 }
