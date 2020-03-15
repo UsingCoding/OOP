@@ -1,9 +1,9 @@
 #include <iostream>
 #include <typeinfo>
 #include <vector>
-#include "./Matrix/Matrix.hpp"
-#include "./Command/ReadMatrixCommand/ReadMatrixCommand.hpp"
-#include "./Command/WriteMatrixCommand/WriteMatrixCommand.hpp"
+#include "./Matrix3x3/Matrix3x3.hpp"
+#include "./Command/ReadMatrix3x3Command/ReadMatrix3x3Command.hpp"
+#include "./Command/WriteMatrix3x3Command/WriteMatrix3x3Command.hpp"
 #include "./Command/CommandException.hpp"
 
 int main(int argc, char const *argv[])
@@ -14,7 +14,7 @@ int main(int argc, char const *argv[])
         return 1;
     }
 
-    Matrix* matrix;
+    Matrix3x3* matrix;
 
     try
     {
@@ -26,18 +26,18 @@ int main(int argc, char const *argv[])
         return 1;
     }
 
-    Matrix* m = matrix->GetInverseMatrix();
+    Matrix3x3* inverseMatrix = matrix->GetInverseMatrix();
 
-    if (m == nullptr)
+    if (inverseMatrix == nullptr)
     {
         std::cout << "Can`t find inverse matrix" << std::endl;
         return 1;
     }
 
-    WriteMatrixCommand::Execute(std::cout, m);
+    WriteMatrixCommand::Execute(std::cout, inverseMatrix);
 
     delete matrix;
-    delete m;
+    delete inverseMatrix;
 
     return 0;
 }

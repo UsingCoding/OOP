@@ -1,22 +1,22 @@
-#include "./Matrix.hpp"
+#include "./Matrix3x3.hpp"
 #include <iostream>
 #include <cmath>
 #include <vector>
 #include <fstream>
 
-Matrix::Matrix(std::vector<std::vector<float>>* m)
+Matrix3x3::Matrix3x3(const std::vector<std::vector<float>> & m)
 {
     for (size_t i = 0; i < SIZE; i++)
     {
         for (size_t j = 0; j < SIZE; j++)
         {
-            coefs[i][j] = (*m)[i][j];
+            coefs[i][j] = m[i][j];
         }
     }
 
 }
 
-Matrix* Matrix::GetInverseMatrix()
+Matrix3x3* Matrix3x3::GetInverseMatrix()
 {
     float deter = CalcDeterminant();
 
@@ -25,14 +25,14 @@ Matrix* Matrix::GetInverseMatrix()
         return nullptr;
     }
 
-    Matrix* matrix = GetCompanionMatrix();
+    Matrix3x3* matrix = GetCompanionMatrix();
 
     *matrix *= 1.0 / deter;
 
     return matrix;
 }
 
-float Matrix::CalcDeterminant()
+float Matrix3x3::CalcDeterminant()
 {
     return (
         coefs[0][0] * coefs[1][1] * coefs[2][2] +
@@ -45,7 +45,7 @@ float Matrix::CalcDeterminant()
     );
 }
 
-Matrix* Matrix::GetCompanionMatrix()
+Matrix3x3* Matrix3x3::GetCompanionMatrix()
 {
     std::vector<std::vector<float>> m;
     for (size_t i = 0; i < SIZE; i++)
@@ -57,10 +57,10 @@ Matrix* Matrix::GetCompanionMatrix()
         }
 
     }
-    return new Matrix(&m);
+    return new Matrix3x3(m);
 }
 
-int Matrix::CalcOffset(int currOffset)
+int Matrix3x3::CalcOffset(int currOffset)
 {
     if (currOffset > SIZE - 1)
     {
@@ -70,7 +70,7 @@ int Matrix::CalcOffset(int currOffset)
     return currOffset;
 }
 
-float Matrix::CalcMinorDeterminant(const MatrixPoint & matrixPoint)
+float Matrix3x3::CalcMinorDeterminant(const MatrixPoint & matrixPoint)
 {
     if ((matrixPoint.x == SIZE - 1 || matrixPoint.x == 0) && (matrixPoint.y == SIZE - 1 || matrixPoint.y == 0))
     {
@@ -93,7 +93,7 @@ float Matrix::CalcMinorDeterminant(const MatrixPoint & matrixPoint)
 }
 
 
-void Matrix::operator *= (float coef)
+void Matrix3x3::operator *= (float coef)
 {
     for (size_t i = 0; i < SIZE; i++)
     {
@@ -104,14 +104,14 @@ void Matrix::operator *= (float coef)
     }
 }
 
-std::ostream& operator<< (std::ostream &out, const Matrix matrix)
+std::ostream& operator << (std::ostream &out, const Matrix3x3* matrix)
 {
-    for (size_t i = 0; i < Matrix::SIZE; i++)
+    for (size_t i = 0; i < Matrix3x3::SIZE; i++)
     {
-        for (size_t j = 0; j < Matrix::SIZE; j++)
+        for (size_t j = 0; j < Matrix3x3::SIZE; j++)
         {
-            out << matrix.coefs[i][j];
-            if (j != Matrix::SIZE -1)
+            out << (*matrix).coefs[i][j];
+            if (j != Matrix3x3::SIZE -1)
             {
                 out << ' ';
             }

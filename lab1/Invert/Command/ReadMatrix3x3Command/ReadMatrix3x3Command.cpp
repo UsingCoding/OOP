@@ -1,7 +1,7 @@
-#include "./ReadMatrixCommand.hpp"
+#include "./ReadMatrix3x3Command.hpp"
 #include <iostream>
 
-Matrix* ReadMatrixCommand::Execute(std::string fileName)
+Matrix3x3* ReadMatrixCommand::Execute(std::string fileName)
 {
     std::ifstream fin;
     fin.open(fileName);
@@ -14,10 +14,10 @@ Matrix* ReadMatrixCommand::Execute(std::string fileName)
     std::vector<std::vector<float>> m;
     float currCoef;
 
-    for (size_t i = 0; i < Matrix::SIZE; i++)
+    for (size_t i = 0; i < Matrix3x3::SIZE; i++)
     {
         m.push_back(std::vector<float>{});
-        for (size_t j = 0; j < Matrix::SIZE; j++)
+        for (size_t j = 0; j < Matrix3x3::SIZE; j++)
         {
             fin >> currCoef;
             m[i].push_back(currCoef);
@@ -25,5 +25,5 @@ Matrix* ReadMatrixCommand::Execute(std::string fileName)
     }
 
     fin.close();
-    return new Matrix(&m);
+    return new Matrix3x3(m);
 }

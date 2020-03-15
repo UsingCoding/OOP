@@ -5,7 +5,7 @@ mainFile = main
 
 .PHONY: build
 build:
-	g++ $(mainFile).cpp Matrix/Matrix.cpp Command/ReadMatrixCommand/ReadMatrixCommand.cpp Command/WriteMatrixCommand/WriteMatrixCommand.cpp Command/CommandException.cpp -o $(mainFile)
+	g++ $(mainFile).cpp Matrix3x3/Matrix3x3.cpp Command/ReadMatrix3x3Command/ReadMatrix3x3Command.cpp Command/WriteMatrix3x3Command/WriteMatrix3x3Command.cpp Command/CommandException.cpp -o $(mainFile)
 
 .PHONY: run
 run:

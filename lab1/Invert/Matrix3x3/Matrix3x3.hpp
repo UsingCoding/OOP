@@ -2,18 +2,18 @@
 #include <vector>
 #include <iostream>
 
-class Matrix
+class Matrix3x3
 {
 public:
     const static int SIZE = 3;
 
-    Matrix(std::vector<std::vector<float>>* m);
+    Matrix3x3(const std::vector<std::vector<float>> & m);
     void operator *= (float coef);
-    friend std::ostream& operator<< (std::ostream &out, const Matrix matrix);
+    friend std::ostream& operator<< (std::ostream &out, const Matrix3x3* matrix);
 
     float CalcDeterminant();
-    Matrix* GetCompanionMatrix();
-    Matrix* GetInverseMatrix();
+    Matrix3x3* GetCompanionMatrix();
+    Matrix3x3* GetInverseMatrix();
 
 private:
     struct MatrixPoint
