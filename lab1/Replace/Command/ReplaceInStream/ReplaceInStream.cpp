@@ -1,27 +1,16 @@
-#include "Replacer.hpp"
+#include "ReplaceInStream.hpp"
 
-Replacer::Replacer(std::ifstream *fin, std::ofstream *fout, std::string searchStr, std::string replaceStr)
+void ReplaceInStream::Execute(std::istream * in, std::ostream * out, std::string searchStr, std::string replaceStr)
 {
-    this->fin = fin;
-    this->fout = fout;
-    this->searchStr = searchStr;
-    this->replaceStr = replaceStr;
-    offset = 0;
-}
-
-Replacer::~Replacer()
-{
-}
-
-void Replacer::execute()
-{
-    std::string buffer = "";
+    int offset = 0;
+    std::string buffer;
     std::string line;
-    std::string resLine = "";
+    std::string resLine;
 
-    while (!(*fin).eof())
+    while (!(*in).eof())
     {
-        getline(*fin, line);
+
+        getline(*in, line);
 
         if (line.length() == 0)
         {
@@ -69,7 +58,7 @@ void Replacer::execute()
             buffer = "";
         }
 
-        *fout << resLine << std::endl;
+        *out << resLine << std::endl;
         resLine = "";
     }
 }

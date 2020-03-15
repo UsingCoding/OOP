@@ -1,31 +1,40 @@
 #include <iostream>
 #include <fstream>
-#include "Replacer/Replacer.hpp"
+#include "Command/ReplaceInStream/ReplaceInStream.hpp"
+
+bool OpenFiles(std::ifstream *fin, std::ofstream *fout, std::string firstFileName, std::string secondeFileName);
 
 int main(int argc, char const *argv[])
 {
     if (argc < 5)
     {
         std::cout << "Not enough arguments" << std::endl;
-        return 0;
+        return 1;
     }
 
     std::ifstream fin;
     std::ofstream fout;
 
-    fin.open(argv[1]);
-    fout.open(argv[2]);
-
-    if (!fin.is_open() || !fout.is_open())
+    if (!OpenFiles(&fin, & fout, argv[1], argv[2]))
     {
-        std::cout << "Error to open " << (!fin.is_open() ? argv[1] : argv[2]) << std::endl;
-        return 0;
+        return 1;
     }
 
-    Replacer *replacer = new Replacer(&fin, &fout, argv[3], argv[4]);
-    replacer->execute();
-
-    delete replacer;
+    ReplaceInStream::Execute(&fin, &fout, argv[3], argv[4]);
 
     return 0;
+}
+
+bool OpenFiles(std::ifstream *fin, std::ofstream *fout, std::string firstFileName, std::string secondeFileName)
+{
+    (*fin).open(firstFileName);
+    (*fout).open(secondeFileName);
+
+    if (!(*fin).is_open() || !(*fout).is_open())
+    {
+        std::cout << "Error to open " << (!(*fin).is_open() ? firstFileName : secondeFileName) << std::endl;
+        return false;
+    }
+
+    return true;
 }
