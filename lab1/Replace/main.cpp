@@ -2,7 +2,7 @@
 #include <fstream>
 #include "Command/ReplaceInStream/ReplaceInStream.hpp"
 
-bool OpenFiles(std::ifstream *fin, std::ofstream *fout, std::string firstFileName, std::string secondeFileName);
+bool OpenFiles(std::ifstream *fin, std::ofstream *fout, std::string firstFileName, std::string secondFileName);
 
 int main(int argc, char const *argv[])
 {
@@ -25,14 +25,14 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
-bool OpenFiles(std::ifstream *fin, std::ofstream *fout, std::string firstFileName, std::string secondeFileName)
+bool OpenFiles(std::ifstream *fin, std::ofstream *fout, std::string firstFileName, std::string secondFileName)
 {
     (*fin).open(firstFileName);
-    (*fout).open(secondeFileName);
+    (*fout).open(secondFileName);
 
     if (!(*fin).is_open() || !(*fout).is_open())
     {
-        std::cout << "Error to open " << (!(*fin).is_open() ? firstFileName : secondeFileName) << std::endl;
+        std::cout << "Error to open " << (!(*fin).is_open() ? firstFileName : secondFileName) << std::endl;
         return false;
     }
 
