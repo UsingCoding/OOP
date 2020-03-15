@@ -8,7 +8,7 @@ Matrix3x3* ReadMatrixCommand::Execute(std::string fileName)
 
     if (!fin.is_open())
     {
-        throw CommandException("File not found");
+        throw CommandException("Problem with input file");
     }
 
     std::vector<std::vector<float>> m;
