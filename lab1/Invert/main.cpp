@@ -5,7 +5,7 @@
 #include <array>
 #include <memory>
 
-std::unique_ptr<Matrix3x3> ReadMatrix3x3(const std::string & fileName);
+std::unique_ptr<Matrix3x3> ReadMatrix3x3(std::string fileName);
 
 int main(int argc, char const *argv[])
 {
@@ -40,7 +40,7 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
-std::unique_ptr<Matrix3x3> ReadMatrix3x3(const std::string & fileName)
+std::unique_ptr<Matrix3x3> ReadMatrix3x3(std::string fileName)
 {
     std::ifstream fin;
     fin.open(fileName);
@@ -69,5 +69,5 @@ std::unique_ptr<Matrix3x3> ReadMatrix3x3(const std::string & fileName)
     }
 
     fin.close();
-    return std::unique_ptr<Matrix3x3>(new Matrix3x3(matrix));
+    return std::move(std::make_unique<Matrix3x3>(matrix));
 }
