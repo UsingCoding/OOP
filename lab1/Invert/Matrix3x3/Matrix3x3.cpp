@@ -1,10 +1,9 @@
 #include "./Matrix3x3.hpp"
 #include <iostream>
 #include <cmath>
-#include <vector>
-#include <fstream>
 
-Matrix3x3::Matrix3x3(const std::vector<std::vector<float>> & matrix)
+
+Matrix3x3::Matrix3x3(const std::array<std::array<float, SIZE>, SIZE> & matrix)
 {
     for (size_t i = 0; i < SIZE; i++)
     {
@@ -15,7 +14,7 @@ Matrix3x3::Matrix3x3(const std::vector<std::vector<float>> & matrix)
     }
 }
 
-Matrix3x3* Matrix3x3::GetInverseMatrix()
+Matrix3x3* Matrix3x3::GetInverseMatrix() const
 {
     float deter = CalcDeterminant();
 
@@ -46,15 +45,13 @@ float Matrix3x3::CalcDeterminant() const
 
 Matrix3x3* Matrix3x3::GetCompanionMatrix() const
 {
-    std::vector<std::vector<float>> matrix;
+    std::array<std::array<float, SIZE>, SIZE> matrix;
     for (size_t i = 0; i < SIZE; i++)
     {
-        matrix.push_back(std::vector<float>{0, 0, 0});
         for (size_t j = 0; j < SIZE; j++)
         {
             matrix[i][j] = pow(-1, i + j) * CalcMinorDeterminant(MatrixPoint{(int) i,(int) j});
         }
-
     }
     return new Matrix3x3(matrix);
 }

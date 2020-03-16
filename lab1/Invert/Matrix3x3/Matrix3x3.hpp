@@ -1,19 +1,20 @@
 #pragma once
 #include <vector>
 #include <iostream>
+#include <array>
 
 class Matrix3x3
 {
 public:
     const static int SIZE = 3;
 
-    Matrix3x3(const std::vector<std::vector<float>> & m);
+    Matrix3x3(const std::array<std::array<float, SIZE>, SIZE> & matrix);
     void operator *= (float coef);
     friend std::ostream& operator<< (std::ostream &out, const Matrix3x3* matrix);
 
     float CalcDeterminant() const;
     Matrix3x3* GetCompanionMatrix() const;
-    Matrix3x3* GetInverseMatrix();
+    Matrix3x3* GetInverseMatrix() const;
 private:
     struct MatrixPoint
     {

@@ -1,11 +1,11 @@
 #pragma once
 #include <string>
 
-class CommandException
+class ReadException
 {
 private:
     std::string msg;
 public:
-    CommandException(std::string msg);
+    ReadException(std::string msg);
     const std::string GetMessage() const noexcept;
 };

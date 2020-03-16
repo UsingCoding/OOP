@@ -1,7 +1,11 @@
 #include "./Matrix3x3/Matrix3x3.hpp"
-#include "./Command/ReadMatrix3x3Command/ReadMatrix3x3Command.hpp"
-#include "./Command/WriteMatrix3x3Command/WriteMatrix3x3Command.hpp"
-#include "./Command/CommandException.hpp"
+#include "./ReadException/ReadException.hpp"
+#include <fstream>
+#include <iostream>
+#include <array>
+
+Matrix3x3* ReadMatrix3x3(std::string fileName);
+void WriteMatrix3x3(std::ostream &out, Matrix3x3* matrix);
 
 int main(int argc, char const *argv[])
 {
@@ -15,9 +19,9 @@ int main(int argc, char const *argv[])
 
     try
     {
-        matrix3x3 = ReadMatrix3x3Command::Execute(argv[1]);
+        matrix3x3 = ReadMatrix3x3(argv[1]);
     }
-    catch(const CommandException& e)
+    catch(const ReadException& e)
     {
         std::cerr << e.GetMessage() << std::endl;
         return 1;
@@ -32,10 +36,47 @@ int main(int argc, char const *argv[])
         return 1;
     }
 
-    WriteMatrix3x3Command::Execute(std::cout, inverseMatrix3x3);
+    WriteMatrix3x3(std::cout, inverseMatrix3x3);
 
     delete matrix3x3;
     delete inverseMatrix3x3;
 
     return 0;
+}
+
+Matrix3x3* ReadMatrix3x3(std::string fileName)
+{
+    std::ifstream fin;
+    fin.open(fileName);
+
+    if (!fin.is_open())
+    {
+        throw ReadException("Problem with input file");
+    }
+
+    std::array<std::array<float, Matrix3x3::SIZE>, Matrix3x3::SIZE>  matrix;
+    float currCoef;
+
+    for (size_t i = 0; i < Matrix3x3::SIZE; i++)
+    {
+        for (size_t j = 0; j < Matrix3x3::SIZE; j++)
+        {
+            fin >> currCoef;
+
+            if (fin.eof())
+            {
+                throw ReadException("Not enough matrix coefficients");
+            }
+
+            matrix[i][j] = currCoef;
+        }
+    }
+
+    fin.close();
+    return new Matrix3x3(matrix);
+}
+
+void WriteMatrix3x3(std::ostream &out, Matrix3x3* matrix)
+{
+    out << matrix;
 }
