@@ -2,7 +2,6 @@
 #include <iostream>
 #include <cmath>
 
-
 Matrix3x3::Matrix3x3(const std::array<std::array<float, SIZE>, SIZE> & matrix)
 {
     for (size_t i = 0; i < SIZE; i++)
@@ -14,7 +13,7 @@ Matrix3x3::Matrix3x3(const std::array<std::array<float, SIZE>, SIZE> & matrix)
     }
 }
 
-Matrix3x3* Matrix3x3::GetInverseMatrix() const
+std::unique_ptr<Matrix3x3> Matrix3x3::GetInverseMatrix() const
 {
     float deter = CalcDeterminant();
 
@@ -23,7 +22,7 @@ Matrix3x3* Matrix3x3::GetInverseMatrix() const
         return nullptr;
     }
 
-    Matrix3x3* matrix = GetCompanionMatrix();
+    std::unique_ptr<Matrix3x3> matrix = GetCompanionMatrix();
 
     *matrix *= 1.0 / deter;
 
@@ -43,7 +42,7 @@ float Matrix3x3::CalcDeterminant() const
     );
 }
 
-Matrix3x3* Matrix3x3::GetCompanionMatrix() const
+std::unique_ptr<Matrix3x3> Matrix3x3::GetCompanionMatrix() const
 {
     std::array<std::array<float, SIZE>, SIZE> matrix;
     for (size_t i = 0; i < SIZE; i++)
@@ -53,7 +52,7 @@ Matrix3x3* Matrix3x3::GetCompanionMatrix() const
             matrix[i][j] = pow(-1, i + j) * CalcMinorDeterminant(MatrixPoint{(int) i,(int) j});
         }
     }
-    return new Matrix3x3(matrix);
+    return std::unique_ptr<Matrix3x3>(new Matrix3x3(matrix));
 }
 
 int Matrix3x3::CalcOffset(int currOffset) const
@@ -95,13 +94,13 @@ void Matrix3x3::operator *= (float coef)
     }
 }
 
-std::ostream& operator << (std::ostream &out, const Matrix3x3* matrix)
+std::ostream& operator << (std::ostream &out, const Matrix3x3 & matrix)
 {
     for (size_t i = 0; i < Matrix3x3::SIZE; i++)
     {
         for (size_t j = 0; j < Matrix3x3::SIZE; j++)
         {
-            out << (*matrix).coefs[i][j];
+            out << matrix.coefs[i][j];
             if (j != Matrix3x3::SIZE -1)
             {
                 out << ' ';

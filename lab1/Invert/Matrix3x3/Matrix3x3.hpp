@@ -2,6 +2,7 @@
 #include <vector>
 #include <iostream>
 #include <array>
+#include <memory>
 
 class Matrix3x3
 {
@@ -10,11 +11,11 @@ public:
 
     Matrix3x3(const std::array<std::array<float, SIZE>, SIZE> & matrix);
     void operator *= (float coef);
-    friend std::ostream& operator<< (std::ostream &out, const Matrix3x3* matrix);
+    friend std::ostream& operator<< (std::ostream &out, const Matrix3x3 & matrix);
 
     float CalcDeterminant() const;
-    Matrix3x3* GetCompanionMatrix() const;
-    Matrix3x3* GetInverseMatrix() const;
+    std::unique_ptr<Matrix3x3> GetCompanionMatrix() const;
+    std::unique_ptr<Matrix3x3> GetInverseMatrix() const;
 private:
     struct MatrixPoint
     {

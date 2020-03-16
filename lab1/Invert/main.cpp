@@ -3,9 +3,10 @@
 #include <fstream>
 #include <iostream>
 #include <array>
+#include <memory>
 
-Matrix3x3* ReadMatrix3x3(std::string fileName);
-void WriteMatrix3x3(std::ostream &out, Matrix3x3* matrix);
+std::unique_ptr<Matrix3x3> ReadMatrix3x3(std::string fileName);
+void WriteMatrix3x3(std::ostream &out, std::unique_ptr<Matrix3x3>&& matrix);
 
 int main(int argc, char const *argv[])
 {
@@ -15,7 +16,7 @@ int main(int argc, char const *argv[])
         return 1;
     }
 
-    Matrix3x3* matrix3x3;
+    std::unique_ptr<Matrix3x3> matrix3x3;
 
     try
     {
@@ -27,24 +28,20 @@ int main(int argc, char const *argv[])
         return 1;
     }
 
-    Matrix3x3* inverseMatrix3x3 = matrix3x3->GetInverseMatrix();
+    std::unique_ptr<Matrix3x3> inverseMatrix3x3 = matrix3x3->GetInverseMatrix();
 
     if (inverseMatrix3x3 == nullptr)
     {
         std::cout << "Can`t find inverse matrix" << std::endl;
-        delete matrix3x3;
         return 1;
     }
 
-    WriteMatrix3x3(std::cout, inverseMatrix3x3);
-
-    delete matrix3x3;
-    delete inverseMatrix3x3;
+    WriteMatrix3x3(std::cout, std::move(inverseMatrix3x3));
 
     return 0;
 }
 
-Matrix3x3* ReadMatrix3x3(std::string fileName)
+std::unique_ptr<Matrix3x3> ReadMatrix3x3(std::string fileName)
 {
     std::ifstream fin;
     fin.open(fileName);
@@ -73,10 +70,10 @@ Matrix3x3* ReadMatrix3x3(std::string fileName)
     }
 
     fin.close();
-    return new Matrix3x3(matrix);
+    return std::unique_ptr<Matrix3x3>(new Matrix3x3(matrix));
 }
 
-void WriteMatrix3x3(std::ostream &out, Matrix3x3* matrix)
+void WriteMatrix3x3(std::ostream &out, std::unique_ptr<Matrix3x3>&& matrix)
 {
-    out << matrix;
+    out << *matrix;
 }
