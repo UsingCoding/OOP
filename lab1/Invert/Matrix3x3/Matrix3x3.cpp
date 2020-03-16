@@ -55,7 +55,7 @@ std::unique_ptr<Matrix3x3> Matrix3x3::GetCompanionMatrix() const
     return std::unique_ptr<Matrix3x3>(new Matrix3x3(matrix));
 }
 
-int Matrix3x3::CalcOffset(int currOffset) const
+int Matrix3x3::CalcOffsetInMinor(int currOffset) const
 {
     return currOffset > SIZE - 1 ? currOffset - SIZE : currOffset;
 }
@@ -64,10 +64,10 @@ float Matrix3x3::CalcMinorDeterminant(const MatrixPoint & matrixPoint) const
 {
     if ((matrixPoint.x == SIZE - 1 || matrixPoint.x == 0) && (matrixPoint.y == SIZE - 1 || matrixPoint.y == 0))
     {
-        return coefs[CalcOffset(matrixPoint.y + 1)][CalcOffset(matrixPoint.x + 1)] *
-        coefs[CalcOffset(matrixPoint.y + 2)][CalcOffset(matrixPoint.x + 2)] -
-        coefs[CalcOffset(matrixPoint.y + 2)][CalcOffset(matrixPoint.x + 1)] *
-        coefs[CalcOffset(matrixPoint.y + 1)][CalcOffset(matrixPoint.x + 2)];
+        return coefs[CalcOffsetInMinor(matrixPoint.y + 1)][CalcOffsetInMinor(matrixPoint.x + 1)] *
+        coefs[CalcOffsetInMinor(matrixPoint.y + 2)][CalcOffsetInMinor(matrixPoint.x + 2)] -
+        coefs[CalcOffsetInMinor(matrixPoint.y + 2)][CalcOffsetInMinor(matrixPoint.x + 1)] *
+        coefs[CalcOffsetInMinor(matrixPoint.y + 1)][CalcOffsetInMinor(matrixPoint.x + 2)];
     }
 
     if ((matrixPoint.x == 1 && matrixPoint.y == 1))
@@ -76,10 +76,10 @@ float Matrix3x3::CalcMinorDeterminant(const MatrixPoint & matrixPoint) const
     }
 
     return -1 * (
-        coefs[CalcOffset(matrixPoint.y + 1)][CalcOffset(matrixPoint.x + 1)] *
-        coefs[CalcOffset(matrixPoint.y + 2)][CalcOffset(matrixPoint.x + 2)] -
-        coefs[CalcOffset(matrixPoint.y + 2)][CalcOffset(matrixPoint.x + 1)] *
-        coefs[CalcOffset(matrixPoint.y + 1)][CalcOffset(matrixPoint.x + 2)]);
+        coefs[CalcOffsetInMinor(matrixPoint.y + 1)][CalcOffsetInMinor(matrixPoint.x + 1)] *
+        coefs[CalcOffsetInMinor(matrixPoint.y + 2)][CalcOffsetInMinor(matrixPoint.x + 2)] -
+        coefs[CalcOffsetInMinor(matrixPoint.y + 2)][CalcOffsetInMinor(matrixPoint.x + 1)] *
+        coefs[CalcOffsetInMinor(matrixPoint.y + 1)][CalcOffsetInMinor(matrixPoint.x + 2)]);
 }
 
 

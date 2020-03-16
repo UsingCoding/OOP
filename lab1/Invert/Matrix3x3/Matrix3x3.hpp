@@ -25,5 +25,5 @@ private:
 
     float coefs[SIZE][SIZE];
     float CalcMinorDeterminant(const MatrixPoint & matrixPoint) const;
-    int CalcOffset(int currOffset) const;
+    int CalcOffsetInMinor(int currOffset) const;
 };
