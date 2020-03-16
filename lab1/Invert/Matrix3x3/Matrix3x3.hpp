@@ -11,10 +11,9 @@ public:
     void operator *= (float coef);
     friend std::ostream& operator<< (std::ostream &out, const Matrix3x3* matrix);
 
-    float CalcDeterminant();
-    Matrix3x3* GetCompanionMatrix();
+    float CalcDeterminant() const;
+    Matrix3x3* GetCompanionMatrix() const;
     Matrix3x3* GetInverseMatrix();
-
 private:
     struct MatrixPoint
     {
@@ -23,6 +22,6 @@ private:
     };
 
     float coefs[SIZE][SIZE];
-    float CalcMinorDeterminant(const MatrixPoint & matrixPoint);
-    int CalcOffset(int currOffset);
+    float CalcMinorDeterminant(const MatrixPoint & matrixPoint) const;
+    int CalcOffset(int currOffset) const;
 };

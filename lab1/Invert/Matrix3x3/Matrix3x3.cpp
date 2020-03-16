@@ -4,16 +4,15 @@
 #include <vector>
 #include <fstream>
 
-Matrix3x3::Matrix3x3(const std::vector<std::vector<float>> & m)
+Matrix3x3::Matrix3x3(const std::vector<std::vector<float>> & matrix)
 {
     for (size_t i = 0; i < SIZE; i++)
     {
         for (size_t j = 0; j < SIZE; j++)
         {
-            coefs[i][j] = m[i][j];
+            coefs[i][j] = matrix[i][j];
         }
     }
-
 }
 
 Matrix3x3* Matrix3x3::GetInverseMatrix()
@@ -32,7 +31,7 @@ Matrix3x3* Matrix3x3::GetInverseMatrix()
     return matrix;
 }
 
-float Matrix3x3::CalcDeterminant()
+float Matrix3x3::CalcDeterminant() const
 {
     return (
         coefs[0][0] * coefs[1][1] * coefs[2][2] +
@@ -45,32 +44,27 @@ float Matrix3x3::CalcDeterminant()
     );
 }
 
-Matrix3x3* Matrix3x3::GetCompanionMatrix()
+Matrix3x3* Matrix3x3::GetCompanionMatrix() const
 {
-    std::vector<std::vector<float>> m;
+    std::vector<std::vector<float>> matrix;
     for (size_t i = 0; i < SIZE; i++)
     {
-        m.push_back(std::vector<float>{0, 0, 0});
+        matrix.push_back(std::vector<float>{0, 0, 0});
         for (size_t j = 0; j < SIZE; j++)
         {
-            m[i][j] = pow(-1, i + j) * CalcMinorDeterminant(MatrixPoint{(int) i,(int) j});
+            matrix[i][j] = pow(-1, i + j) * CalcMinorDeterminant(MatrixPoint{(int) i,(int) j});
         }
 
     }
-    return new Matrix3x3(m);
+    return new Matrix3x3(matrix);
 }
 
-int Matrix3x3::CalcOffset(int currOffset)
+int Matrix3x3::CalcOffset(int currOffset) const
 {
-    if (currOffset > SIZE - 1)
-    {
-        return currOffset - SIZE;
-    }
-
-    return currOffset;
+    return currOffset > SIZE - 1 ? currOffset - SIZE : currOffset;
 }
 
-float Matrix3x3::CalcMinorDeterminant(const MatrixPoint & matrixPoint)
+float Matrix3x3::CalcMinorDeterminant(const MatrixPoint & matrixPoint) const
 {
     if ((matrixPoint.x == SIZE - 1 || matrixPoint.x == 0) && (matrixPoint.y == SIZE - 1 || matrixPoint.y == 0))
     {

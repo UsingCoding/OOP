@@ -2,7 +2,7 @@
 #include <iostream>
 #include "../../Matrix3x3/Matrix3x3.hpp"
 
-class WriteMatrixCommand
+class WriteMatrix3x3Command
 {
 public:
     static void Execute(std::ostream &out, const Matrix3x3 * matrix);

@@ -2,13 +2,12 @@
 #include "./Command/ReadMatrix3x3Command/ReadMatrix3x3Command.hpp"
 #include "./Command/WriteMatrix3x3Command/WriteMatrix3x3Command.hpp"
 #include "./Command/CommandException.hpp"
-#include <memory>
 
 int main(int argc, char const *argv[])
 {
-    if (argc < 2)
+    if (argc != 2)
     {
-        std::cout << "Not enough arguments" << std::endl;
+        std::cout << "Incorrect count of arguments" << std::endl;
         return 1;
     }
 
@@ -16,7 +15,7 @@ int main(int argc, char const *argv[])
 
     try
     {
-        matrix3x3 = ReadMatrixCommand::Execute(argv[1]);
+        matrix3x3 = ReadMatrix3x3Command::Execute(argv[1]);
     }
     catch(const CommandException& e)
     {
@@ -33,7 +32,7 @@ int main(int argc, char const *argv[])
         return 1;
     }
 
-    WriteMatrixCommand::Execute(std::cout, inverseMatrix3x3);
+    WriteMatrix3x3Command::Execute(std::cout, inverseMatrix3x3);
 
     delete matrix3x3;
     delete inverseMatrix3x3;
