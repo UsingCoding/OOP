@@ -5,8 +5,7 @@
 #include <array>
 #include <memory>
 
-std::unique_ptr<Matrix3x3> ReadMatrix3x3(std::string fileName);
-void WriteMatrix3x3(std::ostream &out, std::unique_ptr<Matrix3x3>&& matrix);
+std::unique_ptr<Matrix3x3> ReadMatrix3x3(const std::string & fileName);
 
 int main(int argc, char const *argv[])
 {
@@ -36,12 +35,12 @@ int main(int argc, char const *argv[])
         return 1;
     }
 
-    WriteMatrix3x3(std::cout, std::move(inverseMatrix3x3));
+    std::cout << *inverseMatrix3x3;
 
     return 0;
 }
 
-std::unique_ptr<Matrix3x3> ReadMatrix3x3(std::string fileName)
+std::unique_ptr<Matrix3x3> ReadMatrix3x3(const std::string & fileName)
 {
     std::ifstream fin;
     fin.open(fileName);
@@ -71,9 +70,4 @@ std::unique_ptr<Matrix3x3> ReadMatrix3x3(std::string fileName)
 
     fin.close();
     return std::unique_ptr<Matrix3x3>(new Matrix3x3(matrix));
-}
-
-void WriteMatrix3x3(std::ostream &out, std::unique_ptr<Matrix3x3>&& matrix)
-{
-    out << *matrix;
 }

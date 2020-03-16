@@ -55,7 +55,7 @@ std::unique_ptr<Matrix3x3> Matrix3x3::GetCompanionMatrix() const
     return std::unique_ptr<Matrix3x3>(new Matrix3x3(matrix));
 }
 
-int Matrix3x3::CalcOffsetInMinor(int currOffset) const
+int Matrix3x3::CalcOffsetInMinor(int currOffset)
 {
     return currOffset > SIZE - 1 ? currOffset - SIZE : currOffset;
 }
