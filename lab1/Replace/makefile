@@ -5,7 +5,7 @@ mainFile = main
 
 .PHONY: build
 build:
-	g++ $(mainFile).cpp Command/ReplaceInStream/ReplaceInStream.cpp -o $(mainFile)
+	g++ $(mainFile).cpp -o $(mainFile)
 
 .PHONY: run
 run:
