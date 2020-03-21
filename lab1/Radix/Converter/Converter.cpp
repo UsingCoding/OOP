@@ -4,7 +4,7 @@
 #include <stack>
 #include <vector>
 
-int StringToInt(std::string value, const int & srcNot)
+int StringToInt(const std::string & value, const int & srcNot)
 {
     if (srcNot == TEN_NOT)
     {

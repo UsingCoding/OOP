@@ -3,7 +3,7 @@
 #include "ConverterException.hpp"
 
 std::string IntToString(unsigned int value, const int & destNot);
-int StringToInt(std::string value, const int & srcNot);
+int StringToInt(const std::string & value, const int & srcNot);
 
 bool IsNegative(std::string const & value);
 int ParseInt(std::string const & value);
