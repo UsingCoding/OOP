@@ -8,9 +8,9 @@ const std::string DECRYPT = "decrypt";
 
 void Encrypt(char & byte, int key);
 void Decrypt(char & byte, int key);
-void Transform(std::istream * in, std::ostream * out, int key, void cryptionFunc(char & byte, int key));
-void OpenFiles(std::ifstream* fin, std::ofstream* fout, const std::string & finName, const std::string & foutName);
-void ProceedCryption(std::istream * in, std::ostream * out, const std::string & cryptMode, int key);
+void Transform(std::istream & in, std::ostream & out, int key, void cryptionFunc(char & byte, int key));
+void OpenFiles(std::ifstream & fin, std::ofstream & fout, const std::string & finName, const std::string & foutName);
+void ProceedCryption(std::istream & in, std::ostream & out, const std::string & cryptMode, int key);
 
 int main(int argc, char const *argv[])
 {
@@ -25,11 +25,11 @@ int main(int argc, char const *argv[])
 
     try
     {
-        OpenFiles(&fin, &fout, argv[2], argv[3]);
+        OpenFiles(fin, fout, argv[2], argv[3]);
 
         int key = std::stoi(argv[4]);
 
-        ProceedCryption(&fin, &fout, argv[1], key);
+        ProceedCryption(fin, fout, argv[1], key);
     }
     catch(const std::exception& e)
     {
@@ -39,23 +39,23 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
-void OpenFiles(std::ifstream* fin, std::ofstream* fout, const std::string & finName, const std::string & foutName)
+void OpenFiles(std::ifstream & fin, std::ofstream & fout, const std::string & finName, const std::string & foutName)
 {
-    (*fin).open(finName, std::ios::binary);
-    (*fout).open(foutName, std::ios::binary);
+    fin.open(finName, std::ios::binary);
+    fout.open(foutName, std::ios::binary);
 
-    if (!(*fin).is_open())
+    if (!fin.is_open())
     {
         throw std::runtime_error("Failed to open input file");
     }
 
-    if (!(*fout).is_open())
+    if (!fout.is_open())
     {
         throw std::runtime_error("Failed to open output file");
     }
 }
 
-void ProceedCryption(std::istream * in, std::ostream * out, const std::string & cryptMode, int key)
+void ProceedCryption(std::istream & in, std::ostream & out, const std::string & cryptMode, int key)
 {
     if (cryptMode == CRYPT)
     {
@@ -72,14 +72,14 @@ void ProceedCryption(std::istream * in, std::ostream * out, const std::string & 
     throw std::invalid_argument("Invalid cryption mode");
 }
 
-void Transform(std::istream * in, std::ostream * out, int key, void cryptionFunc(char & byte, int key))
+void Transform(std::istream & in, std::ostream & out, int key, void cryptionFunc(char & byte, int key))
 {
     char byte;
 
-    while ((*in).read(&byte, sizeof(char)))
+    while (in.read(&byte, sizeof(char)))
     {
         cryptionFunc(byte, key);
-        (*out).write(&byte, sizeof(char));
+        out.write(&byte, sizeof(char));
     }
 }
 
