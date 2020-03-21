@@ -7,7 +7,7 @@ int main(int argc, char const *argv[])
 {
     if (argc != 4)
     {
-        std::cout << "Missing arguments" << std::endl;
+        std::cout << "Missing arguments, need to pass 3 arguments" << std::endl;
         return 1;
     }
 
@@ -47,7 +47,7 @@ int main(int argc, char const *argv[])
     }
     catch (const ConverterException & e)
     {
-        std::cerr << e.getMsg() << '\n';
+        std::cerr << e.getMsg() << std::endl;
         return 1;
     }
 

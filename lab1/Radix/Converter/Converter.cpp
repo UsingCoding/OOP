@@ -4,7 +4,7 @@
 #include <stack>
 #include <vector>
 
-int StringToInt(std::string value, int srcNot)
+int StringToInt(std::string value, const int & srcNot)
 {
     if (srcNot == TEN_NOT)
     {
@@ -42,7 +42,7 @@ int StringToInt(std::string value, int srcNot)
     return resNumber;
 }
 
-std::string IntToString(int value, int destNot)
+std::string IntToString(unsigned int value, const int & destNot)
 {
     std::string buffer;
     std::string result;
