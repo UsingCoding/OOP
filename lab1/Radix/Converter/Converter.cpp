@@ -4,35 +4,7 @@
 #include <stack>
 #include <vector>
 
-std::string Converter::Convert(std::string sourceNotation, std::string destNotation, std::string value)
-{
-    if (value.length() <= 0)
-    {
-        throw ConverterException("Not enough length of value");
-    }
-
-    bool isNeg = IsNegative(value);
-
-    if (isNeg)
-    {
-        value.erase(0, 1);
-    }
-
-    int srcNot = ParseInt(sourceNotation);
-    int destNot = ParseInt(destNotation);
-
-    if (!(2 <= srcNot && srcNot <= 36) || !(2 <= destNot && destNot <= 36))
-    {
-        throw ConverterException("Incorrect notation");
-    }
-
-    int valueTenNotation = ConvertToDecNot(value, srcNot);
-    std::string resValue = ConvertFromDecNotTo(valueTenNotation, destNot);
-
-    return !isNeg ? resValue : "-" + resValue;
-}
-
-int Converter::ConvertToDecNot(std::string value, int srcNot)
+int StringToInt(std::string value, int srcNot)
 {
     if (srcNot == TEN_NOT)
     {
@@ -46,11 +18,11 @@ int Converter::ConvertToDecNot(std::string value, int srcNot)
     {
         if (value[i] >= 'A' && value[i] <= 'Z')
         {
-            currNum = (int)value[i] - Converter::MODIFICATOR_FOR_LETTERS;
+            currNum = (int)value[i] - MODIFICATOR_FOR_LETTERS;
         }
         else
         {
-            currNum = (int)value[i] - Converter::MODIFICATOR_FOR_NUMBERS;
+            currNum = (int)value[i] - MODIFICATOR_FOR_NUMBERS;
             if (currNum >= srcNot)
             {
                 throw ConverterException("Incorrect number for this notation");
@@ -70,18 +42,18 @@ int Converter::ConvertToDecNot(std::string value, int srcNot)
     return resNumber;
 }
 
-std::string Converter::ConvertFromDecNotTo(int value, int destNot)
+std::string IntToString(int value, int destNot)
 {
-    std::string buffer = "";
+    std::string buffer;
     std::string result;
     char currNum;
 
     while (true)
     {
         currNum = value % destNot;
-        if (currNum > Converter::MAX_DIGIT)
+        if (currNum > MAX_DIGIT)
         {
-            currNum = currNum + Converter::MODIFICATOR_FOR_LETTERS;
+            currNum = currNum + MODIFICATOR_FOR_LETTERS;
         }
         else
         {
@@ -90,6 +62,7 @@ std::string Converter::ConvertFromDecNotTo(int value, int destNot)
 
         buffer += currNum;
         value = value / destNot;
+
         if (value == 0)
         {
             break;
@@ -104,7 +77,7 @@ std::string Converter::ConvertFromDecNotTo(int value, int destNot)
     return result;
 }
 
-bool Converter::IsNegative(std::string const & value)
+bool IsNegative(std::string const & value)
 {
     if (value[0] != '-')
     {
@@ -113,7 +86,7 @@ bool Converter::IsNegative(std::string const & value)
     return true;
 }
 
-int Converter::ParseInt(std::string const & value)
+int ParseInt(std::string const & value)
 {
     try
     {

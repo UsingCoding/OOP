@@ -7,7 +7,8 @@ private:
     std::string msg;
 public:
     ConverterException(std::string msg);
-    std::string getMsg();
+    const std::string getMsg() const noexcept;
+    void setMsg(const std::string & msg);
 
     static ConverterException convertOverflowError();
 };

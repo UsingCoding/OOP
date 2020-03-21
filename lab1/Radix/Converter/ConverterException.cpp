@@ -2,12 +2,17 @@
 
 ConverterException::ConverterException(std::string msg)
 {
-    ConverterException::msg = msg;
+    this->msg = msg;
 }
 
-std::string ConverterException::getMsg()
+const std::string ConverterException::getMsg() const noexcept
 {
     return ConverterException::msg;
+}
+
+void ConverterException::setMsg(const std::string & msg)
+{
+    this->msg = msg;
 }
 
 static ConverterException convertOverflowError()
