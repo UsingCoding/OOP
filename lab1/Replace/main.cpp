@@ -1,8 +1,8 @@
 #include <iostream>
 #include <fstream>
 
-bool OpenFiles(std::ifstream *fin, std::ofstream *fout, std::string firstFileName, std::string secondFileName);
-void ReplaceInStream(std::istream * in, std::ostream * out, const std::string & searchStr, const std::string & replaceStr);
+bool OpenFiles(std::ifstream & fin, std::ofstream & fout, std::string firstFileName, std::string secondFileName);
+void ReplaceInStream(std::istream & in, std::ostream & out, const std::string & searchStr, const std::string & replaceStr);
 
 int main(int argc, char const *argv[])
 {
@@ -15,34 +15,34 @@ int main(int argc, char const *argv[])
     std::ifstream fin;
     std::ofstream fout;
 
-    if (!OpenFiles(&fin, & fout, argv[1], argv[2]))
+    if (!OpenFiles(fin,  fout, argv[1], argv[2]))
     {
         return 1;
     }
 
-    ReplaceInStream(&fin, &fout, argv[3], argv[4]);
+    ReplaceInStream(fin, fout, argv[3], argv[4]);
 
     return 0;
 }
 
-bool OpenFiles(std::ifstream *fin, std::ofstream *fout, std::string firstFileName, std::string secondFileName)
+bool OpenFiles(std::ifstream & fin, std::ofstream & fout, std::string firstFileName, std::string secondFileName)
 {
-    (*fin).open(firstFileName);
-    (*fout).open(secondFileName);
+    fin.open(firstFileName);
+    fout.open(secondFileName);
 
-    return (*fin).is_open() && (*fout).is_open();
+    return fin.is_open() && fout.is_open();
 }
 
-void ReplaceInStream(std::istream * in, std::ostream * out, const std::string & searchStr, const std::string & replaceStr)
+void ReplaceInStream(std::istream & in, std::ostream & out, const std::string & searchStr, const std::string & replaceStr)
 {
     int offset = 0;
     std::string buffer;
     std::string line;
     std::string resLine;
 
-    while (!(*in).eof())
+    while (!in.eof())
     {
-        getline(*in, line);
+        getline(in, line);
 
         if (line.length() == 0)
         {
@@ -89,7 +89,7 @@ void ReplaceInStream(std::istream * in, std::ostream * out, const std::string & 
             buffer = "";
         }
 
-        *out << resLine << std::endl;
+        out << resLine << std::endl;
         resLine = "";
     }
 }
