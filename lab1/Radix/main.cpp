@@ -1,5 +1,5 @@
 #include <iostream>
-#include "./Converter/Converter.hpp"
+#include "./Convert/Convert.hpp"
 #include <exception>
 #include <stdexcept>
 
@@ -21,7 +21,7 @@ int main(int argc, char const *argv[])
             srcNot = ParseInt(argv[1]);
             destNot = ParseInt(argv[2]);
         }
-        catch(ConverterException e)
+        catch(ConvertException e)
         {
             e.setMsg("Incorrect symbol in notation");
             throw e;
@@ -29,7 +29,7 @@ int main(int argc, char const *argv[])
 
         if (!(2 <= srcNot && srcNot <= 36) || !(2 <= destNot && destNot <= 36))
         {
-            throw ConverterException("Incorrect range of notation");
+            throw ConvertException("Incorrect range of notation");
         }
 
         std::string value = argv[3];
@@ -45,7 +45,7 @@ int main(int argc, char const *argv[])
 
         std::cout << (!isNeg ? value : "-" + value) << std::endl;
     }
-    catch (const ConverterException & e)
+    catch (const ConvertException & e)
     {
         std::cerr << e.getMsg() << std::endl;
         return 1;

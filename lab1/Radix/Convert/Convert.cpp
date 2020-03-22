@@ -1,4 +1,4 @@
-#include "./Converter.hpp"
+#include "./Convert.hpp"
 #include <iostream>
 #include <cmath>
 #include <stack>
@@ -25,7 +25,7 @@ int StringToInt(const std::string & value, const int & srcNot)
             currNum = (int)value[i] - MODIFICATOR_FOR_NUMBERS;
             if (currNum >= srcNot)
             {
-                throw ConverterException("Incorrect number for this notation");
+                throw ConvertException("Incorrect number for this notation");
             }
 
         }
@@ -33,7 +33,7 @@ int StringToInt(const std::string & value, const int & srcNot)
         int resPow = pow(srcNot, value.length() - (i + 1));
         if (resPow < 0)
         {
-            throw ConverterException("Overflow happend while converting");
+            throw ConvertException("Overflow happend while converting");
         }
 
         resNumber += currNum * resPow;
@@ -94,6 +94,6 @@ int ParseInt(std::string const & value)
     }
     catch(std::exception exception)
     {
-        throw ConverterException("Some bad symbol in number");
+        throw ConvertException("Some bad symbol in number");
     }
 }

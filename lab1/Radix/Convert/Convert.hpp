@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "ConverterException.hpp"
+#include "ConvertException.hpp"
 
 std::string IntToString(unsigned int value, const int & destNot);
 int StringToInt(const std::string & value, const int & srcNot);

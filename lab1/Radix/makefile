@@ -5,7 +5,7 @@ mainFile = main
 
 .PHONY: build
 build:
-	g++ $(mainFile).cpp Converter/Converter.cpp Converter/ConverterException.cpp -o $(mainFile)
+	g++ $(mainFile).cpp Convert/Convert.cpp Convert/ConvertException.cpp -o $(mainFile)
 
 .PHONY: run
 run:
