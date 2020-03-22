@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 
-bool OpenFiles(std::ifstream & fin, std::ofstream & fout, std::string firstFileName, std::string secondFileName);
+bool OpenFiles(std::ifstream & fin, std::ofstream & fout, const std::string & firstFileName, const std::string & secondFileName);
 void ReplaceInStream(std::istream & in, std::ostream & out, const std::string & searchStr, const std::string & replaceStr);
 
 int main(int argc, char const *argv[])
@@ -25,7 +25,7 @@ int main(int argc, char const *argv[])
     return 0;
 }
 
-bool OpenFiles(std::ifstream & fin, std::ofstream & fout, std::string firstFileName, std::string secondFileName)
+bool OpenFiles(std::ifstream & fin, std::ofstream & fout, const std::string & firstFileName, const std::string & secondFileName)
 {
     fin.open(firstFileName);
     fout.open(secondFileName);
