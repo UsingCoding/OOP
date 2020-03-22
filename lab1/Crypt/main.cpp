@@ -30,10 +30,22 @@ int main(int argc, char const *argv[])
         int key = std::stoi(argv[4]);
 
         ProceedCryption(fin, fout, argv[1], key);
+
+        if (!fout.flush())
+        {
+            throw std::runtime_error("Failed to save data on disk");
+        }
     }
-    catch(const std::exception& e)
+    catch(const std::runtime_error& e)
     {
         std::cerr << e.what() << std::endl;
+
+        return 1;
+    }
+    catch(const std::invalid_argument& e)
+    {
+        std::cerr << "Wrong char passed as key" << std::endl;
+        return 1;
     }
 
     return 0;
@@ -69,10 +81,10 @@ void ProceedCryption(std::istream & in, std::ostream & out, const std::string & 
         return;
     }
 
-    throw std::invalid_argument("Invalid cryption mode");
+    throw std::runtime_error("Invalid cryption mode");
 }
 
-void Transform(std::istream & in, std::ostream & out, int key, void cryptionFunc(char & byte, int key))
+void Transform(std::istream & in, std::ostream & out, int key, void  cryptionFunc(char & byte, int key))
 {
     char byte;
 
