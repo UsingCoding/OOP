@@ -5,8 +5,8 @@
 std::string IntToString(unsigned int value, const int & destNot);
 int StringToInt(const std::string & value, const int & srcNot);
 
-bool IsNegative(std::string const & value);
-int ParseInt(std::string const & value);
+bool IsNegative(const std::string & value);
+int ParseInt(const std::string & value);
 
 static const int MODIFICATOR_FOR_LETTERS = 55;
 static const int MODIFICATOR_FOR_NUMBERS = 48;

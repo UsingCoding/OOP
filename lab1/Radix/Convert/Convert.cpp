@@ -1,8 +1,6 @@
 #include "./Convert.hpp"
 #include <iostream>
 #include <cmath>
-#include <stack>
-#include <vector>
 
 int StringToInt(const std::string & value, const int & srcNot)
 {
@@ -77,7 +75,7 @@ std::string IntToString(unsigned int value, const int & destNot)
     return result;
 }
 
-bool IsNegative(std::string const & value)
+bool IsNegative(const std::string & value)
 {
     if (value[0] != '-')
     {
@@ -86,7 +84,7 @@ bool IsNegative(std::string const & value)
     return true;
 }
 
-int ParseInt(std::string const & value)
+int ParseInt(const std::string & value)
 {
     try
     {
