@@ -9,7 +9,7 @@ build:
 
 .PHONY: run
 run:
-	./$(mainFile) crypt Tests/Inputs/input1.txt Tests/Outputs/output1.txt 5
+	./$(mainFile) crypt Tests/Inputs/input1.txt output.txt 5
 
 	# ./$(mainFile) decrypt Tests/Outputs/output1.txt Tests/Inputs/input1.txt 5
 

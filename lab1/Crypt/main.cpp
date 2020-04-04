@@ -35,8 +35,7 @@ void Encrypt(char & byte, int key);
 void Decrypt(char & byte, int key);
 
 void Transform(std::istream & in, std::ostream & out, int key, void cryptionFunc(char & byte, int key));
-void OpenFiles(std::ifstream & fin, std::ofstream & fout, const std::string & finName, const std::string & foutName);
-void ProceedCryption(std::istream & in, std::ostream & out, Mode cryptMode, int key);
+void ProceedCryption(const Arguments & args);
 
 int main(int argc, char const *argv[])
 {
@@ -47,9 +46,7 @@ int main(int argc, char const *argv[])
 
         Arguments args = ParseArguments(argc, argv);
 
-        OpenFiles(fin, fout, args.finName, args.foutName);
-
-        ProceedCryption(fin, fout, args.mode, args.key);
+        ProceedCryption(args);
 
         if (!fout.flush())
         {
@@ -135,21 +132,32 @@ void OpenFiles(std::ifstream & fin, std::ofstream & fout, const std::string & fi
     }
 }
 
-void ProceedCryption(std::istream & in, std::ostream & out, Mode cryptMode, int key)
+void ProceedCryption(const Arguments & args)
 {
-    if (cryptMode == CRYPT)
+    std::ifstream fin;
+    std::ofstream fout;
+
+    fin.open(args.finName, std::ios::binary);
+    fout.open(args.foutName, std::ios::binary);
+
+    if (!fin.is_open())
     {
-        Transform(in, out, key, Encrypt);
-        return;
+        throw std::runtime_error("Failed to open input file");
     }
 
-    if (cryptMode == DECRYPT)
+    if (!fout.is_open())
     {
-        Transform(in, out, key, Decrypt);
-        return;
+        throw std::runtime_error("Failed to open output file");
     }
 
-    throw std::runtime_error("Invalid cryption mode");
+    if (args.mode == CRYPT)
+    {
+        Transform(fin, fout, args.key, Encrypt);
+    }
+    else
+    {
+        Transform(fin, fout, args.key, Decrypt);
+    }
 }
 
 void Transform(std::istream & in, std::ostream & out, int key, void  cryptionFunc(char & byte, int key))
