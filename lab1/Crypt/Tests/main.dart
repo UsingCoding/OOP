@@ -15,7 +15,7 @@ class Main {
     {'mode': 'crypt', 'key': 'A'},
     {'mode': 'crypt', 'key': '300'},
     {'mode': 'ecmacrypt', 'key': '300'},
-    {'mode': 'crypt', 'key': '300'},
+    {'mode': 'crypt', 'key': '250'},
   ];
 
   final List<int> failedTests = [];

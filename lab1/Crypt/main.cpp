@@ -3,33 +3,53 @@
 #include <stdexcept>
 #include <exception>
 
-const std::string CRYPT = "crypt";
-const std::string DECRYPT = "decrypt";
+const std::string CRYPT_MODE = "crypt";
+const std::string DECRYPT_MODE = "decrypt";
+const unsigned short int minKey = 0;
+const unsigned short int maxKey = 255;
+
+enum Mode
+{
+    CRYPT,
+    DECRYPT
+};
+
+struct Arguments
+{
+    std::string finName;
+    std::string foutName;
+    Mode mode;
+    int key;
+};
+
+struct Files
+{
+    std::ifstream fin;
+    std::ofstream fout;
+};
+
+
+Arguments ParseArguments(int argc, char const *argv[]);
 
 void Encrypt(char & byte, int key);
 void Decrypt(char & byte, int key);
+
 void Transform(std::istream & in, std::ostream & out, int key, void cryptionFunc(char & byte, int key));
 void OpenFiles(std::ifstream & fin, std::ofstream & fout, const std::string & finName, const std::string & foutName);
-void ProceedCryption(std::istream & in, std::ostream & out, const std::string & cryptMode, int key);
+void ProceedCryption(std::istream & in, std::ostream & out, Mode cryptMode, int key);
 
 int main(int argc, char const *argv[])
 {
-    if (argc != 5)
-    {
-        std::cout << "Incorrect count of arguments" << std::endl;
-        return 1;
-    }
-
-    std::ifstream fin;
-    std::ofstream fout;
-
     try
     {
-        OpenFiles(fin, fout, argv[2], argv[3]);
+        std::ifstream fin;
+        std::ofstream fout;
 
-        int key = std::stoi(argv[4]);
+        Arguments args = ParseArguments(argc, argv);
 
-        ProceedCryption(fin, fout, argv[1], key);
+        OpenFiles(fin, fout, args.finName, args.foutName);
+
+        ProceedCryption(fin, fout, args.mode, args.key);
 
         if (!fout.flush())
         {
@@ -47,8 +67,56 @@ int main(int argc, char const *argv[])
         std::cerr << "Wrong char passed as key" << std::endl;
         return 1;
     }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << std::endl;
+        return 1;
+    }
 
     return 0;
+}
+
+Arguments ParseArguments(int argc, char const *argv[])
+{
+    if (argc != 5)
+    {
+        throw std::runtime_error("Incorrect count of arguments");
+    }
+
+    Arguments args;
+
+    {
+        bool modeInitialized = false;
+
+        if (argv[1] == CRYPT_MODE)
+        {
+            args.mode = CRYPT;
+            modeInitialized = true;
+        }
+
+        if (argv[1] == DECRYPT_MODE)
+        {
+            args.mode = DECRYPT;
+            modeInitialized = true;
+        }
+
+        if (!modeInitialized)
+        {
+            throw std::runtime_error("Invalid cryption mode");
+        }
+    }
+
+    args.key = std::stoi(argv[4]);
+
+    if (args.key >= maxKey or args.key <= minKey)
+    {
+        throw std::runtime_error("Key less than 0 or greater than 255 is incorrect");
+    }
+
+    args.finName = argv[2];
+    args.foutName = argv[3];
+
+    return args;
 }
 
 void OpenFiles(std::ifstream & fin, std::ofstream & fout, const std::string & finName, const std::string & foutName)
@@ -67,7 +135,7 @@ void OpenFiles(std::ifstream & fin, std::ofstream & fout, const std::string & fi
     }
 }
 
-void ProceedCryption(std::istream & in, std::ostream & out, const std::string & cryptMode, int key)
+void ProceedCryption(std::istream & in, std::ostream & out, Mode cryptMode, int key)
 {
     if (cryptMode == CRYPT)
     {
