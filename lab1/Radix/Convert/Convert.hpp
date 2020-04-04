@@ -2,8 +2,8 @@
 #include <string>
 #include "ConvertException.hpp"
 
-std::string IntToString(unsigned int value, const int & destNot);
-int StringToInt(const std::string & value, const int & srcNot);
+std::string IntToString(unsigned int value, int destNot);
+int StringToInt(const std::string & value, int srcNot);
 
 bool IsNegative(const std::string & value);
 int ParseInt(const std::string & value);

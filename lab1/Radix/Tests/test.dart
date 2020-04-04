@@ -34,37 +34,37 @@ Future<void> main() async {
     },
     {
       'input': '2 10 47',
-	    'number': '5',
+	    'number': '6',
       'awaitResult': 'Incorrect number for this notation',
       'currRes': '',
     },
     {
       'input': '36 10 36',
-	    'number': '5',
+	    'number': '7',
       'awaitResult': '114',
       'currRes': '',
     },
     {
       'input': '36 10 0',
-	    'number': '6',
+	    'number': '8',
       'awaitResult': '0',
       'currRes': '',
     },
     {
       'input': '2 10 2F',
-	    'number': '7',
+	    'number': '9',
       'awaitResult': 'Incorrect number for this notation',
       'currRes': '',
     },
     {
       'input': '16 10 f',
-	    'number': '8',
+	    'number': '10',
       'awaitResult': 'Incorrect number for this notation',
       'currRes': '',
     },
     {
       'input': '37 10 f',
-      'number': '9',
+      'number': '11',
       'awaitResult': 'Incorrect notation',
       'currRes': '',
     }

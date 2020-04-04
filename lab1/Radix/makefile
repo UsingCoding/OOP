@@ -9,7 +9,7 @@ build:
 
 .PHONY: run
 run:
-	./$(mainFile) 10 2 -2147483647
+	./$(mainFile) 36 10 36
 
 
 .PHONY: test-only

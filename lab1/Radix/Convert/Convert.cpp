@@ -2,7 +2,7 @@
 #include <iostream>
 #include <cmath>
 
-int StringToInt(const std::string & value, const int & srcNot)
+int StringToInt(const std::string & value, int srcNot)
 {
     if (srcNot == TEN_NOT)
     {
@@ -28,19 +28,13 @@ int StringToInt(const std::string & value, const int & srcNot)
 
         }
 
-        int resPow = pow(srcNot, value.length() - (i + 1));
-        if (resPow < 0)
-        {
-            throw ConvertException("Overflow happend while converting");
-        }
-
-        resNumber += currNum * resPow;
+        resNumber = (resNumber + currNum) * (i != value.length() - 1 ? srcNot : 1);
     }
 
     return resNumber;
 }
 
-std::string IntToString(unsigned int value, const int & destNot)
+std::string IntToString(unsigned int value, int destNot)
 {
     std::string buffer;
     std::string result;
