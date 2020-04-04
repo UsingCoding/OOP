@@ -4,7 +4,7 @@ mainFile = main
 
 .PHONY: build
 build:
-	g++ $(mainFile).cpp -o $(mainFile)
+	g++ $(mainFile).cpp Dictionary/Dictionary.cpp Dictionary/Exception/DictionaryException.cpp  -o $(mainFile)
 
 .PHONY: run
 run:
