@@ -19,7 +19,7 @@ int main(int argc, char const *argv[])
         srcNot = ParseInt(argv[1]);
         destNot = ParseInt(argv[2]);
     }
-    catch(const ConvertException& e)
+    catch(const ConvertException & e)
     {
         std::cerr << "Incorrect symbol in notation" << std:: endl;
         return 1;
