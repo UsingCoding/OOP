@@ -2,10 +2,12 @@
 #include <string>
 #include "ConvertException.hpp"
 
-std::string IntToString(unsigned int value, int destNot);
-int StringToInt(const std::string & value, int srcNot);
+std::string Convert(const std::string & value, int srcNot, int destNot);
 
-bool IsNegative(const std::string & value);
+static int StringToInt(const std::string & value, int srcNot);
+static std::string IntToString(unsigned int value, int destNot);
+
+static bool IsNegative(const std::string & value);
 int ParseInt(const std::string & value);
 
 static const int MODIFICATOR_FOR_LETTERS = 55;

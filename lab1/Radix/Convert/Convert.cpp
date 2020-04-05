@@ -1,6 +1,27 @@
 #include "./Convert.hpp"
 #include <iostream>
-#include <cmath>
+
+std::string Convert(const std::string & value, int srcNot, int destNot)
+{
+    if (!(2 <= srcNot && srcNot <= 36) || !(2 <= destNot && destNot <= 36))
+    {
+        throw ConvertException("Incorrect range of notation");
+    }
+
+    bool isNeg = IsNegative(value);
+
+    std::string resultValue = value;
+
+    if (isNeg)
+    {
+        resultValue.erase(0, 1);
+    }
+
+    int intValue = StringToInt(resultValue, srcNot);
+    resultValue = IntToString(intValue, destNot);
+
+    return !isNeg ? resultValue : "-" + resultValue;
+}
 
 int StringToInt(const std::string & value, int srcNot)
 {
