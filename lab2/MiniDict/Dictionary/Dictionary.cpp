@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "./Dictionary.hpp"
 #include <algorithm>
 
@@ -8,18 +10,22 @@ Dictionary::Dictionary()
 
 std::vector<std::string> Dictionary::retrieveTranslation(std::string key, const Locale & locale)
 {
-    std::map<std::string, std::vector<std::string>> &currDictImpl =  dictEnToRu;
+    dict *currDictImplPtr;
 
-    if (locale == EN)
+    if (locale == RU)
     {
-        currDictImpl = dictRuToEn;
+        currDictImplPtr = &dictEnToRu;
+    }
+    else
+    {
+        currDictImplPtr = &dictRuToEn;
     }
 
-    std::transform(key.begin(), key.end(), key.begin(), [](unsigned char c){ return std::tolower(c); });
+    std::transform(key.begin(), key.end(), key.begin(), tolower);
 
-    std::map<std::string, std::vector<std::string>>::iterator result = currDictImpl.find(key);
+    std::map<std::string, std::vector<std::string>>::iterator result = (*currDictImplPtr).find(key);
 
-    if (result == currDictImpl.end())
+    if (result == (*currDictImplPtr).end())
     {
         throw DictionaryException("Key not found");
     }
@@ -29,20 +35,24 @@ std::vector<std::string> Dictionary::retrieveTranslation(std::string key, const 
 
 void Dictionary::addTranslation(std::string key, std::string value, const Locale & locale)
 {
-    std::map<std::string, std::vector<std::string>> &currDictImpl =  dictEnToRu;
+    dict *currDictImplPtr;
 
-    if (locale == EN)
+    if (locale == RU)
     {
-        currDictImpl = dictRuToEn;
+        currDictImplPtr = &dictEnToRu;
+    }
+    else
+    {
+        currDictImplPtr = &dictRuToEn;
     }
 
-    std::transform(key.begin(), key.end(), key.begin(), [](unsigned char c){ return std::tolower(c); });
+    std::transform(key.begin(), key.end(), key.begin(), tolower);
 
-    std::map<std::string, std::vector<std::string>>::iterator result = currDictImpl.find(key);
+    std::map<std::string, std::vector<std::string>>::iterator result = (*currDictImplPtr).find(key);
 
-    if (result == currDictImpl.end())
+    if (result == (*currDictImplPtr).end())
     {
-        currDictImpl[key] = std::vector<std::string> {value};
+        (*currDictImplPtr)[key] = std::vector<std::string> {value};
         return;
     }
 

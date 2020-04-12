@@ -3,11 +3,13 @@
 #include <vector>
 #include "./Exception/DictionaryException.hpp"
 
+typedef std::map<std::string, std::vector<std::string>> dict;
+
 class Dictionary
 {
 private:
-    std::map<std::string, std::vector<std::string>> dictRuToEn;
-    std::map<std::string, std::vector<std::string>> dictEnToRu;
+    dict dictRuToEn;
+    dict dictEnToRu;
 public:
     Dictionary();
 
