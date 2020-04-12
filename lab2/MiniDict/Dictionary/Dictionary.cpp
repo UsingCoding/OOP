@@ -51,8 +51,6 @@ void Dictionary::WriteTranslationIntoDict(std::string & key, const std::string &
 {
     std::transform(key.begin(), key.end(), key.begin(), tolower);
 
-    std::cout << "Key: " << key << std::endl;
-
     std::map<std::string, std::vector<std::string>>::iterator result = dictionary.find(key);
 
     if (result == dictionary.end())
