@@ -14,8 +14,8 @@ public:
         RU,
         EN
     };
-    std::vector<std::string> retrieveTranslation(std::string & key, const Locale & destLocale);
-    void addTranslation(std::string & key, std::string & value, const Locale & destLocale);
+    std::vector<std::string> TryRetrieveTranslation(std::string & key, const Locale & destLocale);
+    void AddTranslation(std::string & key, std::string & value, const Locale & destLocale);
 
 
     void debug();
@@ -25,4 +25,5 @@ private:
     dict dictEnToRu;
 
     void WriteTranslationIntoDict(std::string & key, const std::string & value, dict & dictionary);
+    std::vector<std::string> RetrieveTranslationFromDict(const std::string & key, dict & dictionary);
 };

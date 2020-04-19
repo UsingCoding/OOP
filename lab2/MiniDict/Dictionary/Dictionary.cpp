@@ -8,32 +8,34 @@ Dictionary::Dictionary()
 
 }
 
-std::vector<std::string> Dictionary::retrieveTranslation(std::string & key, const Locale & locale)
+std::vector<std::string> Dictionary::TryRetrieveTranslation(std::string & key, const Locale & locale)
 {
-    dict *currDictImplPtr;
+    std::transform(key.begin(), key.end(), key.begin(), tolower);
 
     if (locale == RU)
     {
-        currDictImplPtr = &dictEnToRu;
+        return RetrieveTranslationFromDict(key, dictEnToRu);
     }
     else
     {
-        currDictImplPtr = &dictRuToEn;
+        return RetrieveTranslationFromDict(key, dictRuToEn);
     }
 
-    std::transform(key.begin(), key.end(), key.begin(), tolower);
+}
 
-    std::map<std::string, std::vector<std::string>>::iterator result = (*currDictImplPtr).find(key);
+std::vector<std::string> Dictionary::RetrieveTranslationFromDict(const std::string & key, dict & dictionary)
+{
+    std::map<std::string, std::vector<std::string>>::iterator result = dictionary.find(key);
 
-    if (result == (*currDictImplPtr).end())
+    if (result == dictionary.end())
     {
-        throw DictionaryException("Key not found");
+        return std::vector<std::string>{};
     }
 
     return result->second;
 }
 
-void Dictionary::addTranslation(std::string & key, std::string & value, const Locale & destLocale)
+void Dictionary::AddTranslation(std::string & key, std::string & value, const Locale & destLocale)
 {
     if (destLocale == RU)
     {
