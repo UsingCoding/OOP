@@ -8,7 +8,7 @@ Dictionary::Dictionary()
 
 }
 
-std::vector<std::string> Dictionary::TryRetrieveTranslation(std::string & key, const Locale & locale)
+std::vector<std::string> Dictionary::RetrieveTranslation(std::string & key, const Locale & locale) const
 {
     std::transform(key.begin(), key.end(), key.begin(), tolower);
 
@@ -23,9 +23,9 @@ std::vector<std::string> Dictionary::TryRetrieveTranslation(std::string & key, c
 
 }
 
-std::vector<std::string> Dictionary::RetrieveTranslationFromDict(const std::string & key, dict & dictionary)
+std::vector<std::string> Dictionary::RetrieveTranslationFromDict(const std::string & key, const dict & dictionary) const
 {
-    std::map<std::string, std::vector<std::string>>::iterator result = dictionary.find(key);
+    std::map<std::string, std::vector<std::string>>::const_iterator result = dictionary.find(key);
 
     if (result == dictionary.end())
     {
