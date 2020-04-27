@@ -45,7 +45,6 @@ int RetrievePort(Protocol protocol, std::string port)
 
 bool ParseURL(const std::string & url, Protocol &  protocol, int & port, std::string & host, std::string & document)
 {
-    // https://learn-meet.com/new-course/44
     std::cmatch matches;
 
     std::regex regular("^([[:alpha:]]+)://([-.[:alnum:]]+)(:([[:digit:]]+))?(/(.*))?$");
@@ -65,7 +64,6 @@ bool ParseURL(const std::string & url, Protocol &  protocol, int & port, std::st
     }
     catch(const std::runtime_error& e)
     {
-        std::cerr << e.what() << '\n';
         return false;
     }
 
