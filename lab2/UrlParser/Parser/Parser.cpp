@@ -25,7 +25,7 @@ Protocol RetrieveProtocol(std::string protocol)
     throw std::runtime_error("Bad protocol");
 }
 
-int RetrievePort(Protocol protocol, std::string port)
+int RetrievePort(Protocol protocol, const std::string & port)
 {
     if (port.empty())
     {
