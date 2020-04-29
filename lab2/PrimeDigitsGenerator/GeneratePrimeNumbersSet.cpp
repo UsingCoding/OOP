@@ -22,22 +22,22 @@ std::set<int> GeneratePrimeNumbersSet(int upperBound)
 
     for (int i = 2; i <= (int) sqrt(upperBound); i++)
     {
-        if (sieve[i] == true)
+        if (sieve[i])
         {
             continue;
         }
         
-        int it = 2;
-        while (i * it <= upperBound)
+        int it = pow(i, 2);
+        while (it <= upperBound)
         {
-            sieve[i * it] = true;
-            it += 1;
+            sieve[it] = true;
+            it += i;
         }
     }
     
     for (unsigned int i = 0; i < upperBound + 1; i++)
     {
-        if (sieve[i] == false)
+        if (!sieve[i])
         {
             result.insert(i);
         }
