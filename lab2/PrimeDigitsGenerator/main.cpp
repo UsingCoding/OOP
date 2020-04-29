@@ -5,7 +5,7 @@
 
 int main(int argc, char const *argv[])
 {
-    std::set<int> result = GeneratePrimeNumbersSet(50);
+    std::set<int> result = GeneratePrimeNumbersSet(101);
 
     for (std::set<int>::iterator it = result.begin(); it != result.end(); it++) {
         std::cout << *it << " ";

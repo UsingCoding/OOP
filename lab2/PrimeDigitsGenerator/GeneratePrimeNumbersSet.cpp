@@ -1,7 +1,7 @@
 #include "./GeneratePrimeNumbersSet.hpp"
 
 #include <vector>
-#include <exception>
+#include <stdexcept>
 #include <math.h>
 #include <algorithm>
 
@@ -11,10 +11,9 @@ std::set<int> GeneratePrimeNumbersSet(int upperBound)
 {
     if (upperBound > MAX_ELEM)
     {
-        // throw std::logic_error();
+        throw std::logic_error("Upper bound more than " + MAX_ELEM);
     }
     
-    // Элементы, у которых значение true, исключены из решета
     std::vector<bool> sieve(upperBound + 1);
     std::set<int> result;
 
@@ -35,7 +34,7 @@ std::set<int> GeneratePrimeNumbersSet(int upperBound)
         }
     }
     
-    for (unsigned int i = 0; i < upperBound + 1; i++)
+    for (int i = 0; i < upperBound + 1; i++)
     {
         if (!sieve[i])
         {
