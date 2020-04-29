@@ -11,8 +11,16 @@ std::set<int> GeneratePrimeNumbersSet(int upperBound)
 {
     if (upperBound > MAX_ELEM)
     {
-        throw std::logic_error("Upper bound more than " + MAX_ELEM);
+        char strValue[10];
+        sprintf(strValue, "%d", MAX_ELEM);
+        throw std::logic_error("Upper bound more than " + std::string(strValue));
     }
+
+    if (upperBound < 0)
+    {
+        throw std::logic_error("You must provide non-negative value");
+    }
+    
     
     std::vector<bool> sieve(upperBound + 1);
     std::set<int> result;
