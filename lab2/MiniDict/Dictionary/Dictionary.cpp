@@ -25,7 +25,7 @@ std::vector<std::string> Dictionary::RetrieveTranslation(std::string & key, cons
 
 std::vector<std::string> Dictionary::RetrieveTranslationFromDict(const std::string & key, const dict & dictionary) const
 {
-    std::map<std::string, std::vector<std::string>>::const_iterator result = dictionary.find(key);
+    dict::const_iterator result = dictionary.find(key);
 
     if (result == dictionary.end())
     {
@@ -53,7 +53,7 @@ void Dictionary::WriteTranslationIntoDict(std::string & key, const std::string &
 {
     std::transform(key.begin(), key.end(), key.begin(), tolower);
 
-    std::map<std::string, std::vector<std::string>>::iterator result = dictionary.find(key);
+    dict::iterator result = dictionary.find(key);
 
     if (result == dictionary.end())
     {

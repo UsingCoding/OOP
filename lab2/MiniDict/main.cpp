@@ -1,22 +1,27 @@
 #include <iostream>
 #include "./Dictionary/Dictionary.hpp"
 
+#include <vector>
+#include <string>
+
 int main(int argc, char const *argv[])
 {
     Dictionary dictionary;
 
     std::string firstWord;
 
-    dictionary.addTranslation("Cat", "Кошка", Dictionary::EN);
+    std::string original = "Cat";
+    std::string translate = "Кошка";
 
-    try
-    {
-        dictionary.retrieveTranslation("CAT", Dictionary::EN);
-    }
-    catch(const DictionaryException& e)
-    {
-        std::cout << e.what() << '\n';
-    }
+    dictionary.AddTranslation(original, translate, Dictionary::RU);
+
+    original = "Jet";
+    translate = "Самолёт";
+
+    dictionary.AddTranslation(original, translate, Dictionary::RU);
+
+    std::cout << dictionary.Serialize() << std::endl;
+
 
     return 0;
 }
