@@ -4,7 +4,8 @@ mainFile = main
 
 .PHONY: build
 build:
-	g++ $(mainFile).cpp VectorHandling.cpp -o $(mainFile)
+	g++ $(mainFile).cpp ../UrlParser/Parser/Parser.cpp -o $(mainFile)
+
 
 .PHONY: run
 run:

@@ -4,7 +4,7 @@ mainFile = main
 
 .PHONY: build
 build:
-	g++ $(mainFile).cpp VectorHandling.cpp -o $(mainFile)
+	g++ $(mainFile).cpp ../Vector/VectorHandling.cpp -o $(mainFile)
 
 .PHONY: run
 run:

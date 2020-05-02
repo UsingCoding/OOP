@@ -4,7 +4,8 @@ mainFile = main
 
 .PHONY: build
 build:
-	g++ $(mainFile).cpp -o $(mainFile)
+	g++ $(mainFile).cpp Decode.cpp -o $(mainFile)
+
 
 .PHONY: run
 run:
