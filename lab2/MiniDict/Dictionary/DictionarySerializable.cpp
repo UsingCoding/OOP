@@ -48,3 +48,9 @@ std::string Dictionary::ConvertDictToJsonNotaion(const dict & dictionary) const
 
     return serializedDict;
 }
+
+
+void Dictionary::Deserialize(std::string object)
+{
+    
+}
