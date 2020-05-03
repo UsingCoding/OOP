@@ -3,9 +3,9 @@
 #include <iostream>
 #include <sstream>
 
-class StringUtils
+namespace StringUtils
 {
-private:
+    const char QUOTES = '"';
     class StringConcatenator
     {
     private:
@@ -23,15 +23,6 @@ private:
             return stream.str();
         }
     };
-
-    static const char QUOTES = '"';
-public:
-    StringUtils() = delete;
-
-    static StringConcatenator MakeString()
-    {
-        return StringConcatenator();
-    }
 
     static std::string MakeSpaceOffset(int offset)
     {
@@ -78,4 +69,4 @@ public:
         cpValue.erase(cpValue.find_last_not_of(chars) + 1);
         return cpValue;
     }
-};
+} // namespace StringUtils
