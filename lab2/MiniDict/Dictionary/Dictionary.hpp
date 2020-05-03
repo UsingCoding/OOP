@@ -32,6 +32,8 @@ private:
     std::string dictRuToEnName = "RuToEn";
     std::string dictEnToRuName = "EnToRu";
 
+    const std::string DICTIONARY = "Dictionary";
+
     const char JSON_START_OBJECT = '{';
     const char JSON_END_OBJECT = '}';
     const char JSON_START_ARRAY = '[';
@@ -41,6 +43,7 @@ private:
     const char QUOTES = '"';
     const char SPACE = ' ';
     const char DASH ='-';
+    const int YAML_SPACE_OFFSET = 4;
 
     std::string ConvertStringToJsonNotation(const std::string & value) const;
     std::string ConvertDictToJsonNotaion(const dict & dictionary) const;

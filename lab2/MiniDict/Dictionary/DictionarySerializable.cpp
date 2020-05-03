@@ -1,23 +1,17 @@
 #include "./Dictionary.hpp"
+#include "../../../Utils/StringUtils.hpp"
 #include <iostream>
 #include <stdexcept>
 
 std::string Dictionary::Serialize() const
 {
-    std::string enToRuSerialized;
+    std::string serializedDict;
 
-    enToRuSerialized += ConvertStringToJsonNotation(dictEnToRuName) + COLON_SEPARATOR + JSON_START_OBJECT + ConvertDictToJsonNotaion(dictEnToRu) + JSON_END_OBJECT;
+    serializedDict += DICTIONARY + COLON_SEPARATOR + '\n';
 
-    std::string ruToEnSerialized;
+    serializedDict += ConvertDictToJsonNotaion(dictEnToRu);
 
-    ruToEnSerialized += ConvertStringToJsonNotation(dictRuToEnName) + COLON_SEPARATOR + JSON_START_OBJECT + ConvertDictToJsonNotaion(dictRuToEn) + JSON_END_OBJECT;
-
-    return JSON_START_OBJECT + enToRuSerialized + COMMA_SEPARATOR + ruToEnSerialized + JSON_END_OBJECT;
-}
-
-std::string Dictionary::ConvertStringToJsonNotation(const std::string & value) const
-{
-    return QUOTES + value + QUOTES;
+    return serializedDict;
 }
 
 std::string Dictionary::ConvertDictToJsonNotaion(const dict & dictionary) const
@@ -28,37 +22,15 @@ std::string Dictionary::ConvertDictToJsonNotaion(const dict & dictionary) const
 
     for (size_t i = 0; it != dictionary.end(); it++, i++)
     {
-        serializedDict += ConvertStringToJsonNotation(it->first) + COLON_SEPARATOR + JSON_START_ARRAY;
+        serializedDict += StringUtils::MakeSpaceOffset(YAML_SPACE_OFFSET) + StringUtils::ConvertToJsonNotation(it->first) + COLON_SEPARATOR + '\n';
 
         for (size_t i = 0; i < it->second.size(); i++)
         {
-            serializedDict += ConvertStringToJsonNotation(it->second[i]);
-
-            if (i != it->second.size() - 1)
-            {
-                serializedDict += COMMA_SEPARATOR;
-            }
-        }
-
-        serializedDict += JSON_END_ARRAY;
-
-        if (i != dictionary.size() - 1)
-        {
-            serializedDict += COMMA_SEPARATOR;
+            serializedDict += StringUtils::MakeSpaceOffset(YAML_SPACE_OFFSET * 2) + DASH + ' ' + StringUtils::ConvertToJsonNotation(it->second[i]) + '\n';
         }
     }
 
     return serializedDict;
-}
-
-std::string Dictionary::EscapeJsonNotation(std::string & value) const
-{
-    if (value[0] != QUOTES && value[value.length() - 1] != QUOTES)
-    {
-        throw std::runtime_error("Incorrect JSON notaion");
-    }
-    
-    return value.substr(1, value.length() - 2);
 }
 
 void Dictionary::Unserialize(std::string & object)
