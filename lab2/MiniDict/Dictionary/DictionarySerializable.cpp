@@ -5,13 +5,7 @@
 
 std::string Dictionary::Serialize() const
 {
-    std::string serializedDict;
-
-    serializedDict += DICTIONARY + COLON_SEPARATOR + '\n';
-
-    serializedDict += ConvertDictToJsonNotaion(dictEnToRu);
-
-    return serializedDict;
+    return StringUtils::MakeString() << DICTIONARY << COLON_SEPARATOR << '\n' << ConvertDictToJsonNotaion(dictEnToRu);
 }
 
 std::string Dictionary::ConvertDictToJsonNotaion(const dict & dictionary) const
@@ -33,23 +27,51 @@ std::string Dictionary::ConvertDictToJsonNotaion(const dict & dictionary) const
     return serializedDict;
 }
 
-void Dictionary::Unserialize(std::string & object)
+void Dictionary::Unserialize(std::istream & input)
 {
-    int state;
+    std::string dictKeyWord;
 
-    for (size_t i = 0; i < object.length(); i++)
+    getline(input, dictKeyWord);
+
+    dictKeyWord = dictKeyWord.substr(0, dictKeyWord.length() - 1);
+
+    if (dictKeyWord != DICTIONARY)
     {
-        if (object[i] == ' ' || object[i] == '\n')
+        throw std::logic_error("Unknown format - " + dictKeyWord);
+    }
+
+    std::string key;
+    std::string value;
+    bool isDictValueNext = false;
+
+    while (!input.eof())
+    {
+        getline(input, value);
+        value = StringUtils::Trim(value);
+
+        if (IsYamlKey(value))
         {
+            std::string handledValue = value.substr(0, value.length() - 1);
+            key = StringUtils::EscapeJsonNotation(handledValue);
             continue;
         }
 
-        if (object[i] != JSON_START_OBJECT && i == 0)
+        if (IsYamlArrayValue(value))
         {
-            throw std::runtime_error("Incorrect JSON notaion");
-        }
-
-        object.find(JSON_START_OBJECT, i);
-        
+            value = value.substr(2, value.length());
+            value = StringUtils::EscapeJsonNotation(value);
+            WriteTranslationIntoDict(key, value, dictEnToRu);
+            WriteTranslationIntoDict(value, key, dictRuToEn);
+        }        
     }
+}
+
+bool Dictionary::IsYamlKey(const std::string & value) const
+{
+    return value[value.length() - 1] == COLON_SEPARATOR;
+}
+
+bool Dictionary::IsYamlArrayValue(const std::string & value) const
+{
+    return StringUtils::StartsWith(value, StringUtils::MakeString() << DASH);
 }

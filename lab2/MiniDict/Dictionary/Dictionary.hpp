@@ -23,7 +23,7 @@ public:
     void debug();
 
     std::string Serialize() const;
-    void Unserialize(std::string & object);
+    void Unserialize(std::istream & input);
 
 private:
     dict dictRuToEn;
@@ -48,7 +48,8 @@ private:
     std::string ConvertStringToJsonNotation(const std::string & value) const;
     std::string ConvertDictToJsonNotaion(const dict & dictionary) const;
 
-    std::string EscapeJsonNotation(std::string & value) const;
+    bool IsYamlKey(const std::string & value) const;
+    bool IsYamlArrayValue(const std::string & value) const;
 
     void WriteTranslationIntoDict(std::string & key, const std::string & value, dict & dictionary);
     std::vector<std::string> RetrieveTranslationFromDict(const std::string & key, const dict & dictionary) const;
