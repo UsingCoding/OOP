@@ -2,6 +2,7 @@
 #include <map>
 #include <vector>
 #include "./Exception/DictionaryException.hpp"
+#include <iosfwd>
 // #include "./ISerializable.hpp"
 
 
@@ -22,7 +23,7 @@ public:
     void debug();
 
     std::string Serialize() const;
-    void Deserialize(std::string object);
+    void Unserialize(std::string & object);
 
 private:
     dict dictRuToEn;
@@ -39,9 +40,12 @@ private:
     const char COLON_SEPARATOR = ':';
     const char QUOTES = '"';
     const char SPACE = ' ';
+    const char DASH ='-';
 
     std::string ConvertStringToJsonNotation(const std::string & value) const;
     std::string ConvertDictToJsonNotaion(const dict & dictionary) const;
+
+    std::string EscapeJsonNotation(std::string & value) const;
 
     void WriteTranslationIntoDict(std::string & key, const std::string & value, dict & dictionary);
     std::vector<std::string> RetrieveTranslationFromDict(const std::string & key, const dict & dictionary) const;

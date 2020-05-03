@@ -1,4 +1,6 @@
 #include "./Dictionary.hpp"
+#include <iostream>
+#include <stdexcept>
 
 std::string Dictionary::Serialize() const
 {
@@ -49,8 +51,33 @@ std::string Dictionary::ConvertDictToJsonNotaion(const dict & dictionary) const
     return serializedDict;
 }
 
-
-void Dictionary::Deserialize(std::string object)
+std::string Dictionary::EscapeJsonNotation(std::string & value) const
 {
+    if (value[0] != QUOTES && value[value.length() - 1] != QUOTES)
+    {
+        throw std::runtime_error("Incorrect JSON notaion");
+    }
     
+    return value.substr(1, value.length() - 2);
+}
+
+void Dictionary::Unserialize(std::string & object)
+{
+    int state;
+
+    for (size_t i = 0; i < object.length(); i++)
+    {
+        if (object[i] == ' ' || object[i] == '\n')
+        {
+            continue;
+        }
+
+        if (object[i] != JSON_START_OBJECT && i == 0)
+        {
+            throw std::runtime_error("Incorrect JSON notaion");
+        }
+
+        object.find(JSON_START_OBJECT, i);
+        
+    }
 }
