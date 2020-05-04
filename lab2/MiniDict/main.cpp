@@ -1,27 +1,17 @@
 #include <iostream>
 #include "./Dictionary/Dictionary.hpp"
+#include "./CommandLineController/CommandLineController.hpp"
 
-#include <vector>
-#include <string>
+#include <memory>
+#include <fstream>
 
 int main(int argc, char const *argv[])
 {
-    Dictionary dictionary;
+    std::unique_ptr<Dictionary> dict = std::make_unique<Dictionary>();
 
-    std::string firstWord;
+    CommandLineController clc(std::move(dict));
 
-    std::string original = "Cat";
-    std::string translate = "Кошка";
-
-    dictionary.AddTranslation(original, translate, Dictionary::RU);
-
-    original = "Jet";
-    translate = "Самолёт";
-
-    dictionary.AddTranslation(original, translate, Dictionary::RU);
-
-    std::cout << dictionary.Serialize() << std::endl;
-
+    clc.Start();
 
     return 0;
 }

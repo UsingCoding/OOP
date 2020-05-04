@@ -1,0 +1,223 @@
+#include "./CommandLineController.hpp"
+
+#include <iostream>
+#include <algorithm>
+#include <fstream>
+
+#include "../../../Utils/StringUtils.hpp"
+
+CommandLineController::CommandLineController(std::unique_ptr<Dictionary> d)
+{
+    dict = std::move(d);
+}
+
+void CommandLineController::PrintUserInvitationHelper()
+{
+    std::cout << ">> ";
+}
+
+void CommandLineController::PrintHelp()
+{
+    std::cout << "Примеру:" << std::endl;
+    std::string exWord = "Alone";
+    std::cout << "> " << exWord << std::endl;
+    std::cout << "Неизвестное слово " << exWord << ". Введите перевод или пустую строку для отказа." << std::endl;
+    std::string exTranslate = "Одинокий";
+    std::cout << "> " << exTranslate << std::endl;
+    std::cout << "Принято, введите локаль перевода" << std::endl;
+    std::cout << "> Ru" << std::endl;
+    std::cout << "Слово " << exWord << " сохранено в словаре как " << exTranslate << "." << std::endl;
+}
+
+void CommandLineController::PrintResults(const std::vector<std::string> & res)
+{
+    for (size_t i = 0; i < res.size(); i++)
+    {
+        if (i != 0) std::cout << ", ";
+        
+        std::cout << res[i];
+    }
+
+    std::cout << std::endl;
+}
+
+void CommandLineController::Start()
+{
+    std::cout << "Доброе время суток, чтобы начать работу со словарём вы можете указать из какого файла импортировать данные" << std::endl;
+    std::cout << "Хотите импортировать данные? [Y/y]" << std::endl;
+    
+    std::string userIn;
+    std::cin >> userIn;
+
+    std::transform(userIn.begin(), userIn.begin(), userIn.end(), tolower);
+
+    if(userIn[0] == POSITIVE_ANSWER)
+    {
+        RunImportDictFromFileScenario();
+    }
+    else
+    {
+        std::cout << "Продолжим без инициализации" << std::endl;
+    }
+    
+    RunUserSession();
+}
+
+void CommandLineController::RunUserSession()
+{
+    std::cout << "Введите слово, которое вы хотите перевести, если его нет в словаре, то можно ввести перевод, чтобы его запомнить, в обоих случаях стоит указать локаль перевода" << std::endl;
+    PrintHelp();
+    std::cout << "Чтобы закончить работу со словарём введите \"...\"" << std::endl;
+
+    std::string userIn;
+    std::string key;
+    Dictionary::Locale locale;
+
+    while (true)
+    {
+        std::cout << "Введите слово...." << std::endl;
+        PrintUserInvitationHelper();
+        std::cin >> key;
+
+        if (key == EXIT_SYMBOLS)
+        {
+            break;
+        }
+
+        std::cout << "Пожалуйста, введите локаль перевода" << std::endl;
+
+        locale = RetrieveLocaleFromUser();
+
+        std::vector<std::string> res = dict->RetrieveTranslation(key, locale);
+
+        if (res.size() != 0)
+        {
+            PrintResults(res); 
+            continue;
+        }
+        
+        RunAddTranslationToDictScenario(key, locale);
+    }
+
+    RunSaveChangesScenario();
+
+    std::cout << "До свидания" << std::endl;
+}
+
+Dictionary::Locale CommandLineController::RetrieveLocaleFromUser()
+{
+    std::string userIn;
+
+    while (true)
+    {
+        PrintUserInvitationHelper();
+        std::cin >> userIn;
+
+        try
+        {
+            return RetrieveLocaleFromString(userIn);
+        }
+        catch(const std::exception& e)
+        {
+            std::cout << e.what() << std::endl;
+            std::cout << "Попробуйте ещё раз" << std::endl;
+        }
+    }
+}
+
+Dictionary::Locale CommandLineController::RetrieveLocaleFromString(const std::string & value)
+{
+    if (value == "Ru")
+    {
+        return Dictionary::Locale::RU;
+    }
+    
+    if (value == "En")
+    {
+        return Dictionary::Locale::EN;
+    }
+
+    throw std::logic_error("Неизвестная локаль");
+}
+
+void CommandLineController::RunImportDictFromFileScenario()
+{
+    std::cout <<  "Введите название файла. Программа экспортирует данные из YAML формата" << std::endl;
+
+    std::string fileName;
+    std::ifstream fin;
+
+
+    while (true)
+    {
+        PrintUserInvitationHelper();
+        std::cin >> fileName;
+
+
+        if (!fin.is_open())
+        {
+            std::cout << "Файл не удалось открыть, может попробуете другой?" << std::endl;
+            continue;
+        }
+
+        try
+        {
+            dict->Unserialize(fin);
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+            return;
+        }
+    }
+    
+    
+    std::cout << "Данные успешно импортированы" << std::endl;
+}
+
+void CommandLineController::RunAddTranslationToDictScenario(std::string & key, Dictionary::Locale locale)
+{
+    std::string userIn;
+
+    std::cout << "Неизвестное слово \"" << key << "\". Введите перевод или пустую строку для отказа" << std::endl;
+    PrintUserInvitationHelper();
+    std::cin >> userIn;
+    userIn = StringUtils::Trim(userIn);
+
+    if (userIn.length() == 0)
+    {
+        std::cout << "Слово \"" << key << "\" проигнорировано" << std::endl;
+        return;
+    }
+
+    dict->AddTranslation(key, userIn, locale);
+
+    std::cout << "Слово \"" << key << "\" сохранено в словаре как \"" << userIn << "\"." << std::endl;
+}
+
+void CommandLineController::RunSaveChangesScenario()
+{
+    std::cout << "В словарь были внесены изменения. Введите [Y/n] для сохранения перед выходом." << std::endl;
+
+    std::string userIn;
+    PrintUserInvitationHelper();
+    std::cin >> userIn;
+    std::transform(userIn.begin(), userIn.begin(), userIn.end(), tolower);
+
+    if(StringUtils::Trim(userIn)[0] == POSITIVE_ANSWER)
+    {
+        std::cout << "Введите название файла для сохранения" << std::endl;
+        PrintUserInvitationHelper();
+        std::cin >> userIn;
+
+        std::ofstream fout(userIn);
+        if (!fout.is_open())
+        {
+            std::cout << "Не получилось открыть файл, может попробуйте другой?" << std::endl;
+        }
+
+        fout << dict->Serialize();
+
+        std::cout << "Данные успешно сохранены" << std::endl;
+    }
+}
