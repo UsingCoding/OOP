@@ -3,11 +3,6 @@
 #include "./Dictionary.hpp"
 #include <algorithm>
 
-Dictionary::Dictionary()
-{
-
-}
-
 std::vector<std::string> Dictionary::RetrieveTranslation(std::string & key, const Locale & locale) const
 {
     std::transform(key.begin(), key.end(), key.begin(), tolower);
@@ -62,34 +57,4 @@ void Dictionary::WriteTranslationIntoDict(std::string & key, const std::string &
     }
 
     (result->second).push_back(value);
-}
-
-
-void Dictionary::debug()
-{
-    dict::iterator it;
-
-    it = dictEnToRu.begin();
-
-    for (int i = 0; it != dictEnToRu.end(); it++, i++)
-    {
-        std::cout << "Key - " << it->first << ", value..." << std::endl;
-        for (size_t i = 0; i < it->second.size(); i++)
-        {
-            std::cout << it->second[i] << std::endl;
-        }
-        std::cout << std::endl;
-    }
-
-    it = dictRuToEn.begin();
-
-    for (int i = 0; it != dictRuToEn.end(); it++, i++)
-    {
-        std::cout << "Key - " << it->first << ", value..." << std::endl;
-        for (size_t i = 0; i < it->second.size(); i++)
-        {
-            std::cout << it->second[i] << std::endl;
-        }
-        std::cout << std::endl;
-    }
 }
