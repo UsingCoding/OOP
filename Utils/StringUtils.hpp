@@ -26,9 +26,9 @@ namespace StringUtils
 
     std::string MakeSpaceOffset(int offset);
 
-    std::string ConvertToJsonNotation(const std::string & value);
+    std::string EscapeString(const std::string & value);
 
-    std::string EscapeJsonNotation(std::string & value);
+    std::string UnescapeString(std::string & value);
 
     bool StartsWith(const std::string & value, const std::string & beginOfString);
 

@@ -30,15 +30,15 @@ private:
     dict dictRuToEn;
     dict dictEnToRu;
 
-    const std::string DICTIONARY = "Dictionary";
-    const char COLON_SEPARATOR = ':';
-    const char DASH = '-';
-    const int YAML_SPACE_OFFSET = 4;
+    static const std::string DICTIONARY;
+    static const char COLON_SEPARATOR;
+    static const char DASH;
+    static const int YAML_SPACE_OFFSET;
 
-    std::string EscapeDictToYml(const dict & dictionary) const;
+    static std::string EscapeDict(const dict & dictionary);
 
-    bool IsYamlKey(const std::string & value);
-    bool IsYamlArrayValue(const std::string & value);
+    static bool IsKey(const std::string & value);
+    static bool IsArrayValue(const std::string & value);
 
     void WriteTranslationIntoDict(std::string & key, const std::string & value, dict & dictionary);
     std::vector<std::string> RetrieveTranslationFromDict(const std::string & key, const dict & dictionary) const;

@@ -11,16 +11,16 @@ std::string StringUtils::MakeSpaceOffset(int offset)
     return str;
 }
 
-std::string StringUtils::ConvertToJsonNotation(const std::string & value)
+std::string StringUtils::EscapeString(const std::string & value)
 {
     return QUOTES + value + QUOTES;
 }
 
-std::string StringUtils::EscapeJsonNotation(std::string & value)
+std::string StringUtils::UnescapeString(std::string & value)
 {
     if (value[0] != QUOTES || value[value.length() - 1] != QUOTES)
     {
-        throw std::runtime_error("Incorrect YAML notaion");
+        throw std::runtime_error("Failed to unescape, missing quotes");
     }
     return value.substr(1, value.length() - 2);
 }

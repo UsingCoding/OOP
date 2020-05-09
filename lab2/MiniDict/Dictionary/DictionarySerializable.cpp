@@ -3,12 +3,17 @@
 #include <iostream>
 #include <stdexcept>
 
+const char Dictionary::COLON_SEPARATOR = ':';
+const char Dictionary::DASH = '-';
+const int Dictionary::YAML_SPACE_OFFSET = 4;
+const std::string Dictionary::DICTIONARY = "Dictionary";
+
 std::string Dictionary::Serialize() const
 {
-    return StringUtils::StringConcatenator() << DICTIONARY << COLON_SEPARATOR << '\n' << EscapeDictToYml(dictEnToRu);
+    return StringUtils::StringConcatenator() << DICTIONARY << Dictionary::COLON_SEPARATOR << '\n' << EscapeDict(dictEnToRu);
 }
 
-std::string Dictionary::EscapeDictToYml(const dict & dictionary) const
+std::string Dictionary::EscapeDict(const dict & dictionary)
 {
     std::string serializedDict;
 
@@ -16,11 +21,11 @@ std::string Dictionary::EscapeDictToYml(const dict & dictionary) const
 
     for (size_t i = 0; it != dictionary.end(); it++, i++)
     {
-        serializedDict += StringUtils::MakeSpaceOffset(YAML_SPACE_OFFSET) + StringUtils::ConvertToJsonNotation(it->first) + COLON_SEPARATOR + '\n';
+        serializedDict += StringUtils::MakeSpaceOffset(YAML_SPACE_OFFSET) + StringUtils::EscapeString(it->first) + COLON_SEPARATOR + '\n';
 
         for (size_t i = 0; i < it->second.size(); i++)
         {
-            serializedDict += StringUtils::MakeSpaceOffset(YAML_SPACE_OFFSET * 2) + DASH + StringUtils::SPACE + StringUtils::ConvertToJsonNotation(it->second[i]) + '\n';
+            serializedDict += StringUtils::MakeSpaceOffset(YAML_SPACE_OFFSET * 2) + DASH + StringUtils::SPACE + StringUtils::EscapeString(it->second[i]) + '\n';
         }
     }
 
@@ -50,17 +55,17 @@ void Dictionary::Unserialize(std::istream & input)
 
         if (value.length() == 0) continue;    
 
-        if (IsYamlKey(value))
+        if (IsKey(value))
         {
             value = value.substr(0, value.length() - 1);
-            key = StringUtils::EscapeJsonNotation(value);
+            key = StringUtils::UnescapeString(value);
             continue;
         }
 
-        if (IsYamlArrayValue(value))
+        if (IsArrayValue(value))
         {
             value = value.substr(2, value.length());
-            value = StringUtils::EscapeJsonNotation(value);
+            value = StringUtils::UnescapeString(value);
             WriteTranslationIntoDict(key, value, dictEnToRu);
             WriteTranslationIntoDict(value, key, dictRuToEn);
             continue;
@@ -70,12 +75,12 @@ void Dictionary::Unserialize(std::istream & input)
     }
 }
 
-bool Dictionary::IsYamlKey(const std::string & value)
+bool Dictionary::IsKey(const std::string & value)
 {
     return value[value.length() - 1] == COLON_SEPARATOR;
 }
 
-bool Dictionary::IsYamlArrayValue(const std::string & value)
+bool Dictionary::IsArrayValue(const std::string & value)
 {
     return StringUtils::StartsWith(value, StringUtils::StringConcatenator() << DASH);
 }
