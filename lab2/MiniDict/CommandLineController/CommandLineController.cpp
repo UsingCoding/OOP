@@ -52,8 +52,8 @@ std::string CommandLineController::RetrieveUserInput()
         
         std::cout << "Введите строку содержащее что-то помимо пробелов" << std::endl;
     }
-    
-    return res;
+
+    return StringUtils::Trim(res);
 }
 
 void CommandLineController::Start()
@@ -101,7 +101,8 @@ void CommandLineController::RunUserSession()
 
         locale = RetrieveLocaleFromUser();
 
-        std::vector<std::string> res = dict->RetrieveTranslation(key, locale);
+        std::string cpKey = key;
+        std::vector<std::string> res = dict->RetrieveTranslation(cpKey, locale);
 
         if (res.size() != 0)
         {
@@ -190,7 +191,8 @@ void CommandLineController::RunAddTranslationToDictScenario(std::string & key, D
         return;
     }
 
-    dict->AddTranslation(key, userIn, locale);
+    std::string cpKey = key;
+    dict->AddTranslation(cpKey, userIn, locale);
 
     std::cout << "Слово \"" << key << "\" сохранено в словаре как \"" << userIn << "\"." << std::endl;
 }
