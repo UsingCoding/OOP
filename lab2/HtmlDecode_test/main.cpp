@@ -36,3 +36,8 @@ SCENARIO("Decode string with HTML special characters")
     REQUIRE(HtmlDecode("Cat &lt;says&gt; &quot;Meow&quot;. M&amp;M&apos;s") == "Cat <says> \"Meow\". M&M`s");
 }
 
+SCENARIO("Decoding string that have many & at begin")
+{
+    REQUIRE(HtmlDecode("&&&amp;") == "&&&");
+}
+
