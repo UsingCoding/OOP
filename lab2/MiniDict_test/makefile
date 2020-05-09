@@ -4,7 +4,7 @@ mainFile = main
 
 .PHONY: build
 build:
-	g++ $(mainFile).cpp ../MiniDict/Dictionary/Dictionary.cpp ../MiniDict/Dictionary/DictionarySerializable.cpp ../../Utils/StringUtils.cpp -o $(mainFile)
+	g++ $(mainFile).cpp ../MiniDict/Dictionary/Dictionary.cpp ../../Utils/StringUtils.cpp -o $(mainFile)
 
 .PHONY: run
 run:
