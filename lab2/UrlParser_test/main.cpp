@@ -75,16 +75,23 @@ SCENARIO("Parse string with unknown protocol")
     REQUIRE(ParseURL(url, protocol, port, host, document) == false);
 }
 
-SCENARIO("Parse string with port more than 65535")
+SCENARIO("Parse string with port 65535 and 1 and between")
 {
     Protocol protocol;
     int port;
     std::string host;
     std::string document;
 
-    std::string url = "https://mysite.com:80000/assignee.xml";
+    std::string url;
 
-    REQUIRE(ParseURL(url, protocol, port, host, document) == false);
+    url = "https://mysite.com:65535/assignee.xml";
+    REQUIRE(ParseURL(url, protocol, port, host, document) == true);
+
+    url = "https://mysite.com:1/assignee.xml";
+    REQUIRE(ParseURL(url, protocol, port, host, document) == true);
+
+    url = "https://mysite.com:768/assignee.xml";
+    REQUIRE(ParseURL(url, protocol, port, host, document) == true);
 }
 
 
