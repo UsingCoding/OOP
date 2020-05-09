@@ -32,9 +32,17 @@ bool Car::IsEngineOn() const
     return isEngineOn;
 }
 
-bool Car::IsDirectionForward() const
+std::string Car::GetDirection() const
 {
-    return direction == Direction::Forward;
+    switch (direction)
+    {
+    case Direction::Stand:
+        return "Stand";
+    case Direction::Forward:
+        return "Forward";
+    default:
+        return "Backward";
+    };
 }
 
 int Car::GetCurrentSpeed() const

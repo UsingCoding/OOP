@@ -75,7 +75,7 @@ SCENARIO("Turning on engine and ride on first gear on 20 km/h")
                     {
                         REQUIRE(res == true);
                         REQUIRE(car.GetCurrentSpeed() == 20);
-                        REQUIRE(car.IsDirectionForward() == true);
+                        REQUIRE(car.GetDirection() == "Forward");
                     }
                 }
 
@@ -216,7 +216,7 @@ SCENARIO("Riding backward and stopping")
                 {
                     REQUIRE(res == true);
                     REQUIRE(car.GetCurrentSpeed() == 10);
-                    REQUIRE(car.IsDirectionForward() == false);
+                    REQUIRE(car.GetDirection() == "Backward");
                 }
 
                 AND_WHEN("We turning off engine")

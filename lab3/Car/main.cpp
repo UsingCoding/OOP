@@ -1,15 +1,12 @@
 #include <iostream>
+#include <memory>
 #include "./Car/Car.hpp"
+#include "./CommandLineController/CommandLineController.hpp"
 
 int main(int argc, char const *argv[])
 {
-    Car car;
-    car.TurnOnEngine();
-    car.SetGear(-1);
-    car.SetSpeed(10);
-    car.SetSpeed(0);
-    std::cout << "res " << car.TurnOffEngine() << std::endl;
-    
-    car.Display();
+    // std::unique_ptr<Car> car = ;
+    CommandLineController clc(std::make_unique<Car>());
+    clc.Start();
     return 0;
 }

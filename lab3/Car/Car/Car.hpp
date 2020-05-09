@@ -1,6 +1,7 @@
 #pragma once
 
 #include <vector>
+#include <string>
 
 class Car
 {
@@ -37,7 +38,7 @@ public:
     void Display();
 
     bool IsEngineOn() const;
-    bool IsDirectionForward() const;
+    std::string GetDirection() const;
     int GetCurrentSpeed() const;
     int GetCurrentGear() const;
 
