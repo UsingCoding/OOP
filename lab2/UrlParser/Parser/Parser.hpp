@@ -2,28 +2,24 @@
 #include<string>
 #include <map>
 
-enum Protocol
+enum class Protocol
 {
     HTTP,
     HTTPS,
     FTP
 };
 
-static std::string HTTPS_PROTOCOL = "https";
-static std::string HTTP_PROTOCOL = "http";
-static std::string FTP_PROTOCOL = "ftp";
+extern std::string HTTPS_PROTOCOL;
+extern std::string HTTP_PROTOCOL;
+extern std::string FTP_PROTOCOL;
 
-static int HTTPS_PORT = 443;
-static int HTTP_PORT = 80;
-static int FTP_PORT = 21;
+extern int HTTPS_PORT;
+extern int HTTP_PORT;
+extern int FTP_PORT;
 
-static int minPort = 1;
-static int maxPort = 65535;
+extern int MIN_PORT;
+extern int MAX_PORT;
 
-static const std::map<Protocol, int> DEFAULT_PORTS = {
-    { HTTP, HTTP_PORT },
-    { HTTPS, HTTPS_PORT },
-    { FTP, FTP_PORT }
-};
+extern std::map<Protocol, int> DEFAULT_PORTS;
 
 bool ParseURL(const std::string & url, Protocol &  protocol, int & port, std::string & host, std::string & document);

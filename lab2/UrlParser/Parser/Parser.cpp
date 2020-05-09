@@ -5,6 +5,23 @@
 
 #include <iostream>
 
+std::string HTTPS_PROTOCOL = "https";
+std::string HTTP_PROTOCOL = "http";
+std::string FTP_PROTOCOL = "ftp";
+
+int HTTPS_PORT = 443;
+int HTTP_PORT = 80;
+int FTP_PORT = 21;
+
+int MIN_PORT = 1;
+int MAX_PORT = 65535;
+
+std::map<Protocol, int> DEFAULT_PORTS = {
+    { Protocol::HTTP, HTTP_PORT },
+    { Protocol::HTTPS, HTTPS_PORT },
+    { Protocol::FTP, FTP_PORT }
+};
+
 Protocol RetrieveProtocol(std::string protocol)
 {
     std::transform(protocol.begin(), protocol.begin(), protocol.end(), tolower);
@@ -34,7 +51,7 @@ int RetrievePort(Protocol protocol, const std::string & port)
 
     int resultPort = std::atoi(port.c_str());
 
-    if (resultPort <= minPort || resultPort >= maxPort)
+    if (resultPort < MIN_PORT || resultPort > MAX_PORT)
 	{
         throw std::runtime_error("Incorrect port");
 	}
