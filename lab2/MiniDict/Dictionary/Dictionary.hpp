@@ -13,11 +13,17 @@ public:
         RU,
         EN
     };
+
+    static const std::string EN_LOCALE;
+    static const std::string RU_LOCALE;
+
     std::vector<std::string> RetrieveTranslation(std::string & key, const Locale & destLocale) const;
     void AddTranslation(std::string & key, std::string & value, const Locale & destLocale);
 
     std::string Serialize() const;
     void Unserialize(std::istream & input);
+
+    Locale RetrieveLocaleFromString(const std::string & locale);
 
 private:
     typedef std::map<std::string, std::vector<std::string>> dict;

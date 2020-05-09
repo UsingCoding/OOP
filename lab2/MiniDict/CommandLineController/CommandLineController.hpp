@@ -16,8 +16,8 @@ private:
     void RunAddTranslationToDictScenario(std::string & key, Dictionary::Locale locale);
     void RunSaveChangesScenario();
     void RunUserSession();
-    Dictionary::Locale RetrieveLocaleFromString(const std::string & value);
     Dictionary::Locale RetrieveLocaleFromUser();
+    std::string RetrieveUserInput();
 
     void PrintUserInvitationHelper();
     void PrintHelp();

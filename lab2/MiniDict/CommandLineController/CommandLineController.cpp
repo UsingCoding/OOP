@@ -41,13 +41,24 @@ void CommandLineController::PrintResults(const std::vector<std::string> & res)
     std::cout << std::endl;
 }
 
+std::string CommandLineController::RetrieveUserInput()
+{
+    std::string res;
+    std::cout << ">> ";
+    while (StringUtils::Trim(res).length() == 0)
+    {
+        std::cin >> res;
+    }
+    
+    return res;
+}
+
 void CommandLineController::Start()
 {
     std::cout << "Доброе время суток, чтобы начать работу со словарём вы можете указать из какого файла импортировать данные" << std::endl;
     std::cout << "Хотите импортировать данные? [Y/y]" << std::endl;
     
-    std::string userIn;
-    std::cin >> userIn;
+    std::string userIn = RetrieveUserInput();
 
     std::transform(userIn.begin(), userIn.begin(), userIn.end(), tolower);
 
@@ -67,7 +78,7 @@ void CommandLineController::RunUserSession()
 {
     std::cout << "Введите слово, которое вы хотите перевести, если его нет в словаре, то можно ввести перевод, чтобы его запомнить, в обоих случаях стоит указать локаль перевода" << std::endl;
     PrintHelp();
-    std::cout << "Чтобы закончить работу со словарём введите \"...\"" << std::endl;
+    std::cout << std::endl << "Чтобы закончить работу со словарём введите \"...\"" << std::endl;
 
     std::string userIn;
     std::string key;
@@ -76,8 +87,7 @@ void CommandLineController::RunUserSession()
     while (true)
     {
         std::cout << "Введите слово...." << std::endl;
-        PrintUserInvitationHelper();
-        std::cin >> key;
+        key = RetrieveUserInput();
 
         if (key == EXIT_SYMBOLS)
         {
@@ -110,12 +120,11 @@ Dictionary::Locale CommandLineController::RetrieveLocaleFromUser()
 
     while (true)
     {
-        PrintUserInvitationHelper();
-        std::cin >> userIn;
+        userIn = RetrieveUserInput();
 
         try
         {
-            return RetrieveLocaleFromString(userIn);
+            return dict->RetrieveLocaleFromString(userIn);
         }
         catch(const std::exception& e)
         {
@@ -125,34 +134,24 @@ Dictionary::Locale CommandLineController::RetrieveLocaleFromUser()
     }
 }
 
-Dictionary::Locale CommandLineController::RetrieveLocaleFromString(const std::string & value)
-{
-    if (value == "Ru")
-    {
-        return Dictionary::Locale::RU;
-    }
-    
-    if (value == "En")
-    {
-        return Dictionary::Locale::EN;
-    }
-
-    throw std::logic_error("Неизвестная локаль");
-}
-
 void CommandLineController::RunImportDictFromFileScenario()
 {
-    std::cout <<  "Введите название файла. Программа экспортирует данные из YAML формата" << std::endl;
+    std::cout <<  "Введите название файла. Программа экспортирует данные из YAML формата, введите \"" << EXIT_SYMBOLS << "\" для пропуска этого шага." << std::endl;
 
-    std::string fileName;
+    std::string userIn;
     std::ifstream fin;
-
 
     while (true)
     {
-        PrintUserInvitationHelper();
-        std::cin >> fileName;
+        userIn = RetrieveUserInput();
 
+        if (userIn == EXIT_SYMBOLS)
+        {
+            std::cout << "Импорт отменён" << std::endl;
+            return;
+        }
+        
+        fin.open(userIn);
 
         if (!fin.is_open())
         {
@@ -166,23 +165,18 @@ void CommandLineController::RunImportDictFromFileScenario()
         }
         catch(const std::exception& e)
         {
-            std::cerr << e.what() << '\n';
-            return;
+            std::cout << "Неудалось десериализовать из файла: " << e.what() << std::endl << "Может попробуйте другой файл?" << std::endl;
+            continue;
         }
     }
-    
-    
+
     std::cout << "Данные успешно импортированы" << std::endl;
 }
 
 void CommandLineController::RunAddTranslationToDictScenario(std::string & key, Dictionary::Locale locale)
 {
-    std::string userIn;
-
     std::cout << "Неизвестное слово \"" << key << "\". Введите перевод или пустую строку для отказа" << std::endl;
-    PrintUserInvitationHelper();
-    std::cin >> userIn;
-    userIn = StringUtils::Trim(userIn);
+    std::string userIn = RetrieveUserInput();
 
     if (userIn.length() == 0)
     {
@@ -197,27 +191,35 @@ void CommandLineController::RunAddTranslationToDictScenario(std::string & key, D
 
 void CommandLineController::RunSaveChangesScenario()
 {
-    std::cout << "В словарь были внесены изменения. Введите [Y/n] для сохранения перед выходом." << std::endl;
+    std::cout << "В словарь были внесены изменения. Введите [Y/n] для сохранения перед выходом. Введите \"" << EXIT_SYMBOLS << "\" для отмены" << std::endl;
 
-    std::string userIn;
-    PrintUserInvitationHelper();
-    std::cin >> userIn;
+    std::string userIn = RetrieveUserInput();
     std::transform(userIn.begin(), userIn.begin(), userIn.end(), tolower);
 
-    if(StringUtils::Trim(userIn)[0] == POSITIVE_ANSWER)
+    if (userIn[0] == POSITIVE_ANSWER)
     {
-        std::cout << "Введите название файла для сохранения" << std::endl;
-        PrintUserInvitationHelper();
-        std::cin >> userIn;
-
-        std::ofstream fout(userIn);
-        if (!fout.is_open())
+        while (true)
         {
-            std::cout << "Не получилось открыть файл, может попробуйте другой?" << std::endl;
+            std::cout << "Введите название файла для сохранения" << std::endl;
+            userIn = RetrieveUserInput();
+
+            if (userIn == EXIT_SYMBOLS)
+            {
+                break;
+            }
+
+            std::ofstream fout(userIn);
+            if (!fout.is_open())
+            {
+                std::cout << "Не получилось открыть файл, может попробуйте другой?" << std::endl;
+                continue;
+            }
+
+            fout << dict->Serialize();
+
+            std::cout << "Данные успешно сохранены" << std::endl;
+            break;
         }
-
-        fout << dict->Serialize();
-
-        std::cout << "Данные успешно сохранены" << std::endl;
     }
+    std::cout << "Сохранение отменено" << std::endl;
 }

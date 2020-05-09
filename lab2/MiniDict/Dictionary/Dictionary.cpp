@@ -3,6 +3,9 @@
 #include "./Dictionary.hpp"
 #include <algorithm>
 
+const std::string Dictionary::RU_LOCALE = "RU";
+const std::string Dictionary::EN_LOCALE = "EN";
+
 std::vector<std::string> Dictionary::RetrieveTranslation(std::string & key, const Locale & locale) const
 {
     std::transform(key.begin(), key.end(), key.begin(), tolower);
@@ -57,4 +60,19 @@ void Dictionary::WriteTranslationIntoDict(std::string & key, const std::string &
     }
 
     (result->second).push_back(value);
+}
+
+Dictionary::Locale Dictionary::RetrieveLocaleFromString(const std::string & locale)
+{
+    if (locale == RU_LOCALE)
+    {
+        return Dictionary::Locale::RU;
+    }
+    
+    if (locale == EN_LOCALE)
+    {
+        return Dictionary::Locale::EN;
+    }
+
+    throw std::logic_error("Неизвестная локаль");
 }
