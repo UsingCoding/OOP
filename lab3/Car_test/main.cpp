@@ -124,7 +124,7 @@ SCENARIO("Stopping car and turning off engine")
             {
                 REQUIRE(res == false);
                 REQUIRE(car.GetCurrentSpeed() == 50);
-                REQUIRE(car.GetCurrentGear() == 1);
+                REQUIRE(car.GetCurrentGear() == 2);
             }
         }
 
@@ -169,10 +169,10 @@ SCENARIO("Stopping car and turning off engine")
                 }
             }
 
-            AND_WHEN("We set zero speed and neutral gear")
+            AND_WHEN("We set neutral gear and zero speed")
             {
-                car.SetSpeed(0);
-                bool res = car.SetGear(0);
+                car.SetGear(0);
+                bool res = car.SetSpeed(0);
                 THEN("We got true from car and car stopped")
                 {
                     REQUIRE(res == true);
@@ -215,7 +215,7 @@ SCENARIO("Riding backward and stopping")
                 THEN("We got true and speed is 10 and direction is backward")
                 {
                     REQUIRE(res == true);
-                    REQUIRE(car.GetCurrentSpeed() == 20);
+                    REQUIRE(car.GetCurrentSpeed() == 10);
                     REQUIRE(car.IsDirectionForward() == false);
                 }
 
