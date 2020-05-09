@@ -4,7 +4,7 @@ mainFile = main
 
 .PHONY: build
 build:
-	g++ $(mainFile).cpp GeneratePrimeNumbersSet.cpp -o $(mainFile)
+	g++ $(mainFile).cpp GeneratePrimeNumbersSet.cpp ../../Utils/StringUtils.cpp -o $(mainFile)
 
 .PHONY: run
 run:

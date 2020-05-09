@@ -4,16 +4,17 @@
 #include <stdexcept>
 #include <math.h>
 #include <algorithm>
-
 #include <iostream>
+
+#include "../../Utils/StringUtils.hpp"
+
+const int MAX_ELEM = 1e8;
 
 std::set<int> GeneratePrimeNumbersSet(int upperBound)
 {
     if (upperBound > MAX_ELEM)
     {
-        char strValue[10];
-        sprintf(strValue, "%d", MAX_ELEM);
-        throw std::logic_error("Upper bound more than " + std::string(strValue));
+        throw std::logic_error(StringUtils::StringConcatenator() << "Upper bound more than " << MAX_ELEM);
     }
 
     if (upperBound < 0)

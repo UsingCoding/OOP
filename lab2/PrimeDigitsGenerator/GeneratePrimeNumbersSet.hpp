@@ -1,6 +1,6 @@
 #pragma once
 #include <set>
 
-static const int MAX_ELEM = 1e8;
+extern const int MAX_ELEM;
 
 std::set<int> GeneratePrimeNumbersSet(int upperBound);
