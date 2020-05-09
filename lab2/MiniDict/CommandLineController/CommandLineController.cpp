@@ -6,26 +6,23 @@
 
 #include "../../../Utils/StringUtils.hpp"
 
+const std::string CommandLineController::EXIT_SYMBOLS = "...";
+
 CommandLineController::CommandLineController(std::unique_ptr<Dictionary> d)
 {
     dict = std::move(d);
 }
 
-void CommandLineController::PrintUserInvitationHelper()
-{
-    std::cout << ">> ";
-}
-
 void CommandLineController::PrintHelp()
 {
-    std::cout << "Примеру:" << std::endl;
+    std::cout << "Пример:" << std::endl;
     std::string exWord = "Alone";
-    std::cout << "> " << exWord << std::endl;
+    std::cout << ">> " << exWord << std::endl;
     std::cout << "Неизвестное слово " << exWord << ". Введите перевод или пустую строку для отказа." << std::endl;
     std::string exTranslate = "Одинокий";
-    std::cout << "> " << exTranslate << std::endl;
+    std::cout << ">> " << exTranslate << std::endl;
     std::cout << "Принято, введите локаль перевода" << std::endl;
-    std::cout << "> Ru" << std::endl;
+    std::cout << ">> Ru" << std::endl;
     std::cout << "Слово " << exWord << " сохранено в словаре как " << exTranslate << "." << std::endl;
 }
 
@@ -44,10 +41,16 @@ void CommandLineController::PrintResults(const std::vector<std::string> & res)
 std::string CommandLineController::RetrieveUserInput()
 {
     std::string res;
-    std::cout << ">> ";
-    while (StringUtils::Trim(res).length() == 0)
+    while (true)
     {
-        std::cin >> res;
+        std::cout << ">> ";
+        getline(std::cin, res);
+        if (StringUtils::Trim(res).length() != 0)
+        {
+            break;
+        }
+        
+        std::cout << "Введите строку содержащее что-то помимо пробелов" << std::endl;
     }
     
     return res;
@@ -76,7 +79,7 @@ void CommandLineController::Start()
 
 void CommandLineController::RunUserSession()
 {
-    std::cout << "Введите слово, которое вы хотите перевести, если его нет в словаре, то можно ввести перевод, чтобы его запомнить, в обоих случаях стоит указать локаль перевода" << std::endl;
+    std::cout << "Введите слово, которое вы хотите перевести, если его нет в словаре, то можно ввести перевод, чтобы его запомнить, в обоих случаях нужно указать локаль перевода" << std::endl;
     PrintHelp();
     std::cout << std::endl << "Чтобы закончить работу со словарём введите \"...\"" << std::endl;
 
@@ -136,7 +139,7 @@ Dictionary::Locale CommandLineController::RetrieveLocaleFromUser()
 
 void CommandLineController::RunImportDictFromFileScenario()
 {
-    std::cout <<  "Введите название файла. Программа экспортирует данные из YAML формата, введите \"" << EXIT_SYMBOLS << "\" для пропуска этого шага." << std::endl;
+    std::cout <<  "Введите название файла. Программа экспортирует данные из похожего на YAML формата, введите \"" << EXIT_SYMBOLS << "\" для пропуска этого шага." << std::endl;
 
     std::string userIn;
     std::ifstream fin;
@@ -156,6 +159,7 @@ void CommandLineController::RunImportDictFromFileScenario()
         if (!fin.is_open())
         {
             std::cout << "Файл не удалось открыть, может попробуете другой?" << std::endl;
+            fin.close();
             continue;
         }
 
@@ -168,6 +172,8 @@ void CommandLineController::RunImportDictFromFileScenario()
             std::cout << "Неудалось десериализовать из файла: " << e.what() << std::endl << "Может попробуйте другой файл?" << std::endl;
             continue;
         }
+
+        break;
     }
 
     std::cout << "Данные успешно импортированы" << std::endl;
@@ -175,10 +181,10 @@ void CommandLineController::RunImportDictFromFileScenario()
 
 void CommandLineController::RunAddTranslationToDictScenario(std::string & key, Dictionary::Locale locale)
 {
-    std::cout << "Неизвестное слово \"" << key << "\". Введите перевод или пустую строку для отказа" << std::endl;
+    std::cout << "Неизвестное слово \"" << key << "\". Введите перевод или " << EXIT_SYMBOLS << " для отказа" << std::endl;
     std::string userIn = RetrieveUserInput();
 
-    if (userIn.length() == 0)
+    if (StringUtils::StartsWith(userIn, EXIT_SYMBOLS))
     {
         std::cout << "Слово \"" << key << "\" проигнорировано" << std::endl;
         return;
@@ -191,7 +197,7 @@ void CommandLineController::RunAddTranslationToDictScenario(std::string & key, D
 
 void CommandLineController::RunSaveChangesScenario()
 {
-    std::cout << "В словарь были внесены изменения. Введите [Y/n] для сохранения перед выходом. Введите \"" << EXIT_SYMBOLS << "\" для отмены" << std::endl;
+    std::cout << "В словарь были внесены изменения. Введите [Y/n] для сохранения перед выходом." << std::endl;
 
     std::string userIn = RetrieveUserInput();
     std::transform(userIn.begin(), userIn.begin(), userIn.end(), tolower);
@@ -200,7 +206,7 @@ void CommandLineController::RunSaveChangesScenario()
     {
         while (true)
         {
-            std::cout << "Введите название файла для сохранения" << std::endl;
+            std::cout << "Введите название файла для сохранения или \"" << EXIT_SYMBOLS << "\" для отмены" << std::endl;
             userIn = RetrieveUserInput();
 
             if (userIn == EXIT_SYMBOLS)
@@ -221,5 +227,6 @@ void CommandLineController::RunSaveChangesScenario()
             break;
         }
     }
+
     std::cout << "Сохранение отменено" << std::endl;
 }
