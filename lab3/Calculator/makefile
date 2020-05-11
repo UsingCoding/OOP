@@ -4,7 +4,7 @@ mainFile = main
 
 .PHONY: build
 build:
-	g++ $(mainFile).cpp Lexer/Lexer.cpp ../../Utils/StringUtils.cpp -o $(mainFile)
+	sh build_with_files_path
 
 .PHONY: run
 run:

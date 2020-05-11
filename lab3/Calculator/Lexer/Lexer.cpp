@@ -3,6 +3,9 @@
 #include "../../../Utils/StringUtils.hpp"
 #include "../../../Utils/VectorUtils.hpp"
 
+const char Lexer::SPACE = ' ';
+const char Lexer::EQUALS_SIGN = '=';
+
 bool Lexer::IsTerminalDivider(const char symbol)
 {
     switch (symbol)

@@ -7,15 +7,15 @@
 class Lexer
 {
 private:
-    static const char SPACE = ' ';
-    static const char EQUALS_SIGN = '=';
-    static const char PLUS_SIGN = '+';
-    static const char MINUS_SIGN = '-';
-    static const char MULTIPLY_SIGN = '*';
-    static const char DIVIDE_SIGN = '/';
-
     static bool IsTerminalDivider(const char symbol);
 public:
+    static const char SPACE;
+    static const char EQUALS_SIGN;
+    static constexpr char PLUS_SIGN = '+';
+    static constexpr char MINUS_SIGN = '-';
+    static constexpr char MULTIPLY_SIGN = '*';
+    static constexpr char DIVIDE_SIGN = '/';
+
     static std::vector<std::string> RetrieveTokensList(const std::string & value);
     static std::vector<std::string> RetrieveTokensList(std::istream & input);
 };
