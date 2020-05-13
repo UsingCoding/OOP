@@ -12,13 +12,13 @@ public:
         Function
     };
 
-    NodeBuilderInput(NodeCreationType nodeCreationType, std::string nodeName, std::string firstOperandName, std::string secondOperandName, double value): 
-    nodeCreationType(nodeCreationType), nodeName(nodeName), firstOperandName(firstOperandName), secondOperandName(secondOperandName), value(value){}
+    NodeBuilderInput(NodeCreationType nodeCreationType, std::string nodeName, std::string firstOperandName, std::string secondOperandName, double value, double(*operation)(double, double)): 
+    nodeCreationType(nodeCreationType), nodeName(nodeName), firstOperandName(firstOperandName), secondOperandName(secondOperandName), value(value), operation(operation){}
 
-    NodeCreationType getNodeCreationType() const;
-    std::string const & getNodeName() const;
-    std::string const & getFirstOperandName() const;
-    std::string const & getSecondOperandName() const;
+    NodeCreationType GetNodeCreationType() const;
+    std::string const & GetNodeName() const;
+    std::string const & GetFirstOperandName() const;
+    std::string const & GetSecondOperandName() const;
     double GetValue() const;
 
     // void setNodeCreationType(NodeCreationType );
@@ -32,4 +32,5 @@ private:
     std::string firstOperandName;
     std::string secondOperandName;
     double value;
+    double(*operation)(double, double);
 };

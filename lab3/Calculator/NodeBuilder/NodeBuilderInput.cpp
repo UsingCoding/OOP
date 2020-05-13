@@ -1,21 +1,21 @@
 #include "NodeBuilderInput.hpp"
 
-NodeBuilderInput::NodeCreationType NodeBuilderInput::getNodeCreationType() const
+NodeBuilderInput::NodeCreationType NodeBuilderInput::GetNodeCreationType() const
 {
     return nodeCreationType;
 }
 
-std::string const & NodeBuilderInput::getNodeName() const
+std::string const & NodeBuilderInput::GetNodeName() const
 {
     return nodeName;
 }
 
-std::string const & NodeBuilderInput::getFirstOperandName() const
+std::string const & NodeBuilderInput::GetFirstOperandName() const
 {
     return firstOperandName;
 }
 
-std::string const & NodeBuilderInput::getSecondOperandName() const
+std::string const & NodeBuilderInput::GetSecondOperandName() const
 {
     return secondOperandName;
 }

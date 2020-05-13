@@ -64,7 +64,7 @@ double(*Syntaxer::RetrieveArithmeticalOperation(const char symbol))(double, doub
     case Lexer::DIVIDE_SIGN:
         return ArithmeticOperaions::Divide;    
     default:
-        throw std::domain_error("Unknown arithmetic operarion");
+        throw std::domain_error(StringUtils::StringConcatenator() << "Unknown arithmetic operarion " << symbol);
         break;
     }
 }
@@ -91,7 +91,7 @@ void Syntaxer::ParseVariableDeclaration(std::unique_ptr<NodeBuilderInput> & inpu
         throw std::domain_error("Incorrect name for identificator");
     }
     
-    input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::NewVariable, tokens[1], "", "", 0);
+    input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::NewVariable, tokens[1], "", "", 0, nullptr);
 }
 
 void Syntaxer::ParseVariableDefinition(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens)
@@ -118,7 +118,7 @@ void Syntaxer::ParseVariableDefinition(std::unique_ptr<NodeBuilderInput> & input
         firstOperandName = tokens[3];
     }
     
-    input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::CurrentVariable, tokens[1], firstOperandName, "", value);
+    input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::CurrentVariable, tokens[1], firstOperandName, "", value, nullptr);
 }
 
 void Syntaxer::ParseFunctionCreation(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens)
@@ -138,5 +138,10 @@ void Syntaxer::ParseFunctionCreation(std::unique_ptr<NodeBuilderInput> & input, 
         throw std::logic_error("Incorrect name of identifier");
     }
 
-    input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::Function, tokens[1], tokens[3], tokens[5], 0); 
+    if (tokens[4].size() > 1)
+    {
+        throw std::domain_error("Incorrect arithmetic operation " + tokens[4]);
+    }
+    
+    input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::Function, tokens[1], tokens[3], tokens[5], 0, RetrieveArithmeticalOperation(tokens[0][0])); 
 }

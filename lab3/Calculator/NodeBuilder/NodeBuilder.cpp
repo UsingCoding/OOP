@@ -14,7 +14,7 @@
 
 void NodeBuilder::MapIntoModels(const NodeBuilderInput & input)
 {
-    switch (input.getNodeCreationType())
+    switch (input.GetNodeCreationType())
     {
     case NodeBuilderInput::NodeCreationType::Function:
         break;
@@ -63,15 +63,17 @@ double(*NodeBuilder::RetrieveArithmeticalOperation(const char symbol))(double, d
 
 void NodeBuilder::MapIntoFunction(const NodeBuilderInput & input)
 {
-    // std::unique_ptr<UnitOfArithmetic> firstArgument;
-    // std::unique_ptr<UnitOfArithmetic> secondArgument;
-
-    // firstArgument = manager->RetrieveByIdentificator(tokens[3]);
-    // secondArgument = manager->RetrieveByIdentificator(tokens[5]);
+    if (!manager->IsIdentificatorFree(input.GetNodeName()))
+    {
+        throw std::domain_error("Function with this identificator " + input.GetNodeName() + " already exists");
+    }
+    
+    std::unique_ptr<UnitOfArithmetic> & firstArgument = manager->RetrieveByIdentificator(input.GetFirstOperandName());
+    std::unique_ptr<UnitOfArithmetic> & secondArgument = manager->RetrieveByIdentificator(input.GetSecondOperandName());
 
     // double(*operation)(double, double) = RetrieveArithmeticalOperation(tokens[4][0]);
 
-    // std::unique_ptr<Function> func = std::make_unique<Function>(firstArgument, secondArgument);
+    std::unique_ptr<Function> func = std::make_unique<Function>(firstArgument, secondArgument);
 
     // func->SetOperation(operation);
 }
@@ -85,15 +87,15 @@ void NodeBuilder::MapIntoCurrentVariable(const NodeBuilderInput & input)
     catch(const std::exception& e)
     {}
     
-    std::unique_ptr<Variable> & var = manager->RetrieveVariableByIdentificator(input.getNodeName());
+    std::unique_ptr<Variable> & var = manager->RetrieveVariableByIdentificator(input.GetNodeName());
     
-    if (manager->IsIdentificatorFree(input.getFirstOperandName()))
+    if (manager->IsIdentificatorFree(input.GetFirstOperandName()))
     {
         var->SetValue(input.GetValue());
     }
     else
     {
-        var->SetValue(*(manager->RetrieveVariableByIdentificator(input.getFirstOperandName())));
+        var->SetValue(*(manager->RetrieveVariableByIdentificator(input.GetFirstOperandName())));
     }
     
     return;
@@ -101,10 +103,10 @@ void NodeBuilder::MapIntoCurrentVariable(const NodeBuilderInput & input)
 
 void NodeBuilder::MapIntoNewVariable(const NodeBuilderInput & input)
 {
-    if (!manager->IsIdentificatorFree(input.getNodeName()))
+    if (!manager->IsIdentificatorFree(input.GetNodeName()))
     {
         throw std::logic_error("Identificator for this variable already exist");
     }
     
-    manager->Add(input.getNodeName(), std::make_unique<Variable>());
+    manager->Add(input.GetNodeName(), std::make_unique<Variable>());
 }
