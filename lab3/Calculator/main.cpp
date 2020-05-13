@@ -3,31 +3,50 @@
 #include "./Syntaxer/Syntaxer.hpp"
 #include <sstream>
 #include <vector>
+#include <memory>
+#include "./Domain/ResourceManger/ResourceManager.hpp"
+#include "./Domain/ArithmeticObjects/Variable.hpp"
 
 int main(int argc, char const *argv[])
 {
     // std::istringstream ss("fn abs = trip +wert");
     // std::istringstream ss("var newVar");
-    std::istringstream ss("let newVar = 1 +99");
+    // std::istringstream ss("let newVar = 1 +99");
     // std::istringstream ss("let newVar = 44");
 
+    std::unique_ptr<ResourceManager> manager = std::make_unique<ResourceManager>();
 
-    std::vector<std::string> res = Lexer::RetrieveTokensList(ss);
+    Syntaxer syntaxer(manager);
 
-    for (size_t i = 0; i < res.size(); i++)
-    {
-        std::cout << res[i] << std::endl;
-    }
+    std::string userIn;
+    std::vector<std::string> res;
 
-    try
+    while (getline(std::cin, userIn))
     {
-        Syntaxer::MapTokensIntoModels(res);
+        res = Lexer::RetrieveTokensList(userIn);
+
+        try
+        {
+            syntaxer.MapTokensIntoModels(res);
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+        }
+
+        std::unique_ptr<Variable> var;
+
+        try
+        {
+            manager->RetrieveVariableByIdentificator("char");
+        }
+        catch(const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+        }
+        
     }
-    catch(const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-    }
-    
-    
+   
+
     return 0;
 }

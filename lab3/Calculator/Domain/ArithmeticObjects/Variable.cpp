@@ -1,5 +1,7 @@
 #include "./Variable.hpp"
 
+#include <iostream>
+
 Variable::Variable()
 {
 
@@ -12,7 +14,7 @@ Variable::Variable(double newValue)
 
 Variable::~Variable()
 {
-
+    std::cout << "got me destroyed" << std::endl;
 }
 
 Variable::operator double() const

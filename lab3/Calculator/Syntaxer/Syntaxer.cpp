@@ -1,12 +1,13 @@
 #include "./Syntaxer.hpp"
 #include "../Lexer/Lexer.hpp"
 #include "../../../Utils/StringUtils.hpp"
-#include "../Domain/ResourceManger/ResourceManager.hpp"
+
 
 #include <stdexcept>
 #include <iostream>
 #include "../Domain/ArithmeticObjects/Function.hpp"
 #include "../Domain/ArithmeticObjects/Variable.hpp"
+#include "../Domain/ArithmeticObjects/UnitOfArithmetic.hpp"
 #include "../Domain/ArithmeticOperations/ArithmeticOperations.hpp"
 
 const std::string Syntaxer::FUNCTION_TERMINAL = "fn";
@@ -15,6 +16,11 @@ const std::string Syntaxer::VARAIBLE_DEFINITION_TERMINAL = "let";
 
 void Syntaxer::MapTokensIntoModels(const std::vector<std::string> & tokens)
 {
+    // if (tokens[2] != std::string (StringUtils::StringConcatenator() << Lexer::EQUALS_SIGN))
+    // {
+    //     throw std::domain_error(StringUtils::StringConcatenator() << "Expected " << Lexer::EQUALS_SIGN << " got " << tokens[2]);
+    // }
+
     if (tokens[0] == FUNCTION_TERMINAL)
     {
         MapIntoFunction(tokens);
@@ -70,46 +76,79 @@ double(*Syntaxer::RetrieveArithmeticalOperation(const char symbol))(double, doub
 
 void Syntaxer::MapIntoFunction(const std::vector<std::string> & tokens)
 {
-    // Сверение о занятости идентификатора для функции
+    if (tokens.size() != 6)
+    {
+        throw std::domain_error("Incorrect parameters to declare function");
+    }
+    
+    if (!manager->IsIdentificatorFree(tokens[1]))
+    {
+        throw std::logic_error("Identificator for this function already exist");
+    }
 
-    // Function func;
+    std::unique_ptr<UnitOfArithmetic> firstArgument;
+    std::unique_ptr<UnitOfArithmetic> secondArgument;
 
+    firstArgument = manager->RetrieveByIdentificator(tokens[3]);
+    secondArgument = manager->RetrieveByIdentificator(tokens[5]);
+
+    double(*operation)(double, double) = RetrieveArithmeticalOperation(tokens[4][0]);
+
+    std::unique_ptr<Function> func = std::make_unique<Function>(firstArgument, secondArgument);
+
+    func->SetOperation(operation);
 }
 
 void Syntaxer::MapIntoCurrentVariable(const std::vector<std::string> & tokens)
 {
-    // Сверение о занятости идентификатора для переменной
-
-    if (tokens[2] != std::string (StringUtils::StringConcatenator() << Lexer::EQUALS_SIGN))
+    if (tokens.size() != 4)
     {
-        throw std::domain_error(StringUtils::StringConcatenator() << "Expected " << Lexer::EQUALS_SIGN << " got " << tokens[2]);
+        throw std::logic_error("Incorrect params to difine variable");
     }
 
-    Variable var;
+    std::unique_ptr<Variable> var;
 
-    if (tokens.size() == 4)
+    if (!manager->IsIdentificatorFree(tokens[1]))
+    {
+        var = manager->RetrieveVariableByIdentificator(tokens[1]);
+    }
+    else
+    {
+        var = std::make_unique<Variable>();
+    }
+    
+    if (manager->IsIdentificatorFree(tokens[3]))
     {
         try
         {
-            var.SetValue(std::stod(tokens[3].c_str()));
+            var->SetValue(std::stod(tokens[3].c_str()));
         }
         catch(const std::exception& e)
         {
             throw std::domain_error("Got error in operand");
         }
-        
-        return;
     }
+    else
+    {
+        var->SetValue(*(manager->RetrieveVariableByIdentificator(tokens[3])));
+    }
+    
+    return;
 }
 
 void Syntaxer::MapIntoNewVariable(const std::vector<std::string> & tokens)
 {
-    // Сверение о занятости идентификатора для переменной
-
     if (tokens.size() > 2)
     {
         throw std::domain_error("Unexpected params after declaration variable");
     }
+
+    if (!manager->IsIdentificatorFree(tokens[1]))
+    {
+        throw std::logic_error("Identificator for this variable already exist");
+    }
+
+    std::cout << "asdas" << std::endl;
     
-    Variable var;
+    manager->Add(tokens[1], std::make_unique<Variable>());
 }

@@ -1,8 +1,10 @@
 #pragma once
 
 #include "../Domain/ArithmeticObjects/UnitOfArithmetic.hpp"
+#include "../Domain/ResourceManger/ResourceManager.hpp"
 #include <string>
 #include <vector>
+#include <memory>
 
 class Syntaxer
 {
@@ -11,13 +13,16 @@ private:
     static const std::string VARAIBLE_DECLARATION_TERMINAL;
     static const std::string VARAIBLE_DEFINITION_TERMINAL;
 
-    static void MapIntoFunction(const std::vector<std::string> & tokens);
-    static void MapIntoCurrentVariable(const std::vector<std::string> & tokens);
-    static void MapIntoNewVariable(const std::vector<std::string> & tokens);
+    void MapIntoFunction(const std::vector<std::string> & tokens);
+    void MapIntoCurrentVariable(const std::vector<std::string> & tokens);
+    void MapIntoNewVariable(const std::vector<std::string> & tokens);
     static bool IsArithmeticOperation(const char symbol);
     static double(*RetrieveArithmeticalOperation(const char symbol))(double, double);
-
+    
+    std::unique_ptr<ResourceManager> & manager;
 public:
-    static void MapTokensIntoModels(const std::vector<std::string> & tokens);
+    void MapTokensIntoModels(const std::vector<std::string> & tokens);
+
+    Syntaxer(std::unique_ptr<ResourceManager> & manager): manager(manager){}
 };
 

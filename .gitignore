@@ -2,3 +2,6 @@
 main
 currLab
 output.txt
+*.yml
+.idea
+cmake-build-debug
