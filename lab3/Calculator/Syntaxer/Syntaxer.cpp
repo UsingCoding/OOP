@@ -5,6 +5,7 @@
 
 #include <stdexcept>
 #include <iostream>
+#include <regex>
 #include "../Domain/ArithmeticOperations/ArithmeticOperations.hpp"
 
 const std::string Syntaxer::FUNCTION_TERMINAL = "fn";
@@ -57,7 +58,8 @@ double(*Syntaxer::RetrieveArithmeticalOperation(const char symbol))(double, doub
 
 bool Syntaxer::IsIdentificatorCorrect(const std::string & identificator)
 {
-    return true;
+    std::regex regular("([a-zA-Z])([a-zA-Z_\\d]*)$");
+    return std::regex_match(identificator, regular);
 }
 
 void Syntaxer::ParseVariableDeclaration(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens)
