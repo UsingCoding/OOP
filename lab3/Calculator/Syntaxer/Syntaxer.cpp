@@ -106,27 +106,13 @@ void Syntaxer::MapIntoCurrentVariable(const std::vector<std::string> & tokens)
         throw std::logic_error("Incorrect params to difine variable");
     }
 
-    std::unique_ptr<Variable> var;
+    MapIntoNewVariable(tokens);
 
-    if (!manager->IsIdentificatorFree(tokens[1]))
-    {
-        var = manager->RetrieveVariableByIdentificator(tokens[1]);
-    }
-    else
-    {
-        var = std::make_unique<Variable>();
-    }
+    std::unique_ptr<Variable> & var = manager->RetrieveVariableByIdentificator(tokens[1]);
     
     if (manager->IsIdentificatorFree(tokens[3]))
     {
-        try
-        {
-            var->SetValue(std::stod(tokens[3].c_str()));
-        }
-        catch(const std::exception& e)
-        {
-            throw std::domain_error("Got error in operand");
-        }
+        var->SetValue(std::stod(tokens[3].c_str()));
     }
     else
     {
@@ -138,17 +124,10 @@ void Syntaxer::MapIntoCurrentVariable(const std::vector<std::string> & tokens)
 
 void Syntaxer::MapIntoNewVariable(const std::vector<std::string> & tokens)
 {
-    if (tokens.size() > 2)
-    {
-        throw std::domain_error("Unexpected params after declaration variable");
-    }
-
     if (!manager->IsIdentificatorFree(tokens[1]))
     {
         throw std::logic_error("Identificator for this variable already exist");
     }
-
-    std::cout << "asdas" << std::endl;
     
     manager->Add(tokens[1], std::make_unique<Variable>());
 }
