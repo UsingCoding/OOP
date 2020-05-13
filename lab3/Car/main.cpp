@@ -5,7 +5,6 @@
 
 int main(int argc, char const *argv[])
 {
-    // std::unique_ptr<Car> car = ;
     CommandLineController clc(std::make_unique<Car>());
     clc.Start();
     return 0;
