@@ -1,21 +1,19 @@
 #include "./Lexer.hpp"
+#include "../Syntaxer/Syntaxer.hpp"
 #include <iostream>
 #include "../../../Utils/StringUtils.hpp"
 #include "../../../Utils/VectorUtils.hpp"
-
-const char Lexer::SPACE = ' ';
-const char Lexer::EQUALS_SIGN = '=';
 
 bool Lexer::IsTerminalDivider(const char symbol)
 {
     switch (symbol)
     {
-    case SPACE:
-    case EQUALS_SIGN:
-    case PLUS_SIGN:
-    case MINUS_SIGN:
-    case MULTIPLY_SIGN:
-    case DIVIDE_SIGN:
+    case Syntaxer::SPACE:
+    case Syntaxer::EQUALS_SIGN:
+    case Syntaxer::PLUS_SIGN:
+    case Syntaxer::MINUS_SIGN:
+    case Syntaxer::MULTIPLY_SIGN:
+    case Syntaxer::DIVIDE_SIGN:
         return true;
     default:
         return false;
@@ -39,7 +37,7 @@ std::vector<std::string> Lexer::RetrieveTokensList(const std::string & value)
             result.push_back(value.substr(i - offset, offset));
         }
         
-        if (value[i] != SPACE)
+        if (value[i] != Syntaxer::SPACE)
         {
             result.push_back(StringUtils::StringConcatenator() << value[i]);
         }

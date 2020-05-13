@@ -13,8 +13,6 @@ private:
     void MapIntoFunction(const NodeBuilderInput & input);
     void MapIntoCurrentVariable(const NodeBuilderInput & input);
     void MapIntoNewVariable(const NodeBuilderInput & input);
-    static bool IsArithmeticOperation(const char symbol);
-    static double(*RetrieveArithmeticalOperation(const char symbol))(double, double);
     
     std::unique_ptr<ResourceManager> & manager;
 public:

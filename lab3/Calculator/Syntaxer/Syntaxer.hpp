@@ -11,7 +11,7 @@ private:
     static const std::string FUNCTION_TERMINAL;
     static const std::string VARAIBLE_DECLARATION_TERMINAL;
     static const std::string VARAIBLE_DEFINITION_TERMINAL;
-    static bool IsArithmeticOperation(const char symbol);
+
     static double(*RetrieveArithmeticalOperation(const char symbol))(double, double);
     static bool IsIdentificatorCorrect(const std::string & identificator);
 
@@ -21,5 +21,12 @@ private:
     
 public:
     static std::unique_ptr<NodeBuilderInput> ParseTokens(const std::vector<std::string> & tokens);
+
+    static constexpr char SPACE = ' ';
+    static constexpr char EQUALS_SIGN = '=';
+    static constexpr char PLUS_SIGN = '+';
+    static constexpr char MINUS_SIGN = '-';
+    static constexpr char MULTIPLY_SIGN = '*';
+    static constexpr char DIVIDE_SIGN = '/';
 };
 

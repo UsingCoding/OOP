@@ -37,31 +37,17 @@ std::unique_ptr<NodeBuilderInput> Syntaxer::ParseTokens(const std::vector<std::s
     throw std::domain_error("Unknown terminal " + tokens[0]);
 }
 
-bool Syntaxer::IsArithmeticOperation(const char symbol)
-{
-    switch (symbol)
-    {
-    case Lexer::PLUS_SIGN:
-    case Lexer::MINUS_SIGN:
-    case Lexer::MULTIPLY_SIGN:
-    case Lexer::DIVIDE_SIGN:
-        return true;
-    default:
-        return false;
-    }
-}
-
 double(*Syntaxer::RetrieveArithmeticalOperation(const char symbol))(double, double)
 {
     switch (symbol)
     {
-    case Lexer::PLUS_SIGN:
+    case Syntaxer::PLUS_SIGN:
         return ArithmeticOperaions::Add;
-    case Lexer::MINUS_SIGN:
+    case Syntaxer::MINUS_SIGN:
         return ArithmeticOperaions::Subtraction;
-    case Lexer::MULTIPLY_SIGN:
+    case Syntaxer::MULTIPLY_SIGN:
         return ArithmeticOperaions::Multiply;
-    case Lexer::DIVIDE_SIGN:
+    case Syntaxer::DIVIDE_SIGN:
         return ArithmeticOperaions::Divide;    
     default:
         throw std::domain_error(StringUtils::StringConcatenator() << "Unknown arithmetic operarion " << symbol);

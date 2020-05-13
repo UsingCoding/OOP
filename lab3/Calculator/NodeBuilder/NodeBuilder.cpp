@@ -29,38 +29,6 @@ void NodeBuilder::MapIntoModels(const NodeBuilderInput & input)
     }
 }
 
-bool NodeBuilder::IsArithmeticOperation(const char symbol)
-{
-    switch (symbol)
-    {
-    case Lexer::PLUS_SIGN:
-    case Lexer::MINUS_SIGN:
-    case Lexer::MULTIPLY_SIGN:
-    case Lexer::DIVIDE_SIGN:
-        return true;
-    default:
-        return false;
-    }
-}
-
-double(*NodeBuilder::RetrieveArithmeticalOperation(const char symbol))(double, double)
-{
-    switch (symbol)
-    {
-    case Lexer::PLUS_SIGN:
-        return ArithmeticOperaions::Add;
-    case Lexer::MINUS_SIGN:
-        return ArithmeticOperaions::Subtraction;
-    case Lexer::MULTIPLY_SIGN:
-        return ArithmeticOperaions::Multiply;
-    case Lexer::DIVIDE_SIGN:
-        return ArithmeticOperaions::Divide;    
-    default:
-        throw std::domain_error("Unknown arithmetic operarion");
-        break;
-    }
-}
-
 void NodeBuilder::MapIntoFunction(const NodeBuilderInput & input)
 {
     if (!manager->IsIdentificatorFree(input.GetNodeName()))
