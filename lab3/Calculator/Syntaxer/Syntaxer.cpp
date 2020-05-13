@@ -17,8 +17,8 @@ std::unique_ptr<NodeBuilderInput> Syntaxer::ParseTokens(const std::vector<std::s
 
     if (tokens[0] == FUNCTION_TERMINAL)
     {
-        // ParseVariableDeclaration(input, tokens);
-        // return std::move(input);
+        ParseFunctionCreation(input, tokens);
+        return std::move(input);
     }
 
     if (tokens[0] == VARAIBLE_DECLARATION_TERMINAL)
@@ -123,5 +123,20 @@ void Syntaxer::ParseVariableDefinition(std::unique_ptr<NodeBuilderInput> & input
 
 void Syntaxer::ParseFunctionCreation(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens)
 {
+    if (tokens.size() > 6)
+    {
+        throw std::domain_error("Unknown params after declaration function");
+    }
 
+    if (tokens.size() < 6)
+    {
+        throw std::domain_error("No enough params to declare function");
+    }
+
+    if (!IsIdentificatorCorrect(tokens[1]) || !IsIdentificatorCorrect(tokens[3]) || !IsIdentificatorCorrect(tokens[5]))
+    {
+        throw std::logic_error("Incorrect name of identifier");
+    }
+
+    input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::Function, tokens[1], tokens[3], tokens[5], 0); 
 }

@@ -19,11 +19,10 @@ void NodeBuilder::MapIntoModels(const NodeBuilderInput & input)
     case NodeBuilderInput::NodeCreationType::Function:
         break;
     case NodeBuilderInput::NodeCreationType::CurrentVariable:
-        std::cout << input.getNodeName() << std::endl;
-        std::cout << input.getFirstOperandName() << std::endl;
-        std::cout << input.GetValue() << std::endl;
+        MapIntoCurrentVariable(input);
         break;
     case NodeBuilderInput::NodeCreationType::NewVariable:
+        MapIntoNewVariable(input);
         break;
     default:
         break;
@@ -62,18 +61,8 @@ double(*NodeBuilder::RetrieveArithmeticalOperation(const char symbol))(double, d
     }
 }
 
-void NodeBuilder::MapIntoFunction(const std::vector<std::string> & tokens)
+void NodeBuilder::MapIntoFunction(const NodeBuilderInput & input)
 {
-    if (tokens.size() != 6)
-    {
-        throw std::domain_error("Incorrect parameters to declare function");
-    }
-    
-    if (!manager->IsIdentificatorFree(tokens[1]))
-    {
-        throw std::logic_error("Identificator for this function already exist");
-    }
-
     // std::unique_ptr<UnitOfArithmetic> firstArgument;
     // std::unique_ptr<UnitOfArithmetic> secondArgument;
 
@@ -87,35 +76,35 @@ void NodeBuilder::MapIntoFunction(const std::vector<std::string> & tokens)
     // func->SetOperation(operation);
 }
 
-void NodeBuilder::MapIntoCurrentVariable(const std::vector<std::string> & tokens)
+void NodeBuilder::MapIntoCurrentVariable(const NodeBuilderInput & input)
 {
-    if (tokens.size() != 4)
+    try
     {
-        throw std::logic_error("Incorrect params to difine variable");
+        MapIntoNewVariable(input);
     }
-
-    MapIntoNewVariable(tokens);
-
-    std::unique_ptr<Variable> & var = manager->RetrieveVariableByIdentificator(tokens[1]);
+    catch(const std::exception& e)
+    {}
     
-    if (manager->IsIdentificatorFree(tokens[3]))
+    std::unique_ptr<Variable> & var = manager->RetrieveVariableByIdentificator(input.getNodeName());
+    
+    if (manager->IsIdentificatorFree(input.getFirstOperandName()))
     {
-        var->SetValue(std::stod(tokens[3].c_str()));
+        var->SetValue(input.GetValue());
     }
     else
     {
-        var->SetValue(*(manager->RetrieveVariableByIdentificator(tokens[3])));
+        var->SetValue(*(manager->RetrieveVariableByIdentificator(input.getFirstOperandName())));
     }
     
     return;
 }
 
-void NodeBuilder::MapIntoNewVariable(const std::vector<std::string> & tokens)
+void NodeBuilder::MapIntoNewVariable(const NodeBuilderInput & input)
 {
-    if (!manager->IsIdentificatorFree(tokens[1]))
+    if (!manager->IsIdentificatorFree(input.getNodeName()))
     {
         throw std::logic_error("Identificator for this variable already exist");
     }
     
-    manager->Add(tokens[1], std::make_unique<Variable>());
+    manager->Add(input.getNodeName(), std::make_unique<Variable>());
 }

@@ -10,9 +10,9 @@
 class NodeBuilder
 {
 private:
-    void MapIntoFunction(const std::vector<std::string> & tokens);
-    void MapIntoCurrentVariable(const std::vector<std::string> & tokens);
-    void MapIntoNewVariable(const std::vector<std::string> & tokens);
+    void MapIntoFunction(const NodeBuilderInput & input);
+    void MapIntoCurrentVariable(const NodeBuilderInput & input);
+    void MapIntoNewVariable(const NodeBuilderInput & input);
     static bool IsArithmeticOperation(const char symbol);
     static double(*RetrieveArithmeticalOperation(const char symbol))(double, double);
     
