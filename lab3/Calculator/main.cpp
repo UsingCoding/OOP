@@ -1,6 +1,8 @@
 #include <iostream>
 #include "./Lexer/Lexer.hpp"
 #include "./Syntaxer/Syntaxer.hpp"
+#include "./NodeBuilder/NodeBuilder.hpp"
+#include "./NodeBuilder/NodeBuilderInput.hpp"
 #include <sstream>
 #include <vector>
 #include <memory>
@@ -15,35 +17,26 @@ int main(int argc, char const *argv[])
     // std::istringstream ss("let newVar = 44");
 
     std::unique_ptr<ResourceManager> manager = std::make_unique<ResourceManager>();
+    std::unique_ptr<NodeBuilder> nodeBuilder = std::make_unique<NodeBuilder>(manager);
 
-    Syntaxer syntaxer(manager);
 
     std::string userIn;
     std::vector<std::string> res;
+    std::unique_ptr<NodeBuilderInput> input;
 
     while (getline(std::cin, userIn))
     {
         res = Lexer::RetrieveTokensList(userIn);
-
         try
         {
-            syntaxer.MapTokensIntoModels(res);
+            input = Syntaxer::ParseTokens(res);
+            nodeBuilder->MapIntoModels(*input);
         }
         catch(const std::exception& e)
         {
             std::cerr << e.what() << '\n';
         }
-
-        std::unique_ptr<Variable> var;
-
-        try
-        {
-            manager->RetrieveVariableByIdentificator("char");
-        }
-        catch(const std::exception& e)
-        {
-            std::cerr << e.what() << '\n';
-        }
+        
         
     }
    

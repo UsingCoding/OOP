@@ -5,38 +5,33 @@
 
 #include <stdexcept>
 #include <iostream>
-#include "../Domain/ArithmeticObjects/Function.hpp"
-#include "../Domain/ArithmeticObjects/Variable.hpp"
-#include "../Domain/ArithmeticObjects/UnitOfArithmetic.hpp"
 #include "../Domain/ArithmeticOperations/ArithmeticOperations.hpp"
 
 const std::string Syntaxer::FUNCTION_TERMINAL = "fn";
 const std::string Syntaxer::VARAIBLE_DECLARATION_TERMINAL = "var";
 const std::string Syntaxer::VARAIBLE_DEFINITION_TERMINAL = "let";
 
-void Syntaxer::MapTokensIntoModels(const std::vector<std::string> & tokens)
+std::unique_ptr<NodeBuilderInput> Syntaxer::ParseTokens(const std::vector<std::string> & tokens)
 {
-    // if (tokens[2] != std::string (StringUtils::StringConcatenator() << Lexer::EQUALS_SIGN))
-    // {
-    //     throw std::domain_error(StringUtils::StringConcatenator() << "Expected " << Lexer::EQUALS_SIGN << " got " << tokens[2]);
-    // }
+    std::unique_ptr<NodeBuilderInput> input;
 
     if (tokens[0] == FUNCTION_TERMINAL)
     {
-        MapIntoFunction(tokens);
-        return;
+        // ParseVariableDeclaration(input, tokens);
+        // return std::move(input);
     }
 
     if (tokens[0] == VARAIBLE_DECLARATION_TERMINAL)
     {
-        MapIntoNewVariable(tokens);
-        return;
+        
+        ParseVariableDeclaration(input, tokens);
+        return std::move(input);
     }
 
     if (tokens[0] == VARAIBLE_DEFINITION_TERMINAL)
     {
-        MapIntoCurrentVariable(tokens);
-        return;
+        ParseVariableDefinition(input, tokens);
+        return std::move(input);
     }
     
     throw std::domain_error("Unknown terminal " + tokens[0]);
@@ -74,60 +69,59 @@ double(*Syntaxer::RetrieveArithmeticalOperation(const char symbol))(double, doub
     }
 }
 
-void Syntaxer::MapIntoFunction(const std::vector<std::string> & tokens)
+bool Syntaxer::IsIdentificatorCorrect(const std::string & identificator)
 {
-    if (tokens.size() != 6)
-    {
-        throw std::domain_error("Incorrect parameters to declare function");
-    }
-    
-    if (!manager->IsIdentificatorFree(tokens[1]))
-    {
-        throw std::logic_error("Identificator for this function already exist");
-    }
-
-    std::unique_ptr<UnitOfArithmetic> firstArgument;
-    std::unique_ptr<UnitOfArithmetic> secondArgument;
-
-    firstArgument = manager->RetrieveByIdentificator(tokens[3]);
-    secondArgument = manager->RetrieveByIdentificator(tokens[5]);
-
-    double(*operation)(double, double) = RetrieveArithmeticalOperation(tokens[4][0]);
-
-    std::unique_ptr<Function> func = std::make_unique<Function>(firstArgument, secondArgument);
-
-    func->SetOperation(operation);
+    return true;
 }
 
-void Syntaxer::MapIntoCurrentVariable(const std::vector<std::string> & tokens)
+void Syntaxer::ParseVariableDeclaration(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens)
 {
-    if (tokens.size() != 4)
+    if (tokens.size() > 2)
     {
-        throw std::logic_error("Incorrect params to difine variable");
+        throw std::domain_error("Unknown params after declaration variable");
     }
 
-    MapIntoNewVariable(tokens);
-
-    std::unique_ptr<Variable> & var = manager->RetrieveVariableByIdentificator(tokens[1]);
-    
-    if (manager->IsIdentificatorFree(tokens[3]))
+    if (tokens.size() < 2)
     {
-        var->SetValue(std::stod(tokens[3].c_str()));
-    }
-    else
-    {
-        var->SetValue(*(manager->RetrieveVariableByIdentificator(tokens[3])));
+        throw std::domain_error("Missing variable identificator");
     }
     
-    return;
+    if (!IsIdentificatorCorrect(tokens[1]))
+    {
+        throw std::domain_error("Incorrect name for identificator");
+    }
+    
+    input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::NewVariable, tokens[1], "", "", 0);
 }
 
-void Syntaxer::MapIntoNewVariable(const std::vector<std::string> & tokens)
+void Syntaxer::ParseVariableDefinition(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens)
 {
-    if (!manager->IsIdentificatorFree(tokens[1]))
+    if (tokens.size() > 4)
     {
-        throw std::logic_error("Identificator for this variable already exist");
+        throw std::domain_error("Unknown params after definition variable");
+    }
+
+    if (tokens.size() < 4)
+    {
+        throw std::domain_error("No enough params to define or declare variable");
+    }
+
+    double value;
+    std::string firstOperandName;
+
+    try
+    {
+        value = std::stod(tokens[3].c_str());
+    }
+    catch(const std::exception& e)
+    {
+        firstOperandName = tokens[3];
     }
     
-    manager->Add(tokens[1], std::make_unique<Variable>());
+    input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::CurrentVariable, tokens[1], firstOperandName, "", value);
+}
+
+void Syntaxer::ParseFunctionCreation(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens)
+{
+
 }

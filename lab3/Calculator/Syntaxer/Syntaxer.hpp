@@ -1,7 +1,6 @@
 #pragma once
 
-#include "../Domain/ArithmeticObjects/UnitOfArithmetic.hpp"
-#include "../Domain/ResourceManger/ResourceManager.hpp"
+#include "../NodeBuilder/NodeBuilderInput.hpp"
 #include <string>
 #include <vector>
 #include <memory>
@@ -12,17 +11,15 @@ private:
     static const std::string FUNCTION_TERMINAL;
     static const std::string VARAIBLE_DECLARATION_TERMINAL;
     static const std::string VARAIBLE_DEFINITION_TERMINAL;
-
-    void MapIntoFunction(const std::vector<std::string> & tokens);
-    void MapIntoCurrentVariable(const std::vector<std::string> & tokens);
-    void MapIntoNewVariable(const std::vector<std::string> & tokens);
     static bool IsArithmeticOperation(const char symbol);
     static double(*RetrieveArithmeticalOperation(const char symbol))(double, double);
-    
-    std::unique_ptr<ResourceManager> & manager;
-public:
-    void MapTokensIntoModels(const std::vector<std::string> & tokens);
+    static bool IsIdentificatorCorrect(const std::string & identificator);
 
-    Syntaxer(std::unique_ptr<ResourceManager> & manager): manager(manager){}
+    static void ParseVariableDeclaration(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens);
+    static void ParseVariableDefinition(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens);
+    static void ParseFunctionCreation(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens);
+    
+public:
+    static std::unique_ptr<NodeBuilderInput> ParseTokens(const std::vector<std::string> & tokens);
 };
 
