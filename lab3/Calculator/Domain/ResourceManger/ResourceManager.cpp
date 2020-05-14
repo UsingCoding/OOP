@@ -10,7 +10,6 @@ std::unique_ptr<Variable> & ResourceManager::RetrieveVariableByIdentificator(con
     {
         throw std::runtime_error("No variable by this identificator exist: " + name);
     }
-    std::cout << "qweqw" << std::endl;
     return it->second;
 }
 
@@ -61,4 +60,16 @@ void ResourceManager::Add(const std::string & identificator, std::unique_ptr<Var
 void ResourceManager::Add(const std::string & identificator, std::unique_ptr<Function> function)
 {
     functionCollection[identificator] = std::move(function);
+}
+
+std::map<std::string, double> ResourceManager::GetVariablesNamesWithValues() const
+{
+    std::map<std::string, double> result;
+
+    for (auto it = variableCollection.begin(); it != variableCollection.end(); it++)
+    {
+        result.insert(std::make_pair(it->first, *(it->second)));
+    }
+
+    return result;
 }

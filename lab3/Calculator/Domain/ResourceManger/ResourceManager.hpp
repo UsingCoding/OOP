@@ -20,4 +20,6 @@ public:
     bool IsIdentificatorFree(const std::string & name) const;
     void Add(const std::string & identificator, std::unique_ptr<Variable> unitOfArithmetic);
     void Add(const std::string & identificator, std::unique_ptr<Function> unitOfArithmetic);
+
+    std::map<std::string, double> GetVariablesNamesWithValues() const;
 };
