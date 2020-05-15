@@ -77,13 +77,11 @@ std::map<std::string, double> ResourceManager::GetVariablesNamesWithValues() con
 std::map<std::string, double> ResourceManager::GetFunctionsNamesWithValues() const
 {
     std::map<std::string, double> result;
-    std::cout << "Request" << std::endl;
 
     for (auto it = functionCollection.begin(); it != functionCollection.end(); it++)
     {
         result.insert(std::make_pair(it->first, *(it->second)));
     }
 
-    std::cout << "Print later" << std::endl;
     return result;
 }

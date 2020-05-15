@@ -40,13 +40,7 @@ void NodeBuilder::MapIntoFunction(const NodeBuilderInput & input)
     std::shared_ptr<UnitOfArithmetic> firstArgument = manager->RetrieveByIdentificator(input.GetFirstOperandName());
     std::shared_ptr<UnitOfArithmetic> secondArgument = manager->RetrieveByIdentificator(input.GetSecondOperandName());
 
-    double(*operation)(double, double) = ArithmeticOperaions::Add;
-
-    std::shared_ptr<Function> func = std::make_unique<Function>(firstArgument, secondArgument);
-
-    func->SetOperation(operation);
-
-    std::cout << *(func) << std::endl;
+    std::shared_ptr<Function> func = std::make_shared<Function>(firstArgument, secondArgument, input.GetOperation());
 
     manager->Add(input.GetNodeName(), std::move(func));
 }

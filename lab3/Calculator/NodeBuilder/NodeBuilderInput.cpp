@@ -24,3 +24,8 @@ double NodeBuilderInput::GetValue() const
 {
     return value;
 }
+
+double(*NodeBuilderInput::GetOperation() const)(double, double)
+{
+    return operation;
+}
