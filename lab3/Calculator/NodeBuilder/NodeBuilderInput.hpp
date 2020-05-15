@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "../Domain/ArithmeticOperations/ArithmeticOperations.hpp"
 
 class NodeBuilderInput
 {
@@ -12,7 +13,7 @@ public:
         Function
     };
 
-    NodeBuilderInput(NodeCreationType nodeCreationType, std::string nodeName, std::string firstOperandName, std::string secondOperandName, double value, double(*operation)(double, double)): 
+    NodeBuilderInput(NodeCreationType nodeCreationType, std::string nodeName, std::string firstOperandName, std::string secondOperandName, double value, ArithmeticOperaions::ArithmeticOperation operation): 
     nodeCreationType(nodeCreationType), nodeName(nodeName), firstOperandName(firstOperandName), secondOperandName(secondOperandName), value(value), operation(operation){}
 
     NodeCreationType GetNodeCreationType() const;
@@ -20,7 +21,7 @@ public:
     std::string const & GetFirstOperandName() const;
     std::string const & GetSecondOperandName() const;
     double GetValue() const;
-    double(*GetOperation() const)(double, double);
+    ArithmeticOperaions::ArithmeticOperation GetOperation() const;
 
 private:
     NodeCreationType nodeCreationType;
@@ -28,5 +29,5 @@ private:
     std::string firstOperandName;
     std::string secondOperandName;
     double value;
-    double(*operation)(double, double);
+    ArithmeticOperaions::ArithmeticOperation operation;
 };

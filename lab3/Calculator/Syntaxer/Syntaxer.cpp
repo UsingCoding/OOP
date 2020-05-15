@@ -38,7 +38,7 @@ std::unique_ptr<NodeBuilderInput> Syntaxer::ParseTokens(const std::vector<std::s
     throw std::domain_error("Unknown terminal " + tokens[0]);
 }
 
-double(*Syntaxer::RetrieveArithmeticalOperation(const char symbol))(double, double)
+ArithmeticOperaions::ArithmeticOperation Syntaxer::RetrieveArithmeticalOperation(const char symbol)
 {
     switch (symbol)
     {

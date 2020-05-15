@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../NodeBuilder/NodeBuilderInput.hpp"
+#include "../Domain/ArithmeticOperations/ArithmeticOperations.hpp"
 #include <string>
 #include <vector>
 #include <memory>
@@ -12,7 +13,8 @@ private:
     static const std::string VARAIBLE_DECLARATION_TERMINAL;
     static const std::string VARAIBLE_DEFINITION_TERMINAL;
 
-    static double(*RetrieveArithmeticalOperation(const char symbol))(double, double);
+    // static double(*RetrieveArithmeticalOperation(const char symbol))(double, double);
+    static ArithmeticOperaions::ArithmeticOperation RetrieveArithmeticalOperation(const char symbol);
     static bool IsIdentificatorCorrect(const std::string & identificator);
 
     static void ParseVariableDeclaration(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens);

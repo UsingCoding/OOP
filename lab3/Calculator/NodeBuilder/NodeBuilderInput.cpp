@@ -25,7 +25,7 @@ double NodeBuilderInput::GetValue() const
     return value;
 }
 
-double(*NodeBuilderInput::GetOperation() const)(double, double)
+ArithmeticOperaions::ArithmeticOperation NodeBuilderInput::GetOperation() const
 {
     return operation;
 }

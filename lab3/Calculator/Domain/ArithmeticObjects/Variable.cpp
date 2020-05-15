@@ -2,14 +2,9 @@
 
 #include <iostream>
 
-Variable::Variable()
+Variable::Variable(): isDefined(false)
 {
 
-}
-
-Variable::Variable(double newValue)
-{
-    value = newValue;
 }
 
 Variable::~Variable()
@@ -30,4 +25,9 @@ double Variable::GetRawValue() const
 void Variable::SetValue(double newValue)
 {
     value = newValue;
+}
+
+bool Variable::IsDefined() const
+{
+    return isDefined;
 }

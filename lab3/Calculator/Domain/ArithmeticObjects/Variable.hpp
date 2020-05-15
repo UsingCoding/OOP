@@ -6,14 +6,14 @@ class Variable: public UnitOfArithmetic
 {
 private:
     double value;
-    bool isInitilized;
+    bool isDefined;
 public:
     Variable();
-    Variable(double newValue);
     ~Variable();
 
     operator double() const override;
-
     double GetRawValue() const override;
+    bool IsDefined() const override;
+
     void SetValue(double newValue);
 };
