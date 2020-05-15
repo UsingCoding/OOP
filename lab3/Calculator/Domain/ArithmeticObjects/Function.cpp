@@ -1,6 +1,6 @@
 #include "./Function.hpp"
 
-Function::Function(std::unique_ptr<UnitOfArithmetic> & firstOperand, std::unique_ptr<UnitOfArithmetic> & secondOperand): firstOperand(firstOperand), secondOperand(secondOperand)
+Function::Function(std::shared_ptr<UnitOfArithmetic> firstOperand, std::shared_ptr<UnitOfArithmetic> secondOperand): firstOperand(firstOperand), secondOperand(secondOperand)
 {
 
 }

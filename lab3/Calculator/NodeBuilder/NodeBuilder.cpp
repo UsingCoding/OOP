@@ -17,6 +17,7 @@ void NodeBuilder::MapIntoModels(const NodeBuilderInput & input)
     switch (input.GetNodeCreationType())
     {
     case NodeBuilderInput::NodeCreationType::Function:
+        MapIntoFunction(input);
         break;
     case NodeBuilderInput::NodeCreationType::CurrentVariable:
         MapIntoCurrentVariable(input);
@@ -36,14 +37,18 @@ void NodeBuilder::MapIntoFunction(const NodeBuilderInput & input)
         throw std::domain_error("Function with this identificator " + input.GetNodeName() + " already exists");
     }
     
-    std::unique_ptr<UnitOfArithmetic> & firstArgument = manager->RetrieveByIdentificator(input.GetFirstOperandName());
-    std::unique_ptr<UnitOfArithmetic> & secondArgument = manager->RetrieveByIdentificator(input.GetSecondOperandName());
+    std::shared_ptr<UnitOfArithmetic> firstArgument = manager->RetrieveByIdentificator(input.GetFirstOperandName());
+    std::shared_ptr<UnitOfArithmetic> secondArgument = manager->RetrieveByIdentificator(input.GetSecondOperandName());
 
-    // double(*operation)(double, double) = RetrieveArithmeticalOperation(tokens[4][0]);
+    double(*operation)(double, double) = ArithmeticOperaions::Add;
 
-    std::unique_ptr<Function> func = std::make_unique<Function>(firstArgument, secondArgument);
+    std::shared_ptr<Function> func = std::make_unique<Function>(firstArgument, secondArgument);
 
-    // func->SetOperation(operation);
+    func->SetOperation(operation);
+
+    std::cout << *(func) << std::endl;
+
+    manager->Add(input.GetNodeName(), std::move(func));
 }
 
 void NodeBuilder::MapIntoCurrentVariable(const NodeBuilderInput & input)
@@ -55,7 +60,7 @@ void NodeBuilder::MapIntoCurrentVariable(const NodeBuilderInput & input)
     catch(const std::exception& e)
     {}
     
-    std::unique_ptr<Variable> & var = manager->RetrieveVariableByIdentificator(input.GetNodeName());
+    std::shared_ptr<Variable> var = manager->RetrieveVariableByIdentificator(input.GetNodeName());
     
     if (manager->IsIdentificatorFree(input.GetFirstOperandName()))
     {
@@ -76,5 +81,5 @@ void NodeBuilder::MapIntoNewVariable(const NodeBuilderInput & input)
         throw std::logic_error("Identificator for this variable already exist");
     }
     
-    manager->Add(input.GetNodeName(), std::make_unique<Variable>());
+    manager->Add(input.GetNodeName(), std::make_shared<Variable>());
 }

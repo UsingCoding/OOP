@@ -7,11 +7,11 @@ class Function: public UnitOfArithmetic
 {
 private:
     double(*operation)(double, double);
-    std::unique_ptr<UnitOfArithmetic> & firstOperand;
-    std::unique_ptr<UnitOfArithmetic> & secondOperand;
+    std::shared_ptr<UnitOfArithmetic> firstOperand;
+    std::shared_ptr<UnitOfArithmetic> secondOperand;
 
 public:
-    Function(std::unique_ptr<UnitOfArithmetic> & firstOperand, std::unique_ptr<UnitOfArithmetic> & secondOperand);
+    Function(std::shared_ptr<UnitOfArithmetic> firstOperand, std::shared_ptr<UnitOfArithmetic> secondOperand);
     ~Function();
 
     Function(const Function&) = default;

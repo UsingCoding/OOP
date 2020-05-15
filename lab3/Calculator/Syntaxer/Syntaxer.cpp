@@ -131,5 +131,5 @@ void Syntaxer::ParseFunctionCreation(std::unique_ptr<NodeBuilderInput> & input, 
         throw std::domain_error("Incorrect arithmetic operation " + tokens[4]);
     }
     
-    input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::Function, tokens[1], tokens[3], tokens[5], 0, RetrieveArithmeticalOperation(tokens[0][0])); 
+    input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::Function, tokens[1], tokens[3], tokens[5], 0, RetrieveArithmeticalOperation(tokens[4][0])); 
 }

@@ -10,16 +10,17 @@
 class ResourceManager
 {
 private:
-    std::map<std::string, std::unique_ptr<Variable>> variableCollection;
-    std::map<std::string, std::unique_ptr<Function>> functionCollection;
+    std::map<std::string, std::shared_ptr<Variable>> variableCollection;
+    std::map<std::string, std::shared_ptr<Function>> functionCollection;
 
 public:
-    std::unique_ptr<Variable> & RetrieveVariableByIdentificator(const std::string & name);
-    std::unique_ptr<Function> & RetrieveFunctionByIdentificator(const std::string & name);
-    std::unique_ptr<UnitOfArithmetic> & RetrieveByIdentificator(const std::string & name);
+    std::shared_ptr<Variable>  RetrieveVariableByIdentificator(const std::string & name);
+    std::shared_ptr<Function> & RetrieveFunctionByIdentificator(const std::string & name);
+    std::shared_ptr<UnitOfArithmetic> RetrieveByIdentificator(const std::string & name);
     bool IsIdentificatorFree(const std::string & name) const;
-    void Add(const std::string & identificator, std::unique_ptr<Variable> unitOfArithmetic);
-    void Add(const std::string & identificator, std::unique_ptr<Function> unitOfArithmetic);
+    void Add(const std::string & identificator, std::shared_ptr<Variable> unitOfArithmetic);
+    void Add(const std::string & identificator, std::shared_ptr<Function> unitOfArithmetic);
 
     std::map<std::string, double> GetVariablesNamesWithValues() const;
+    std::map<std::string, double> GetFunctionsNamesWithValues() const;
 };

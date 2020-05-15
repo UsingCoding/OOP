@@ -20,6 +20,7 @@ public:
     std::string const & GetFirstOperandName() const;
     std::string const & GetSecondOperandName() const;
     double GetValue() const;
+    // double(*GetOperation())(double, double) const; 
 
     // void setNodeCreationType(NodeCreationType );
     // void setNodeName(std::string );
