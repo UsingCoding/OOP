@@ -21,7 +21,7 @@ Variable::operator double() const
 
 Variable::operator std::string() const
 {
-    return isDefined ? (StringUtils::StringConcatenator() << value) : ArithmeticOperaions::NOT_A_NUMBER;
+    return isDefined ? (StringUtils::StringConcatenator() << value) : UnitOfArithmetic::NOT_A_NUMBER;
 }
 
 double Variable::GetRawValue() const

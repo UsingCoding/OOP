@@ -8,7 +8,7 @@ Function::operator double() const
 
 Function::operator std::string() const
 {
-    return IsDefined() ? StringUtils::StringConcatenator() << (double) *this : ArithmeticOperaions::NOT_A_NUMBER;
+    return IsDefined() ? StringUtils::StringConcatenator() << (double) *this : UnitOfArithmetic::NOT_A_NUMBER;
 }
 
 double Function::GetRawValue() const

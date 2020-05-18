@@ -1,8 +1,6 @@
 #include "./ArithmeticOperations.hpp"
 #include <stdexcept>
 
-std::string ArithmeticOperaions::NOT_A_NUMBER = "NaN";
-
 double ArithmeticOperaions::Add(double firstArg, double secondArg)
 {    
     return firstArg + secondArg;
