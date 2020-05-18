@@ -13,8 +13,14 @@ public:
         Function
     };
 
-    NodeBuilderInput(NodeCreationType nodeCreationType, std::string nodeName, std::string firstOperandName, std::string secondOperandName, double value, ArithmeticOperaions::ArithmeticOperation operation): 
-    nodeCreationType(nodeCreationType), nodeName(nodeName), firstOperandName(firstOperandName), secondOperandName(secondOperandName), value(value), operation(operation){}
+    NodeBuilderInput(NodeCreationType nodeCreationType, std::string nodeName): 
+    nodeCreationType(nodeCreationType), nodeName(nodeName) {}
+
+    NodeBuilderInput(NodeCreationType nodeCreationType, std::string nodeName, std::string firstOperandName, double value): 
+    nodeCreationType(nodeCreationType), nodeName(nodeName), firstOperandName(firstOperandName), value(value) {}
+
+    NodeBuilderInput(NodeCreationType nodeCreationType, std::string nodeName, std::string firstOperandName, std::string secondOperandName, ArithmeticOperaions::ArithmeticOperation operation): 
+    nodeCreationType(nodeCreationType), nodeName(nodeName), firstOperandName(firstOperandName), secondOperandName(secondOperandName), operation(operation){}
 
     NodeCreationType GetNodeCreationType() const;
     std::string const & GetNodeName() const;

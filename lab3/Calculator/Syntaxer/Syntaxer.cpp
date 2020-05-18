@@ -79,7 +79,7 @@ void Syntaxer::ParseVariableDeclaration(std::unique_ptr<NodeBuilderInput> & inpu
         throw std::domain_error("Incorrect name for identificator");
     }
     
-    input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::NewVariable, tokens[1], "", "", 0, nullptr);
+    input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::NewVariable, tokens[1]);
 }
 
 void Syntaxer::ParseVariableDefinition(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens)
@@ -106,7 +106,7 @@ void Syntaxer::ParseVariableDefinition(std::unique_ptr<NodeBuilderInput> & input
         firstOperandName = tokens[3];
     }
     
-    input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::CurrentVariable, tokens[1], firstOperandName, "", value, nullptr);
+    input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::CurrentVariable, tokens[1], firstOperandName, value);
 }
 
 void Syntaxer::ParseFunctionCreation(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens)
@@ -131,5 +131,5 @@ void Syntaxer::ParseFunctionCreation(std::unique_ptr<NodeBuilderInput> & input, 
         throw std::domain_error("Incorrect arithmetic operation " + tokens[4]);
     }
     
-    input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::Function, tokens[1], tokens[3], tokens[5], 0, RetrieveArithmeticalOperation(tokens[4][0])); 
+    input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::Function, tokens[1], tokens[3], tokens[5], RetrieveArithmeticalOperation(tokens[4][0])); 
 }
