@@ -1,4 +1,6 @@
 #include "./Variable.hpp"
+#include "../../../../Utils/StringUtils.hpp"
+#include "../ArithmeticOperations/ArithmeticOperations.hpp"
 
 #include <iostream>
 
@@ -15,6 +17,11 @@ Variable::~Variable()
 Variable::operator double() const
 {
     return value;
+}
+
+Variable::operator std::string() const
+{
+    return isDefined ? (StringUtils::StringConcatenator() << value) : ArithmeticOperaions::NOT_A_NUMBER;
 }
 
 double Variable::GetRawValue() const

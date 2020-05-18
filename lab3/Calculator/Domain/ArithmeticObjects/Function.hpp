@@ -16,6 +16,7 @@ public:
     firstOperand(firstOperand), secondOperand(secondOperand), operation(newOperation) {}
     
     operator double() const override;
+    operator std::string() const override;
     bool IsDefined() const override;
 
     double GetRawValue() const override;

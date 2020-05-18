@@ -1,4 +1,5 @@
 #include "./ResourceManager.hpp"
+#include "../ArithmeticOperations/ArithmeticOperations.hpp"
 #include <stdexcept>
 
 #include <iostream>
@@ -62,9 +63,9 @@ void ResourceManager::Add(const std::string & identificator, std::shared_ptr<Fun
     functionCollection[identificator] = std::move(function);
 }
 
-std::map<std::string, double> ResourceManager::GetVariablesNamesWithValues() const
+std::map<std::string, std::string> ResourceManager::GetVariablesNamesWithValues() const
 {
-    std::map<std::string, double> result;
+    std::map<std::string, std::string> result;
 
     for (auto it = variableCollection.begin(); it != variableCollection.end(); it++)
     {
@@ -74,9 +75,9 @@ std::map<std::string, double> ResourceManager::GetVariablesNamesWithValues() con
     return result;
 }
 
-std::map<std::string, double> ResourceManager::GetFunctionsNamesWithValues() const
+std::map<std::string, std::string> ResourceManager::GetFunctionsNamesWithValues() const
 {
-    std::map<std::string, double> result;
+    std::map<std::string, std::string> result;
 
     for (auto it = functionCollection.begin(); it != functionCollection.end(); it++)
     {

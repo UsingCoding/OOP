@@ -21,6 +21,6 @@ public:
     void Add(const std::string & identificator, std::shared_ptr<Variable> unitOfArithmetic);
     void Add(const std::string & identificator, std::shared_ptr<Function> unitOfArithmetic);
 
-    std::map<std::string, double> GetVariablesNamesWithValues() const;
-    std::map<std::string, double> GetFunctionsNamesWithValues() const;
+    std::map<std::string, std::string> GetVariablesNamesWithValues() const;
+    std::map<std::string, std::string> GetFunctionsNamesWithValues() const;
 };

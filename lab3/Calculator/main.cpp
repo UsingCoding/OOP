@@ -70,7 +70,7 @@ void HandlePrintIdentificatorValueCommand(const std::string & identificator, std
 {
     try
     {
-        std::cout << *(manager->RetrieveByIdentificator(identificator)) << std::endl;
+        std::cout << (std::string) *(manager->RetrieveByIdentificator(identificator)) << std::endl;
     }
     catch(const std::exception& e)
     {
@@ -81,7 +81,7 @@ void HandlePrintIdentificatorValueCommand(const std::string & identificator, std
 
 void HandlePrintVarValuesCommand(std::unique_ptr<ResourceManager> & manager)
 {
-    std::map<std::string, double> vars = manager->GetVariablesNamesWithValues();
+    std::map<std::string, std::string> vars = manager->GetVariablesNamesWithValues();
     for (auto it = vars.begin(); it != vars.end(); it++)
     {
         std::cout << it->first << " = " << it->second << std::endl;
@@ -90,7 +90,7 @@ void HandlePrintVarValuesCommand(std::unique_ptr<ResourceManager> & manager)
 
 void HandlePrintFunctionsValuesCommand(std::unique_ptr<ResourceManager> & manager)
 {
-    std::map<std::string, double> vars = manager->GetFunctionsNamesWithValues();
+    std::map<std::string, std::string> vars = manager->GetFunctionsNamesWithValues();
     for (auto it = vars.begin(); it != vars.end(); it++)
     {
         std::cout << it->first << " = " << it->second << std::endl;

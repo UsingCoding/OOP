@@ -12,6 +12,7 @@ public:
     ~Variable();
 
     operator double() const override;
+    operator std::string() const override;
     double GetRawValue() const override;
     bool IsDefined() const override;
 
