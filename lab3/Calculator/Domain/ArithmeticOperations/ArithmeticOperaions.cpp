@@ -1,10 +1,9 @@
 #include "./ArithmeticOperations.hpp"
 #include <stdexcept>
-#include "../../../../Utils/StringUtils.hpp"
 
 std::string ArithmeticOperaions::NOT_A_NUMBER = "NaN";
 
-double ArithmeticOperaions::Add(std::shared_ptr<UnitOfArithmetic> & firstArg, std::shared_ptr<UnitOfArithmetic> & secondArg)
+double ArithmeticOperaions::Add(const std::shared_ptr<UnitOfArithmetic> & firstArg, const std::shared_ptr<UnitOfArithmetic> & secondArg)
 {
     if (!firstArg->IsDefined() || !secondArg->IsDefined())
     {
@@ -14,7 +13,7 @@ double ArithmeticOperaions::Add(std::shared_ptr<UnitOfArithmetic> & firstArg, st
     return *(firstArg) + *(secondArg);
 }
 
-double ArithmeticOperaions::Subtraction(std::shared_ptr<UnitOfArithmetic> & firstArg, std::shared_ptr<UnitOfArithmetic> & secondArg)
+double ArithmeticOperaions::Subtraction(const std::shared_ptr<UnitOfArithmetic> & firstArg, const std::shared_ptr<UnitOfArithmetic> & secondArg)
 {
     if (!firstArg->IsDefined() || !secondArg->IsDefined())
     {
@@ -24,7 +23,7 @@ double ArithmeticOperaions::Subtraction(std::shared_ptr<UnitOfArithmetic> & firs
     return *(firstArg) - *(secondArg);
 }
 
-double ArithmeticOperaions::Multiply(std::shared_ptr<UnitOfArithmetic> & firstArg, std::shared_ptr<UnitOfArithmetic> & secondArg)
+double ArithmeticOperaions::Multiply(const std::shared_ptr<UnitOfArithmetic> & firstArg, const std::shared_ptr<UnitOfArithmetic> & secondArg)
 {
     if (!firstArg->IsDefined() || !secondArg->IsDefined())
     {
@@ -34,7 +33,7 @@ double ArithmeticOperaions::Multiply(std::shared_ptr<UnitOfArithmetic> & firstAr
     return *(firstArg) * *(secondArg);
 }
 
-double ArithmeticOperaions::Divide(std::shared_ptr<UnitOfArithmetic> & firstArg, std::shared_ptr<UnitOfArithmetic> & secondArg)
+double ArithmeticOperaions::Divide(const std::shared_ptr<UnitOfArithmetic> & firstArg, const std::shared_ptr<UnitOfArithmetic> & secondArg)
 {
     if (!firstArg->IsDefined() || !secondArg->IsDefined())
     {

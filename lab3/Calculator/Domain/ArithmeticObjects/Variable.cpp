@@ -25,6 +25,7 @@ double Variable::GetRawValue() const
 void Variable::SetValue(double newValue)
 {
     value = newValue;
+    isDefined = true;
 }
 
 bool Variable::IsDefined() const
