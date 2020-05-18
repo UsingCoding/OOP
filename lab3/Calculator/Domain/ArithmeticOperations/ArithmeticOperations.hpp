@@ -4,10 +4,10 @@
 
 namespace ArithmeticOperaions
 {
-    typedef double (*ArithmeticOperation)(const std::shared_ptr<UnitOfArithmetic> &, const std::shared_ptr<UnitOfArithmetic> &);
+    typedef double (*ArithmeticOperation)(double, double);
     extern std::string NOT_A_NUMBER;
-    double Add(const std::shared_ptr<UnitOfArithmetic> &, const std::shared_ptr<UnitOfArithmetic> &);
-    double Subtraction(const std::shared_ptr<UnitOfArithmetic> &, const std::shared_ptr<UnitOfArithmetic> &);
-    double Multiply(const std::shared_ptr<UnitOfArithmetic> &, const std::shared_ptr<UnitOfArithmetic> &);
-    double Divide(const std::shared_ptr<UnitOfArithmetic> &, const std::shared_ptr<UnitOfArithmetic> &);
+    double Add(double, double);
+    double Subtraction(double, double);
+    double Multiply(double, double);
+    double Divide(double, double);
 } // namespace ArithmeticOperaions

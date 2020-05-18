@@ -3,7 +3,7 @@
 
 Function::operator double() const
 {
-    return operation(firstOperand, secondOperand);
+    return operation(*(firstOperand), *(secondOperand));
 }
 
 Function::operator std::string() const
@@ -13,7 +13,7 @@ Function::operator std::string() const
 
 double Function::GetRawValue() const
 {
-    return operation(firstOperand, secondOperand);
+    return operation(*(firstOperand), *(secondOperand));
 }
 
 bool Function::IsDefined() const
