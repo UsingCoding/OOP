@@ -21,7 +21,7 @@ std::shared_ptr<Function> & ResourceManager::RetrieveFunctionByIdentificator(con
     {
         throw std::runtime_error("No function by this identificator exist: " + name);
     }
-    
+
     return it->second;
 }
 
@@ -33,16 +33,16 @@ std::shared_ptr<UnitOfArithmetic> ResourceManager::RetrieveByIdentificator(const
     }
     catch(const std::exception& e)
     {
-        
+
     }
-    
+
     try
     {
         return RetrieveFunctionByIdentificator(name);
     }
     catch(const std::exception& e)
     {
-        
+
     }
 
     throw std::runtime_error("No variable or function by this identificator exist: " + name);
@@ -78,10 +78,20 @@ std::map<std::string, std::string> ResourceManager::GetVariablesNamesWithValues(
 std::map<std::string, std::string> ResourceManager::GetFunctionsNamesWithValues() const
 {
     std::map<std::string, std::string> result;
+    std::string value;
 
     for (auto it = functionCollection.begin(); it != functionCollection.end(); it++)
     {
-        result.insert(std::make_pair(it->first, *(it->second)));
+        try
+        {
+            value = (std::string) *(it->second);
+        }
+        catch(const std::exception& e)
+        {
+            value = e.what();
+        }
+
+        result.insert(std::make_pair(it->first, value));
     }
 
     return result;
