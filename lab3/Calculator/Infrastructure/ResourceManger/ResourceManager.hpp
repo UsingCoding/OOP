@@ -2,9 +2,9 @@
 
 #include <map>
 #include <string>
-#include "../ArithmeticObjects/UnitOfArithmetic.hpp"
-#include "../ArithmeticObjects/Function.hpp"
-#include "../ArithmeticObjects/Variable.hpp"
+#include "../../Domain/ArithmeticObjects/UnitOfArithmetic.hpp"
+#include "../../Domain/ArithmeticObjects/Function.hpp"
+#include "../../Domain/ArithmeticObjects/Variable.hpp"
 #include <memory>
 
 class ResourceManager

@@ -1,5 +1,5 @@
 #include "./ResourceManager.hpp"
-#include "../ArithmeticOperations/ArithmeticOperations.hpp"
+#include "../../Domain/ArithmeticOperations/ArithmeticOperations.hpp"
 #include <stdexcept>
 
 #include <iostream>

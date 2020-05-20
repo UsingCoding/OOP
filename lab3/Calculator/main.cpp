@@ -17,7 +17,6 @@ int main(int argc, char const *argv[])
     {
         std::cout << interpreter.Handle(userIn) << std::endl;
     }
-    
-   
+
     return 0;
 }
