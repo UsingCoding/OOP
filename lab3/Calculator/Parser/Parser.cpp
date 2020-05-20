@@ -1,18 +1,66 @@
-#include "./Syntaxer.hpp"
-#include "../Lexer/Lexer.hpp"
-#include "../../../Utils/StringUtils.hpp"
+#include "Parser.hpp"
 
+#include <iostream>
+#include "../../../Utils/StringUtils.hpp"
 
 #include <stdexcept>
 #include <iostream>
 #include <regex>
-#include "../Domain/ArithmeticOperations/ArithmeticOperations.hpp"
 
-const std::string Syntaxer::FUNCTION_TERMINAL = "fn";
-const std::string Syntaxer::VARAIBLE_DECLARATION_TERMINAL = "var";
-const std::string Syntaxer::VARAIBLE_DEFINITION_TERMINAL = "let";
+const std::string Parser::FUNCTION_TERMINAL = "fn";
+const std::string Parser::VARAIBLE_DECLARATION_TERMINAL = "var";
+const std::string Parser::VARAIBLE_DEFINITION_TERMINAL = "let";
 
-std::unique_ptr<NodeBuilderInput> Syntaxer::ParseTokens(const std::vector<std::string> & tokens)
+
+bool Parser::IsTerminalDivider(const char symbol)
+{
+    switch (symbol)
+    {
+    case Parser::SPACE:
+    case Parser::EQUALS_SIGN:
+    case Parser::PLUS_SIGN:
+    case Parser::MINUS_SIGN:
+    case Parser::MULTIPLY_SIGN:
+    case Parser::DIVIDE_SIGN:
+        return true;
+    default:
+        return false;
+    }
+}
+
+std::vector<std::string> Parser::RetrieveTokensList(const std::string & value)
+{
+    std::vector<std::string> result;
+    int offset = -1;
+
+    for (size_t i = 0; i < value.length(); i++)
+    {
+        if (!IsTerminalDivider(value[i]))
+        {
+            offset = offset == -1 ? 1 : offset + 1;
+            continue;
+        }
+        if (offset != -1)
+        {
+            result.push_back(value.substr(i - offset, offset));
+        }
+        
+        if (value[i] != Parser::SPACE)
+        {
+            result.push_back(StringUtils::StringConcatenator() << value[i]);
+        }
+        
+        offset = -1;
+    }
+    if (offset != -1)
+    {
+        result.push_back(value.substr(value.length() - offset, offset));
+    }
+
+    return result;
+}
+
+std::unique_ptr<NodeBuilderInput> Parser::BuildInput(const std::vector<std::string> & tokens)
 {
     std::unique_ptr<NodeBuilderInput> input;
 
@@ -38,17 +86,17 @@ std::unique_ptr<NodeBuilderInput> Syntaxer::ParseTokens(const std::vector<std::s
     throw std::domain_error("Unknown terminal " + tokens[0]);
 }
 
-ArithmeticOperaions::ArithmeticOperation Syntaxer::RetrieveArithmeticalOperation(const char symbol)
+ArithmeticOperaions::ArithmeticOperation Parser::RetrieveArithmeticalOperation(const char symbol)
 {
     switch (symbol)
     {
-    case Syntaxer::PLUS_SIGN:
+    case Parser::PLUS_SIGN:
         return ArithmeticOperaions::Add;
-    case Syntaxer::MINUS_SIGN:
+    case Parser::MINUS_SIGN:
         return ArithmeticOperaions::Subtraction;
-    case Syntaxer::MULTIPLY_SIGN:
+    case Parser::MULTIPLY_SIGN:
         return ArithmeticOperaions::Multiply;
-    case Syntaxer::DIVIDE_SIGN:
+    case Parser::DIVIDE_SIGN:
         return ArithmeticOperaions::Divide;    
     default:
         throw std::domain_error(StringUtils::StringConcatenator() << "Unknown arithmetic operarion " << symbol);
@@ -56,13 +104,13 @@ ArithmeticOperaions::ArithmeticOperation Syntaxer::RetrieveArithmeticalOperation
     }
 }
 
-bool Syntaxer::IsIdentificatorCorrect(const std::string & identificator)
+bool Parser::IsIdentificatorCorrect(const std::string & identificator)
 {
     std::regex regular("([a-zA-Z])([a-zA-Z_\\d]*)$");
     return std::regex_match(identificator, regular);
 }
 
-void Syntaxer::ParseVariableDeclaration(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens)
+void Parser::ParseVariableDeclaration(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens)
 {
     if (tokens.size() > 2)
     {
@@ -82,7 +130,7 @@ void Syntaxer::ParseVariableDeclaration(std::unique_ptr<NodeBuilderInput> & inpu
     input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::NewVariable, tokens[1]);
 }
 
-void Syntaxer::ParseVariableDefinition(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens)
+void Parser::ParseVariableDefinition(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens)
 {
     if (tokens.size() > 4)
     {
@@ -109,7 +157,7 @@ void Syntaxer::ParseVariableDefinition(std::unique_ptr<NodeBuilderInput> & input
     input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::CurrentVariable, tokens[1], firstOperandName, value);
 }
 
-void Syntaxer::ParseFunctionCreation(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens)
+void Parser::ParseFunctionCreation(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens)
 {
     if (tokens.size() > 6)
     {
