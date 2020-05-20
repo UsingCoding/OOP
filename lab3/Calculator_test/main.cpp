@@ -7,8 +7,7 @@
 #include <sstream>
 
 #include "../Calculator/NodeBuilder/NodeBuilder.hpp"
-#include "../Calculator/Syntaxer/Syntaxer.hpp"
-#include "../Calculator/Lexer/Lexer.hpp"
+#include "../Calculator/Parser/Parser.hpp"
 #include "../Calculator/Domain/ResourceManger/ResourceManager.hpp"
 #include "../Calculator/Domain/ArithmeticObjects/Variable.hpp"
 #include "../Calculator/Domain/ArithmeticObjects/Function.hpp"
@@ -27,7 +26,7 @@ SCENARIO("Declaring variable then defining her")
 
             AND_WHEN("We parse user input")
             {
-                auto res = Lexer::RetrieveTokensList(userInputToDeclareVariable);
+                auto res = Parser::RetrieveTokensList(userInputToDeclareVariable);
                 std::string variableIdentificator = "number";
 
                 THEN("We got user input divided by terminal characters")
@@ -42,7 +41,7 @@ SCENARIO("Declaring variable then defining her")
 
                     try
                     {
-                        input = Syntaxer::ParseTokens(res);
+                        input = Parser::BuildInput(res);
                     }
                     catch(const std::exception& e)
                     {
@@ -80,7 +79,7 @@ SCENARIO("Declaring variable then defining her")
                     AND_WHEN("We define variable")
                     {
                         std::string userInputToDefVar = "let number = 4";
-                        auto tokens = Lexer::RetrieveTokensList(userInputToDefVar);
+                        auto tokens = Parser::RetrieveTokensList(userInputToDefVar);
 
                         
                     }

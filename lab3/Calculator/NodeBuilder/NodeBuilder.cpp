@@ -8,7 +8,6 @@
 #include "../Domain/ArithmeticObjects/Function.hpp"
 #include "../Domain/ArithmeticObjects/Variable.hpp"
 #include "../Domain/ArithmeticObjects/UnitOfArithmetic.hpp"
-#include "../Domain/ArithmeticOperations/ArithmeticOperations.hpp"
 
 void NodeBuilder::MapIntoModels(const NodeBuilderInput & input)
 {
