@@ -8,7 +8,7 @@
 
 #include "../Calculator/NodeBuilder/NodeBuilder.hpp"
 #include "../Calculator/Parser/Parser.hpp"
-#include "../Calculator/Domain/ResourceManger/ResourceManager.hpp"
+#include "../Calculator/Infrastructure/ResourceManger/ResourceManager.hpp"
 #include "../Calculator/Domain/ArithmeticObjects/Variable.hpp"
 #include "../Calculator/Domain/ArithmeticObjects/Function.hpp"
 

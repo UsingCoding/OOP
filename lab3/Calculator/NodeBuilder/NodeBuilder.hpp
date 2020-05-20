@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Domain/ArithmeticObjects/UnitOfArithmetic.hpp"
-#include "../Domain/ResourceManger/ResourceManager.hpp"
+#include "../Infrastructure/ResourceManger/ResourceManager.hpp"
 #include "./NodeBuilderInput.hpp"
 #include <string>
 #include <vector>
