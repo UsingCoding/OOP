@@ -22,14 +22,6 @@ std::unique_ptr<Interpreter> GetInterpreter()
     return std::move(std::make_unique<Interpreter>(nodeBuilder, manager));
 }
 
-void MakeRequest(std::unique_ptr<NodeBuilder> & nodeBuilder, const std::string & userInput)
-{
-    auto tokens = Parser::RetrieveTokensList(userInput);
-    std::unique_ptr<NodeBuilderInput> input = Parser::BuildInput(tokens);
-    nodeBuilder->MapIntoModels(*input);
-}
-
-
 SCENARIO("Declaring variable then defining her")
 {
     GIVEN("An empty ResourceManager and NodeBuilder")
@@ -123,62 +115,62 @@ SCENARIO("Declaring variable then defining her")
 
 SCENARIO("Calculating two functions")
 {
-    GIVEN("Empty resourses")
+    GIVEN("Interpreter")
     {
-        std::unique_ptr<ResourceManager> manager = std::make_unique<ResourceManager>();
-        std::unique_ptr<NodeBuilder> nodeBuilder = std::make_unique<NodeBuilder>(manager);
+        std::unique_ptr<Interpreter> interpreter = GetInterpreter();
 
         AND_GIVEN("Two variables: first is defined, second is not defined")
         {
-            std::string varIdentificator = "number_1";
-            std::shared_ptr<Variable> var_1 = std::make_shared<Variable>();
-            var_1->SetValue(4);
-            manager->Add(varIdentificator, var_1);
+            std::string req = "let number_1 = 4";
+            interpreter->Handle(req);
 
-            varIdentificator = "number_2";
-            std::shared_ptr<Variable> var_2 = std::make_shared<Variable>();
-            manager->Add(varIdentificator, var_2);
+            req = "var number_2";
+            interpreter->Handle(req);
 
             THEN("We retrieve varibale value and it`s NaN")
             {
-                std::shared_ptr<Variable> var = manager->RetrieveVariableByIdentificator(varIdentificator);
-                REQUIRE((std::string) *var == "NaN");
+                req = "var number_2";
+                std::string res = interpreter->Handle(req);
+                REQUIRE(res == "NaN");
             }
 
             AND_WHEN("We define function with params number_1 - number_2")
             {
                 std::string req = "fn function = number_1 - number_2";
-                MakeRequest(nodeBuilder, req);
+                interpreter->Handle(req);
 
                 THEN("We check value of function and it`s NaN")
                 {
-                    std::shared_ptr<Function> func = manager->RetrieveFunctionByIdentificator("function");
-                    REQUIRE((std::string) *func == "NaN");
+                    req = "print function";
+                    std::string res = interpreter->Handle(req);
+                    REQUIRE(res == "NaN");
                 }
 
                 AND_WHEN("We define second variable")
                 {
                     req = "let number_2 = 5";
-                    MakeRequest(nodeBuilder, req);
+                    interpreter->Handle(req);
 
                     THEN("We check function value")
                     {
-                        std::shared_ptr<Function> func = manager->RetrieveFunctionByIdentificator("function");
-                        REQUIRE((std::string) *func == "-1");
+                        req = "print function";
+                        std::string res = interpreter->Handle(req);
+                        REQUIRE(res == "-1");                        
                     }
 
                     AND_WHEN("We define new variable and new function")
                     {
                         req = "let number_3 = 15";
-                        MakeRequest(nodeBuilder, req);
+                        interpreter->Handle(req);
 
                         req = "fn sum = function + number_3";
-                        MakeRequest(nodeBuilder, req);
+                        interpreter->Handle(req);
 
                         THEN("We retrieve value of this func")
                         {
-                            std::shared_ptr<Function> summFunc = manager->RetrieveFunctionByIdentificator("sum");
-                            REQUIRE((std::string) *summFunc == "14");
+                            req = "print function";
+                            std::string res = interpreter->Handle(req);
+                            REQUIRE(res == "14");                                                    
                         }
                     }
                 }
@@ -191,28 +183,16 @@ SCENARIO("Trying to calculate recursive function")
 {
     GIVEN("Gentelman kit(empty resourses)")
     {
-        std::unique_ptr<ResourceManager> manager = std::make_unique<ResourceManager>();
-        std::unique_ptr<NodeBuilder> nodeBuilder = std::make_unique<NodeBuilder>(manager);
+        std::unique_ptr<Interpreter> interpreter = GetInterpreter();
 
         WHEN("We define function and use it in itself")
         {
             std::string req = "fn function = function - function";
-
-            bool wasError = false;
-
-            try
-            {
-                MakeRequest(nodeBuilder, req);
-            }
-            catch(const std::exception& e)
-            {
-                wasError = true;
-                std::cerr << e.what() << '\n';
-            }
+            std::string res = interpreter->Handle(req);
 
             THEN("We have exception that function is not defined")
             {
-                REQUIRE(wasError);
+                REQUIRE(res == "No variable or function by this identificator exist: function");
             }
         }
     }
@@ -282,6 +262,7 @@ SCENARIO("Calculating Fibonacci number 8 and change first number")
         {
 
             std::vector<std::string> commands = {
+                "let v0=0",
                 "let v1=1", 
                 "fn fib0=v0", 
                 "fn fib1=v1", 
@@ -316,7 +297,7 @@ SCENARIO("Calculating Fibonacci number 8 and change first number")
                     req = "print fib8";
                     std::string res = interpreter->Handle(req);
 
-                    // REQUIRE
+                    REQUIRE(res == "42");
                 }
             }
         }
