@@ -23,6 +23,9 @@ private:
     static void ParseVariableDefinition(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens);
     static void ParseFunctionCreation(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens);
 
+    static void ParseSignleOperandCreationFunction(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens);
+    static void ParseTwoOperandsCreationFunction(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens);
+
     static constexpr char SPACE = ' ';
     static constexpr char EQUALS_SIGN = '=';
     static constexpr char PLUS_SIGN = '+';
@@ -33,5 +36,5 @@ private:
 public:
     static std::vector<std::string> RetrieveTokensList(const std::string & value);
 
-    static std::unique_ptr<NodeBuilderInput> BuildInput(const std::vector<std::string> & tokens);    
+    static std::unique_ptr<NodeBuilderInput> BuildInput(const std::vector<std::string> & tokens);
 };

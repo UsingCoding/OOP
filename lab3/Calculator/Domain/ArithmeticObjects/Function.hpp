@@ -14,7 +14,10 @@ private:
 public:
     Function(std::shared_ptr<UnitOfArithmetic> firstOperand, std::shared_ptr<UnitOfArithmetic> secondOperand, ArithmeticOperaions::ArithmeticOperation newOperation):
     firstOperand(firstOperand), secondOperand(secondOperand), operation(newOperation) {}
-    
+
+    Function(std::shared_ptr<UnitOfArithmetic> firstOperand):
+    firstOperand(firstOperand), operation(nullptr) {}
+
     operator double() const override;
     operator std::string() const override;
     bool IsDefined() const override;

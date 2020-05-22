@@ -15,109 +15,13 @@
 
 #include "../Calculator/Interpreter/Interpreter.hpp"
 
-std::unique_ptr<Interpreter> GetInterpreter()
-{
-    std::unique_ptr<ResourceManager> manager = std::make_unique<ResourceManager>();
-    std::unique_ptr<NodeBuilder> nodeBuilder = std::make_unique<NodeBuilder>(manager);
-    return std::move(std::make_unique<Interpreter>(nodeBuilder, manager));
-}
-
-SCENARIO("Declaring variable then defining her")
-{
-    GIVEN("An empty ResourceManager and NodeBuilder")
-    {
-        std::unique_ptr<ResourceManager> manager = std::make_unique<ResourceManager>();
-        std::unique_ptr<NodeBuilder> nodeBuilder = std::make_unique<NodeBuilder>(manager);
-
-        WHEN("We declare a new varibale")
-        {
-            std::string userInputToDeclareVariable = "var number";
-
-            AND_WHEN("We parse user input")
-            {
-                auto res = Parser::RetrieveTokensList(userInputToDeclareVariable);
-                std::string variableIdentificator = "number";
-
-                THEN("We got user input divided by terminal characters")
-                {
-                    REQUIRE(res == std::vector<std::string>{"var", variableIdentificator});
-                }
-
-                AND_WHEN("We saving user variable")
-                {
-                    bool wasError = false;
-                    std::unique_ptr<NodeBuilderInput> input;
-
-                    try
-                    {
-                        input = Parser::BuildInput(res);
-                    }
-                    catch(const std::exception& e)
-                    {
-                        wasError = true;
-                    }
-
-                    REQUIRE(!wasError);
-
-                    try
-                    {
-                        nodeBuilder->MapIntoModels(*input);
-                    }
-                    catch(const std::exception& e)
-                    {
-                        wasError = true;
-                    }
-
-                    REQUIRE(!wasError);
-
-                    THEN("We check that variable declarated")
-                    {
-
-                        try
-                        {
-                            manager->RetrieveVariableByIdentificator(variableIdentificator);
-                        }
-                        catch(const std::exception& e)
-                        {
-                            wasError = true;
-                        }
-
-                        REQUIRE(!wasError);
-                    }
-
-                    AND_WHEN("We define variable")
-                    {
-                        std::string userInputToDefVar = "let number = 4";
-                        auto tokens = Parser::RetrieveTokensList(userInputToDefVar);
-                        input = Parser::BuildInput(tokens);
-                        nodeBuilder->MapIntoModels(*input);
-                        
-                        THEN("We can retrieve this varibale")
-                        {
-                            try
-                            {
-                                manager->RetrieveVariableByIdentificator(variableIdentificator);
-                            }
-                            catch(const std::exception& e)
-                            {
-                                wasError = true;
-                            }
-
-                            REQUIRE(!wasError);
-                        }
-                    }
-
-                }
-            }
-        }
-    }
-}
-
 SCENARIO("Calculating two functions")
 {
     GIVEN("Interpreter")
     {
-        std::unique_ptr<Interpreter> interpreter = GetInterpreter();
+        std::unique_ptr<ResourceManager> manager = std::make_unique<ResourceManager>();
+        std::unique_ptr<NodeBuilder> nodeBuilder = std::make_unique<NodeBuilder>(manager);
+        std::unique_ptr<Interpreter> interpreter = std::make_unique<Interpreter>(nodeBuilder, manager);
 
         AND_GIVEN("Two variables: first is defined, second is not defined")
         {
@@ -129,7 +33,7 @@ SCENARIO("Calculating two functions")
 
             THEN("We retrieve varibale value and it`s NaN")
             {
-                req = "var number_2";
+                req = "print number_2";
                 std::string res = interpreter->Handle(req);
                 REQUIRE(res == "NaN");
             }
@@ -155,7 +59,7 @@ SCENARIO("Calculating two functions")
                     {
                         req = "print function";
                         std::string res = interpreter->Handle(req);
-                        REQUIRE(res == "-1");                        
+                        REQUIRE(res == "-1");
                     }
 
                     AND_WHEN("We define new variable and new function")
@@ -168,9 +72,9 @@ SCENARIO("Calculating two functions")
 
                         THEN("We retrieve value of this func")
                         {
-                            req = "print function";
+                            req = "print sum";
                             std::string res = interpreter->Handle(req);
-                            REQUIRE(res == "14");                                                    
+                            REQUIRE(res == "14");
                         }
                     }
                 }
@@ -183,7 +87,9 @@ SCENARIO("Trying to calculate recursive function")
 {
     GIVEN("Gentelman kit(empty resourses)")
     {
-        std::unique_ptr<Interpreter> interpreter = GetInterpreter();
+        std::unique_ptr<ResourceManager> manager = std::make_unique<ResourceManager>();
+        std::unique_ptr<NodeBuilder> nodeBuilder = std::make_unique<NodeBuilder>(manager);
+        std::unique_ptr<Interpreter> interpreter = std::make_unique<Interpreter>(nodeBuilder, manager);
 
         WHEN("We define function and use it in itself")
         {
@@ -202,7 +108,9 @@ SCENARIO("Declare and define variables in different cases and without spaces bet
 {
     GIVEN("Gentelman kit(interpreter)")
     {
-        std::unique_ptr<Interpreter> interpreter = GetInterpreter();
+        std::unique_ptr<ResourceManager> manager = std::make_unique<ResourceManager>();
+        std::unique_ptr<NodeBuilder> nodeBuilder = std::make_unique<NodeBuilder>(manager);
+        std::unique_ptr<Interpreter> interpreter = std::make_unique<Interpreter>(nodeBuilder, manager);
 
         WHEN("We declare variable in incorrect way we have error")
         {
@@ -218,7 +126,7 @@ SCENARIO("Declare and define variables in different cases and without spaces bet
             std::string req = "let number=4";
 
             std::string res = interpreter->Handle(req);
-            
+
             REQUIRE(res == "Success");
         }
 
@@ -239,7 +147,7 @@ SCENARIO("Declare and define variables in different cases and without spaces bet
 
                 AND_WHEN("We try to get value of var")
                 {
-                    req = "print char";
+                    req = "print number";
                     std::string res = interpreter->Handle(req);
 
                     THEN("We got NaN")
@@ -256,28 +164,32 @@ SCENARIO("Calculating Fibonacci number 8 and change first number")
 {
     GIVEN("Interpreter")
     {
-        std::unique_ptr<Interpreter> interpreter = GetInterpreter();
+        std::unique_ptr<ResourceManager> manager = std::make_unique<ResourceManager>();
+        std::unique_ptr<NodeBuilder> nodeBuilder = std::make_unique<NodeBuilder>(manager);
+        std::unique_ptr<Interpreter> interpreter = std::make_unique<Interpreter>(nodeBuilder, manager);
 
         AND_GIVEN("Defined variables and functions")
         {
 
             std::vector<std::string> commands = {
                 "let v0=0",
-                "let v1=1", 
-                "fn fib0=v0", 
-                "fn fib1=v1", 
-                "fn fib2=fib1+fib0", 
-                "fn fib3=fib2+fib1", 
-                "fn fib4=fib3+fib2", 
-                "fn fib5=fib4+fib3", 
-                "fn fib6=fib5+fib4", 
-                "fn fib7=fib6+fib5", 
-                "fn fib8=fib7+fib6", 
+                "let v1=1",
+                "fn fib0=v0",
+                "fn fib1=v1",
+                "fn fib2=fib1+fib0",
+                "fn fib3=fib2+fib1",
+                "fn fib4=fib3+fib2",
+                "fn fib5=fib4+fib3",
+                "fn fib6=fib5+fib4",
+                "fn fib7=fib6+fib5",
+                "fn fib8=fib7+fib6",
             };
 
             std::for_each(commands.begin(), commands.end(), [&interpreter](std::string command){
                 interpreter->Handle(command);
             });
+
+
 
             THEN("We get number 8")
             {
@@ -298,6 +210,111 @@ SCENARIO("Calculating Fibonacci number 8 and change first number")
                     std::string res = interpreter->Handle(req);
 
                     REQUIRE(res == "42");
+                }
+            }
+        }
+    }
+}
+
+SCENARIO("Defining incorrect-named variable, function with three params, and using in function unknown variable, and calculating function with one undefined argument")
+{
+    GIVEN("Interpreter")
+    {
+        std::unique_ptr<ResourceManager> manager = std::make_unique<ResourceManager>();
+        std::unique_ptr<NodeBuilder> nodeBuilder = std::make_unique<NodeBuilder>(manager);
+        std::unique_ptr<Interpreter> interpreter = std::make_unique<Interpreter>(nodeBuilder, manager);
+
+        WHEN("We try to define incorrect-named variable")
+        {
+            std::string req = "let 1number = 4";
+            std::string res = interpreter->Handle(req);
+
+            THEN("We got error response")
+            {
+                REQUIRE(res == "Incorrect name for identificator");
+            }
+        }
+
+        WHEN("We try to define function with 3 params")
+        {
+            std::string req = "fn function = number_1 + number_2 + number_3";
+            std::string res = interpreter->Handle(req);
+
+            THEN("We got error response")
+            {
+                REQUIRE(res == "Incorrect function declaration");
+            }
+        }
+
+        AND_GIVEN("Variable with some value")
+        {
+            std::string req = "let number = 4";
+            interpreter->Handle(req);
+
+            WHEN("We defining function with unknown param")
+            {
+                std::string req = "fn function = var_2 + number";
+                std::string res = interpreter->Handle(req);
+
+                THEN("We got error response")
+                {
+                    REQUIRE(res == "No variable or function by this identificator exist: var_2");
+                }
+            }
+
+            AND_GIVEN("Another variable without value")
+            {
+                std::string req = "var secondNumber";
+                interpreter->Handle(req);
+
+                WHEN("We define a function with this variables")
+                {
+                    std::string req = "fn function = number - secondNumber";
+                    std::string res = interpreter->Handle(req);
+
+                    THEN("Function defined")
+                    {
+                        REQUIRE(res == "Success");
+                    }
+
+                    WHEN("We retrieving value of this function")
+                    {
+                        req = "print function";
+                        res = interpreter->Handle(req);
+
+                        THEN("We got NaN")
+                        {
+                            REQUIRE(res == "NaN");
+                        }
+                    }
+                }
+            }
+
+            AND_GIVEN("Variable with zero value")
+            {
+                std::string req = "let zero = 0";
+                interpreter->Handle(req);
+
+                WHEN("We try to divide smth on zero variable")
+                {
+                    std::string req = "fn function = number / zero";
+                    std::string res = interpreter->Handle(req);
+
+                    THEN("We define a function, but her value is not calculated")
+                    {
+                        REQUIRE(res == "Success");
+                    }
+
+                    AND_WHEN("We calculate this function")
+                    {
+                        std::string req = "print function";
+                        std::string res = interpreter->Handle(req);
+
+                        THEN("We got an error")
+                        {
+                            REQUIRE(res == "You can`t divide by zero");
+                        }
+                    }
                 }
             }
         }

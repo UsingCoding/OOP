@@ -8,8 +8,7 @@ private:
     double value;
     bool isDefined;
 public:
-    Variable();
-    ~Variable();
+    Variable(): isDefined(false){}
 
     operator double() const override;
     operator std::string() const override;

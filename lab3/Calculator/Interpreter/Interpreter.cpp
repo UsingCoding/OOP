@@ -22,7 +22,7 @@ std::string Interpreter::Handle(const std::string & query) const
     {
         return HandlePrintVarValuesCommand();
     }
-    
+
     if (tokens[0] == PRINT_FUNCTIONS)
     {
         return HandlePrintFunctionsValuesCommand();
@@ -34,7 +34,7 @@ std::string Interpreter::Handle(const std::string & query) const
     try
     {
         std::unique_ptr<NodeBuilderInput> input = Parser::BuildInput(tokens);
-        nodeBuilder->MapIntoModels(*input);
+        nodeBuilder->MapIntoModels(input);
 
         return "Success";
     }
@@ -42,7 +42,7 @@ std::string Interpreter::Handle(const std::string & query) const
     {
         return e.what();
     }
-    
+
 }
 
 std::string Interpreter::HandlePrintIdentificatorValueCommand(const std::string & identificator) const

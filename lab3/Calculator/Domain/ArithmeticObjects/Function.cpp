@@ -1,9 +1,10 @@
 #include "./Function.hpp"
 #include "../../../../Utils/StringUtils.hpp"
+#include <iostream>
 
 Function::operator double() const
 {
-    return operation(*(firstOperand), *(secondOperand));
+    return operation == nullptr ? *(firstOperand) : operation(*(firstOperand), *(secondOperand));
 }
 
 Function::operator std::string() const
@@ -18,5 +19,5 @@ double Function::GetRawValue() const
 
 bool Function::IsDefined() const
 {
-    return firstOperand->IsDefined() && secondOperand->IsDefined();
+    return firstOperand->IsDefined() && operation == nullptr ?: secondOperand->IsDefined();
 }

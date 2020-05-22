@@ -44,12 +44,12 @@ std::vector<std::string> Parser::RetrieveTokensList(const std::string & value)
         {
             result.push_back(value.substr(i - offset, offset));
         }
-        
+
         if (value[i] != Parser::SPACE)
         {
             result.push_back(StringUtils::StringConcatenator() << value[i]);
         }
-        
+
         offset = -1;
     }
     if (offset != -1)
@@ -72,7 +72,7 @@ std::unique_ptr<NodeBuilderInput> Parser::BuildInput(const std::vector<std::stri
 
     if (tokens[0] == VARAIBLE_DECLARATION_TERMINAL)
     {
-        
+
         ParseVariableDeclaration(input, tokens);
         return std::move(input);
     }
@@ -82,7 +82,7 @@ std::unique_ptr<NodeBuilderInput> Parser::BuildInput(const std::vector<std::stri
         ParseVariableDefinition(input, tokens);
         return std::move(input);
     }
-    
+
     throw std::domain_error("Unknown terminal " + tokens[0]);
 }
 
@@ -97,7 +97,7 @@ ArithmeticOperaions::ArithmeticOperation Parser::RetrieveArithmeticalOperation(c
     case Parser::MULTIPLY_SIGN:
         return ArithmeticOperaions::Multiply;
     case Parser::DIVIDE_SIGN:
-        return ArithmeticOperaions::Divide;    
+        return ArithmeticOperaions::Divide;
     default:
         throw std::domain_error(StringUtils::StringConcatenator() << "Unknown arithmetic operarion " << symbol);
         break;
@@ -106,7 +106,7 @@ ArithmeticOperaions::ArithmeticOperation Parser::RetrieveArithmeticalOperation(c
 
 bool Parser::IsIdentificatorCorrect(const std::string & identificator)
 {
-    std::regex regular("([a-zA-Z])([a-zA-Z_\\d]*)$");
+    std::regex regular("^([a-zA-Z])([a-zA-Z_\\d]*)$");
     return std::regex_match(identificator, regular);
 }
 
@@ -121,12 +121,12 @@ void Parser::ParseVariableDeclaration(std::unique_ptr<NodeBuilderInput> & input,
     {
         throw std::domain_error("Missing variable identificator");
     }
-    
+
     if (!IsIdentificatorCorrect(tokens[1]))
     {
         throw std::domain_error("Incorrect name for identificator");
     }
-    
+
     input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::NewVariable, tokens[1]);
 }
 
@@ -142,6 +142,11 @@ void Parser::ParseVariableDefinition(std::unique_ptr<NodeBuilderInput> & input, 
         throw std::domain_error("No enough params to define or declare variable");
     }
 
+    if (!IsIdentificatorCorrect(tokens[1]))
+    {
+        throw std::domain_error("Incorrect name for identificator");
+    }
+
     double value;
     std::string firstOperandName;
 
@@ -153,34 +158,39 @@ void Parser::ParseVariableDefinition(std::unique_ptr<NodeBuilderInput> & input, 
     {
         firstOperandName = tokens[3];
     }
-    
+
     input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::CurrentVariable, tokens[1], firstOperandName, value);
 }
 
 void Parser::ParseFunctionCreation(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens)
 {
-    if (tokens.size() > 6)
+    switch (tokens.size())
     {
-        throw std::domain_error("Unknown params after declaration function");
+    case 4:
+        ParseSignleOperandCreationFunction(input, tokens);
+        break;
+    case 6:
+        ParseTwoOperandsCreationFunction(input, tokens);
+        break;
+    default:
+        throw std::domain_error("Incorrect function declaration");
+        break;
     }
+}
 
-    if (tokens.size() < 6)
-    {
-        throw std::domain_error("No enough params to declare function");
-    }
-
+void Parser::ParseSignleOperandCreationFunction(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens)
+{
     if (!IsIdentificatorCorrect(tokens[1]) || !IsIdentificatorCorrect(tokens[3]))
     {
         throw std::logic_error("Incorrect name of identifier");
     }
 
-    if (tokens.size() > 4)
-    {
-            
-    }
-    
+    input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::Function, tokens[1], tokens[3]);
+}
 
-    if (!IsIdentificatorCorrect(tokens[1]) || !IsIdentificatorCorrect(tokens[3]))
+void Parser::ParseTwoOperandsCreationFunction(std::unique_ptr<NodeBuilderInput> & input, const std::vector<std::string> & tokens)
+{
+    if (!IsIdentificatorCorrect(tokens[1]) || !IsIdentificatorCorrect(tokens[3]) || !IsIdentificatorCorrect(tokens[5]))
     {
         throw std::logic_error("Incorrect name of identifier");
     }
@@ -189,6 +199,6 @@ void Parser::ParseFunctionCreation(std::unique_ptr<NodeBuilderInput> & input, co
     {
         throw std::domain_error("Incorrect arithmetic operation " + tokens[4]);
     }
-    
-    input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::Function, tokens[1], tokens[3], tokens[5], RetrieveArithmeticalOperation(tokens[4][0])); 
+
+    input = std::make_unique<NodeBuilderInput>(NodeBuilderInput::NodeCreationType::Function, tokens[1], tokens[3], tokens[5], RetrieveArithmeticalOperation(tokens[4][0]));
 }

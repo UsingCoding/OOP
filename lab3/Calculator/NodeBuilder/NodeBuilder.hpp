@@ -10,12 +10,12 @@
 class NodeBuilder
 {
 private:
-    void MapIntoFunction(const NodeBuilderInput & input);
-    void MapIntoCurrentVariable(const NodeBuilderInput & input);
-    void MapIntoNewVariable(const NodeBuilderInput & input);
-    
+    void MapIntoFunction(const std::unique_ptr<NodeBuilderInput> & input);
+    void MapIntoCurrentVariable(const std::unique_ptr<NodeBuilderInput> & input);
+    void MapIntoNewVariable(const std::unique_ptr<NodeBuilderInput> & input);
+
     std::unique_ptr<ResourceManager> & manager;
 public:
-    void MapIntoModels(const NodeBuilderInput & input);
+    void MapIntoModels(const std::unique_ptr<NodeBuilderInput> & input);
     NodeBuilder(std::unique_ptr<ResourceManager> & manager): manager(manager){}
 };
