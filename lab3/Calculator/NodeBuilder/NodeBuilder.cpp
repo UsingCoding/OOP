@@ -23,6 +23,7 @@ void NodeBuilder::MapIntoModels(const NodeBuilderInput & input)
         MapIntoNewVariable(input);
         break;
     default:
+        throw std::runtime_error("Unknown node type");
         break;
     }
 }

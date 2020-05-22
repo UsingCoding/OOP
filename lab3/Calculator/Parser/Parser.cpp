@@ -169,7 +169,18 @@ void Parser::ParseFunctionCreation(std::unique_ptr<NodeBuilderInput> & input, co
         throw std::domain_error("No enough params to declare function");
     }
 
-    if (!IsIdentificatorCorrect(tokens[1]) || !IsIdentificatorCorrect(tokens[3]) || !IsIdentificatorCorrect(tokens[5]))
+    if (!IsIdentificatorCorrect(tokens[1]) || !IsIdentificatorCorrect(tokens[3]))
+    {
+        throw std::logic_error("Incorrect name of identifier");
+    }
+
+    if (tokens.size() > 4)
+    {
+            
+    }
+    
+
+    if (!IsIdentificatorCorrect(tokens[1]) || !IsIdentificatorCorrect(tokens[3]))
     {
         throw std::logic_error("Incorrect name of identifier");
     }
