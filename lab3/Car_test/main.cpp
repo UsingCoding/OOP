@@ -274,3 +274,79 @@ SCENARIO("Riding backward and stopping")
         }
     }
 }
+
+SCENARIO("Changing gears on differnt speeds")
+{
+    GIVEN("New car with turned on engine")    
+    {
+        Car car;
+        car.TurnOnEngine();
+
+        WHEN("We set gear at -1 and speed at 10")
+        {
+            car.SetGear(-1);
+            car.SetSpeed(10);
+
+            AND_WHEN("We set neutral gear")
+            {
+                car.SetGear(0);
+
+                THEN("We can`t set -1 gear")
+                {
+                    REQUIRE(!car.SetGear(-1));
+                }
+
+                THEN("We can`t set 1 gear")
+                {
+                    REQUIRE(!car.SetGear(1));
+                }
+
+                AND_WHEN("We set zero speed")
+                {
+                    car.SetSpeed(0);
+
+                    THEN("We can set -1 gear")
+                    {
+                        REQUIRE(car.SetGear(-1));
+                    }
+
+                    THEN("We can set 1 gear")
+                    {
+                        REQUIRE(car.SetGear(1));
+                    }
+                }
+            }
+        }
+
+        WHEN("We set first gear and speed at 15")
+        {
+            car.SetGear(-1);
+            car.SetSpeed(10);
+
+            THEN("We can`t set -1 gear")
+            {
+                REQUIRE(!car.SetGear(-1));
+            }
+        }
+
+        WHEN("We trying to set -2 gear")
+        {
+            bool res = car.SetGear(-2);
+
+            THEN("We can`t do it")
+            {
+                REQUIRE(!res);
+            }
+        }
+
+        WHEN("We trying to set speed at -20")
+        {
+            bool res = car.SetSpeed(-20);
+
+            THEN("We can`t do it")
+            {
+                REQUIRE(!res);
+            }
+        }
+    }
+}
