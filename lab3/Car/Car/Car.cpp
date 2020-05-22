@@ -24,7 +24,7 @@ bool Car::Gear::IsInSpeedsRange(int value)
         return true;
     }
     
-    return minValue <= value && value <= maxValue;
+    return minSpeed <= value && value <= maxSpeed;
 }
 
 bool Car::IsEngineOn() const
@@ -79,7 +79,7 @@ bool Car::TurnOffEngine()
 
 bool Car::SetGear(int newGear)
 {
-    if (newGear >= MAX_GEAR)
+    if (newGear >= GetMaxGearCount() || newGear < MIN_GEAR)
     {
         return false;
     }
@@ -87,7 +87,22 @@ bool Car::SetGear(int newGear)
     if (!isEngineOn && newGear != 0)
     {
         return false;
-    }    
+    }
+
+    if (newGear == -1 && speed !=0)
+    {
+        return false;
+    }
+
+    if (gear == -1 && newGear >= 1 && speed != 0)
+    {
+        return false;
+    }
+
+    if (newGear == 1 && gear <= 0 && speed != 0)
+    {
+        return false;
+    }
     
     Gear currentGear = gearbox[newGear + 1];
 
@@ -112,7 +127,13 @@ bool Car::SetGear(int newGear)
 
 bool Car::SetSpeed(int newSpeed)
 {
+    
     if (!isEngineOn)
+    {
+        return false;
+    }
+
+    if (newSpeed < 0)
     {
         return false;
     }
@@ -139,10 +160,7 @@ bool Car::SetSpeed(int newSpeed)
     return true;
 }
 
-void Car::Display()
+int Car::GetMaxGearCount() const
 {
-    std::cout << "IsEngineOn " << isEngineOn << std::endl;
-    std::cout << "Gear " << gear << std::endl;
-    std::cout << "Speed " << speed << std::endl;
-    std::cout << "Direction " << direction << std::endl;
+    return gearbox.size();
 }

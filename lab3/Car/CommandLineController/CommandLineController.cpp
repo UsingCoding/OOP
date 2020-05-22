@@ -18,6 +18,8 @@ void CommandLineController::Start()
     std::cout << "Your new Bentley just created. Type commands to ride on your car" << std::endl;
     std::string userIn;
 
+    EngineOnCommandHandle();
+
     while (true)
     {
         std::cout << "Enter a command" << std::endl << ">> ";
