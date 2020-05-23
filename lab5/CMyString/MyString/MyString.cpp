@@ -128,6 +128,26 @@ void MyString::Clear()
     buffer[size] = '\0';
 }
 
+MyString::Iterator MyString::begin()
+{
+    return buffer;
+}
+
+MyString::Iterator MyString::end()
+{
+    return buffer + size;
+}
+
+MyString::ConstIterator MyString::begin() const
+{
+    return buffer;
+}
+
+MyString::ConstIterator MyString::end() const
+{
+    return buffer + size;
+}
+
 MyString::operator char*()
 {
     return buffer;
@@ -259,4 +279,57 @@ std::istream& operator>> (std::istream &in, MyString & string)
     }
 
     return in;
+}
+
+
+MyString::Iterator& MyString::Iterator::operator+=(int n)
+{
+    curr += n;
+    return *this;
+}
+
+MyString::Iterator& MyString::Iterator::operator-=(int n)
+{
+    *curr -= n;
+    return *this;
+}
+
+int MyString::Iterator::operator-(const Iterator it) const
+{
+    return curr - it.curr;
+}
+
+char& MyString::Iterator::operator++(int) const
+{
+    return *curr++;
+}
+
+char& MyString::Iterator::operator--(int) const
+{
+    return *curr--;
+}
+
+char& MyString::Iterator::operator++() const
+{
+    return *++curr;
+}
+
+char& MyString::Iterator::operator--() const
+{
+    return *--curr;
+}
+
+bool MyString::Iterator::operator!=(const Iterator & it) const
+{
+    return curr != it.curr;
+}
+
+bool MyString::Iterator::operator==(const Iterator & it) const
+{
+    return curr == it.curr;
+}
+
+char& MyString::Iterator::operator* () const
+{
+    return *curr;
 }

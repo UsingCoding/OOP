@@ -35,6 +35,16 @@ public:
 
 	void Clear();
 
+	class Iterator;
+
+	typedef const Iterator ConstIterator;
+
+	Iterator begin();
+	Iterator end();
+
+	ConstIterator begin() const;
+	ConstIterator end() const;
+
 	operator char*();
 
 	MyString operator+(const MyString & string);
@@ -58,4 +68,25 @@ public:
 
 	friend std::ostream& operator<< (std::ostream &out, const MyString & string);
 	friend std::istream& operator>> (std::istream &in, MyString & string);
+
+	class Iterator
+	{
+	private:
+		mutable char* curr;
+	public:
+		Iterator(char* curr): curr(curr){}
+
+		Iterator& operator+=(int n);
+		Iterator& operator-=(int n);
+		int operator-(const Iterator it) const;
+
+		char& operator++(int) const;
+		char& operator--(int) const;
+		char& operator++() const;
+		char& operator--() const;
+
+		bool operator!=(const Iterator & it) const;
+		bool operator==(const Iterator & it) const;
+		char& operator* () const;
+	};
 };
