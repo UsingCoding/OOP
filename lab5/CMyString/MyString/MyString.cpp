@@ -196,9 +196,18 @@ bool MyString::operator!=(const MyString & string) const
 
 bool MyString::operator<(const MyString & string) const
 {
-    MyString substr = SubString(0, string.size);
+    MyString substr;
 
-    return string == substr;
+    try
+    {
+        substr = string.SubString(0, size);
+    }
+    catch(const std::invalid_argument& e)
+    {
+        return false;
+    }
+
+    return *this == substr;
 }
 
 bool MyString::operator>(const MyString & string) const
@@ -208,12 +217,12 @@ bool MyString::operator>(const MyString & string) const
 
 bool MyString::operator<=(const MyString & string) const
 {
-    return *this < string && *this == string;
+    return *this < string || *this == string;
 }
 
 bool MyString::operator>=(const MyString & string) const
 {
-    return *this > string && *this == string;
+    return *this > string || *this == string;
 }
 
 char& MyString::operator[] (const int index)
