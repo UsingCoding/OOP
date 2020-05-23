@@ -1,8 +1,10 @@
 #include "./MyString.hpp"
+#include <iostream>
 #include <stdio.h>
 #include <string.h>
 #include <stdexcept>
-
+#include <cstring>
+#include <cstdio>
 
 MyString::MyString()
 {
@@ -69,8 +71,7 @@ MyString& MyString::operator=(MyString&& other)
 	delete[] buffer;
 
     size = other.size;
-    buffer = new char[size + 1];
-    memcpy(buffer, other.buffer, size + 1);
+    buffer = other.buffer;
 	other.buffer = nullptr; // Уточнить поведение
 
 	return *this;
@@ -111,7 +112,7 @@ MyString MyString::SubString(size_t start, size_t length) const
 
     char result[length];
 
-    for (size_t i = 0; i < length; i++)
+    for (size_t i = start; i < length; i++)
     {
         result[i] = buffer[i];
     }
@@ -125,4 +126,128 @@ void MyString::Clear()
     size = 0;
     buffer = new char[size + 1];
     buffer[size] = '\0';
+}
+
+MyString::operator char*()
+{
+    return buffer;
+}
+
+// Operators
+
+MyString MyString::operator+(const MyString & string)
+{
+    return MyString(std::strcat(buffer, string.buffer));
+}
+
+MyString MyString::operator+(const char* string)
+{
+    return MyString(string) + *this;
+}
+
+MyString MyString::operator+(const std::string & string)
+{
+    return MyString(string) + *this;
+}
+
+MyString& MyString::operator+=(const MyString & string)
+{
+    buffer = (*this + string);
+    return *this;
+}
+
+MyString& MyString::operator+=(char ch)
+{
+    char* tempBuffer = new char[size + 2];
+    memcpy(tempBuffer, buffer, size);
+
+    delete[] buffer;
+    ++size;
+
+    tempBuffer[size - 1] = ch;
+    tempBuffer[size] = '\0';
+
+    buffer = tempBuffer;
+    tempBuffer = nullptr;
+}
+
+bool MyString::operator==(const MyString & string) const
+{
+    if (size != string.size)
+    {
+        return false;
+    }
+
+    for (size_t i = 0; i < size; i++)
+    {
+        if (buffer[i] != string.buffer[i])
+        {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+bool MyString::operator!=(const MyString & string) const
+{
+    return (*this == string);
+}
+
+bool MyString::operator<(const MyString & string) const
+{
+    MyString substr = SubString(0, string.size);
+
+    return string == substr;
+}
+
+bool MyString::operator>(const MyString & string) const
+{
+    return string < *this;
+}
+
+bool MyString::operator<=(const MyString & string) const
+{
+    return *this < string && *this == string;
+}
+
+bool MyString::operator>=(const MyString & string) const
+{
+    return *this > string && *this == string;
+}
+
+char& MyString::operator[] (const int index)
+{
+    if (index >= size)
+    {
+        throw std::out_of_range("");
+    }
+
+    return buffer[index];
+}
+
+const char& MyString::operator[] (const int index) const
+{
+    if (index >= size)
+    {
+        throw std::out_of_range("");
+    }
+
+    return buffer[index];
+}
+
+std::ostream& operator<< (std::ostream &out, const MyString & string)
+{
+    return out << string.buffer;
+}
+
+std::istream& operator>> (std::istream &in, MyString & string)
+{
+    char ch;
+    while ((ch = in.get()) != '\n' && ch != ' ')
+    {
+        string += ch;
+    }
+
+    return in;
 }

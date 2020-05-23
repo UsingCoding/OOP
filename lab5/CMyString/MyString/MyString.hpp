@@ -34,4 +34,28 @@ public:
 	MyString SubString(size_t start, size_t length) const;
 
 	void Clear();
+
+	operator char*();
+
+	MyString operator+(const MyString & string);
+	MyString operator+(const char* string);
+	MyString operator+(const std::string & string);
+
+	MyString& operator+=(const MyString & string);
+	MyString& operator+=(char ch);
+
+	bool operator==(const MyString & string) const;
+	bool operator!=(const MyString & string) const;
+
+	bool operator<(const MyString & string) const;
+	bool operator>(const MyString & string) const;
+
+	bool operator<=(const MyString & string) const;
+	bool operator>=(const MyString & string) const;
+
+	char& operator[] (const int index);
+    const char& operator[] (const int index) const;
+
+	friend std::ostream& operator<< (std::ostream &out, const MyString & string);
+	friend std::istream& operator>> (std::istream &in, MyString & string);
 };
