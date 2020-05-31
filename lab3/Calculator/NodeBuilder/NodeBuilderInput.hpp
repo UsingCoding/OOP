@@ -23,7 +23,7 @@ public:
     nodeCreationType(nodeCreationType), nodeName(nodeName), firstOperandName(firstOperandName), secondOperandName(secondOperandName), operation(operation){}
 
     NodeBuilderInput(NodeCreationType nodeCreationType, std::string nodeName, std::string firstOperandName):
-    nodeCreationType(nodeCreationType), nodeName(nodeName), firstOperandName(firstOperandName) {}
+    nodeCreationType(nodeCreationType), nodeName(nodeName), firstOperandName(firstOperandName), operation(nullptr) {}
 
     NodeCreationType GetNodeCreationType() const;
     std::string const & GetNodeName() const;
