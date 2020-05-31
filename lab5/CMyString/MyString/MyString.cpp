@@ -72,7 +72,7 @@ MyString& MyString::operator=(MyString&& other)
 
     size = other.size;
     buffer = other.buffer;
-	other.buffer = nullptr; // Уточнить поведение
+	other.buffer = nullptr;
 
 	return *this;
 }
@@ -162,12 +162,12 @@ MyString MyString::operator+(const MyString & string)
 
 MyString MyString::operator+(const char* string)
 {
-    return MyString(string) + *this;
+    return  *this + MyString(string);
 }
 
 MyString MyString::operator+(const std::string & string)
 {
-    return MyString(string) + *this;
+    return *this + MyString(string);
 }
 
 MyString& MyString::operator+=(const MyString & string)
