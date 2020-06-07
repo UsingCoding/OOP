@@ -3,6 +3,10 @@
 
 int main(int argc, char const *argv[])
 {
-    MyString string = "1";
+    MyString string = "startup";
+
+    std::cout << string;
+    std::cin >> string;
+
     return 0;
 }
