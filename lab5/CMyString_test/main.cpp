@@ -5,6 +5,7 @@
 #include <sstream>
 
 #include "../CMyString/MyString/MyString.hpp"
+#include "../../Utils/StringUtils.hpp"
 
 SCENARIO("Creating new MyString from diffent type strings")
 {
@@ -72,8 +73,7 @@ SCENARIO("MyString operators")
 
             THEN("We got new MyString containing substr")
             {
-                std::cout << "QWE " <<  newStr.GetStringData() << std::endl;
-                REQUIRE(newStr.GetStringData() == "test");
+                REQUIRE(strcmp(newStr.GetStringData(), "test"));
             }
         }
 
@@ -216,6 +216,22 @@ SCENARIO("MyString operators")
             {
                 string == otherString;
             }
+        }
+
+        WHEN("We iterate string via const iterator")
+        {
+            const MyString newString = string;
+
+            MyString::ConstIterator it = newString.begin();
+
+            StringUtils::StringConcatenator res;
+
+            for (; it != newString.end(); it++)
+            {
+                res << *it;
+            }
+
+            REQUIRE((MyString) res == string);
         }
     }
 }

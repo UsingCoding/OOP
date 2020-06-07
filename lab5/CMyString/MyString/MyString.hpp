@@ -80,13 +80,14 @@ public:
 		Iterator& operator-=(int n);
 		int operator-(const Iterator it) const;
 
-		char& operator++(int) const;
-		char& operator--(int) const;
-		char& operator++() const;
-		char& operator--() const;
+		char* operator++(int) const;
+		char* operator--(int) const;
+		char* operator++() const;
+		char* operator--() const;
 
 		bool operator!=(const Iterator & it) const;
 		bool operator==(const Iterator & it) const;
-		char& operator* () const;
+		char& operator*();
+		const char& operator*() const;
 	};
 };

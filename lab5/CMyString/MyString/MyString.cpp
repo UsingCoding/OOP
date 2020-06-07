@@ -299,24 +299,24 @@ int MyString::Iterator::operator-(const Iterator it) const
     return curr - it.curr;
 }
 
-char& MyString::Iterator::operator++(int) const
+char* MyString::Iterator::operator++(int) const
 {
-    return *curr++;
+    return curr++;
 }
 
-char& MyString::Iterator::operator--(int) const
+char* MyString::Iterator::operator--(int) const
 {
-    return *curr--;
+    return curr--;
 }
 
-char& MyString::Iterator::operator++() const
+char* MyString::Iterator::operator++() const
 {
-    return *++curr;
+    return ++curr;
 }
 
-char& MyString::Iterator::operator--() const
+char* MyString::Iterator::operator--() const
 {
-    return *--curr;
+    return --curr;
 }
 
 bool MyString::Iterator::operator!=(const Iterator & it) const
@@ -329,7 +329,12 @@ bool MyString::Iterator::operator==(const Iterator & it) const
     return curr == it.curr;
 }
 
-char& MyString::Iterator::operator* () const
+char& MyString::Iterator::operator*()
+{
+    return *curr;
+}
+
+const char& MyString::Iterator::operator*() const
 {
     return *curr;
 }
