@@ -1,0 +1,5 @@
+#! /bin/bash
+
+files=`find ../CComplex/ -name "*.cpp" -not -name main.cpp`
+
+g++ $files ../../Utils/StringUtils.cpp main.cpp -o main

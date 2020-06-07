@@ -4,11 +4,6 @@
 
 class Complex
 {
-private:
-    double real;
-    double image;
-
-	static const char I = 'i';
 public:
     Complex(double real = 0, double image = 0);
 
@@ -43,10 +38,16 @@ public:
 
 	Complex operator/=(const Complex & other);
 
-	bool operator==(const Complex & other);
+	bool operator==(const Complex & other) const;
 
-	bool operator!=(const Complex & other);
+	bool operator!=(const Complex & other) const;
 
 	friend std::ostream& operator<< (std::ostream &out, const Complex & complex);
 	friend std::istream& operator>> (std::istream &in, Complex & complex);
+
+private:
+    double real;
+    double image;
+
+	static const char I = 'i';
 };

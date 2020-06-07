@@ -7,7 +7,7 @@
 
 #include <iostream>
 
-Complex::Complex(double real, double image): real(real), image(real) {}
+Complex::Complex(double real, double image): real(real), image(image) {}
 
 double Complex::Re() const
 {
@@ -41,7 +41,6 @@ Complex Complex::operator+(const Complex & other)
 
 Complex Complex::operator-(const Complex & other)
 {
-    // try with unary operator
     return Complex(real - other.real, image - other.image);
 }
 
@@ -91,15 +90,15 @@ Complex Complex::operator/=(const Complex & other)
     image = (real * other.image + image * other.real) / (pow(real, 2) + pow(image, 2));
 }
 
-bool Complex::operator==(const Complex & other)
+bool Complex::operator==(const Complex & other) const
 {
-    bool realsAreEqual = fabs(real- other.real) < DBL_EPSILON;
-    bool imagesAreEqual = fabs(image- other.image) < DBL_EPSILON;
+    bool realsAreEqual = fabs(real - other.real) < DBL_EPSILON;
+    bool imagesAreEqual = fabs(image - other.image) < DBL_EPSILON;
 
     return realsAreEqual && imagesAreEqual;
 }
 
-bool Complex::operator!=(const Complex & other)
+bool Complex::operator!=(const Complex & other) const
 {
     return !(*this == other);
 }
