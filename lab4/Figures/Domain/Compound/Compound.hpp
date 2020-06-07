@@ -1,11 +1,12 @@
 #pragma once
 
-#include <string>
+#include "../Body/Body.hpp"
 
-class Body
+class Compound: public Body
 {
 public:
-    virtual ~Body(){}
+    Compound();
+
     virtual double GetDensity() = 0;
     virtual double GetVolume() = 0;
     virtual double GetMass() = 0;
