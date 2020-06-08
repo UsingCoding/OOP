@@ -299,22 +299,22 @@ int MyString::Iterator::operator-(const Iterator it) const
     return curr - it.curr;
 }
 
-char* MyString::Iterator::operator++(int) const
+MyString::Iterator MyString::Iterator::operator++(int) const
 {
     return curr++;
 }
 
-char* MyString::Iterator::operator--(int) const
+MyString::Iterator MyString::Iterator::operator--(int) const
 {
     return curr--;
 }
 
-char* MyString::Iterator::operator++() const
+MyString::Iterator MyString::Iterator::operator++() const
 {
     return ++curr;
 }
 
-char* MyString::Iterator::operator--() const
+MyString::Iterator MyString::Iterator::operator--() const
 {
     return --curr;
 }
