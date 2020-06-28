@@ -16,16 +16,15 @@ public:
 	MyArray()
     {
         size = 0;
-        // buffer = new T[size];
         buffer = nullptr;
     }
 
 	// Copying
 	MyArray(MyArray<T> const& other)
     {
+        buffer = new T[other.size];
         size = other.size;
-        buffer = new T[size + 1];
-        memcpy(buffer, other.buffer, size + 1);
+        memcpy(buffer, other.buffer, sizeof(T) * size);
     }
 
 	MyArray<T>& operator=(const MyArray<T>& other)
@@ -40,7 +39,7 @@ public:
         delete[] buffer;
 
         buffer = new T[size];
-        memcpy(buffer, other.buffer, size);
+        memcpy(buffer, other.buffer, sizeof(T) * size);
 
         return *this;
     }
@@ -51,6 +50,7 @@ public:
         size = other.size;
         buffer = other.buffer;
         other.buffer = nullptr;
+        other.size = 0;
     }
 
 	MyArray<T>& operator=(MyArray<T>&& other)
@@ -65,6 +65,7 @@ public:
         size = other.size;
         buffer = other.buffer;
 	    other.buffer = nullptr;
+        other.size = 0;
 
 	    return *this;
     }
@@ -98,7 +99,7 @@ public:
     {
         delete[] buffer;
         size = 0;
-        buffer = new T[size];
+        buffer = nullptr;
     }
 
     void Push(T element)
@@ -138,7 +139,7 @@ public:
 
     IteratorReverse rbegin()
     {
-        return buffer + size;
+        return buffer + size - 1;
     }
 
 	IteratorReverse rend()
@@ -166,7 +167,7 @@ public:
         return buffer[index];
     }
 
-    const char& operator[] (const int index) const
+    const T& operator[] (const int index) const
     {
         if (index >= size)
         {
