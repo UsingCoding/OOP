@@ -16,8 +16,8 @@ public:
 	MyArray()
     {
         size = 0;
-        buffer = new T[size + 1];
-        buffer[size] = '\0';
+        // buffer = new T[size];
+        buffer = nullptr;
     }
 
 	// Copying
@@ -39,8 +39,8 @@ public:
 
         delete[] buffer;
 
-        buffer = new T[size + 1];
-        memcpy(buffer, other.buffer, size + 1);
+        buffer = new T[size];
+        memcpy(buffer, other.buffer, size);
 
         return *this;
     }
@@ -81,21 +81,14 @@ public:
 
 	void Resize(size_t newSize)
     {
-        T* tempBuffer = new T[newSize];
+        T* tempBuffer = new T[newSize]();
 
-        memcpy(tempBuffer, buffer, newSize < size ? newSize : size);
+        if (buffer != nullptr)
+        {
+            memcpy(tempBuffer, buffer, newSize < size ? sizeof(T) * newSize : sizeof(T) * size);
+        }
 
         delete[] buffer;
-
-        size_t diff;
-
-        if ((diff = (newSize - size)) > 0)
-        {
-            for (size_t i = size; i < newSize; i++)
-            {
-                tempBuffer[i] = T();
-            }
-        }
 
         size = newSize;
         buffer = tempBuffer;
@@ -105,8 +98,7 @@ public:
     {
         delete[] buffer;
         size = 0;
-        buffer = new T[size + 1];
-        buffer[size] = '\0';
+        buffer = new T[size];
     }
 
     void Push(T element)
@@ -163,9 +155,6 @@ public:
     {
         return buffer;
     }
-
-	// operator char*();
-
 
 	T& operator[] (const int index)
     {
