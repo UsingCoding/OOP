@@ -1,13 +1,13 @@
 // https://github.com/UsingCoding/OOP/issues/7#issue-621202695
 #pragma once
 
-#include "../Body/Body.hpp"
+#include "../SolidBody/SolidBody.hpp"
 
-class BodyRotation: public Body
+class BodyRotation: public SolidBody
 {
 protected:
     double radius;
 public:
-    BodyRotation(double density, double volume, double radius): Body(density, volume), radius(radius) {}
+    BodyRotation(double density, double volume, double radius): SolidBody(density, volume), radius(radius) {}
     virtual double GetBaseRadius() const;
 };

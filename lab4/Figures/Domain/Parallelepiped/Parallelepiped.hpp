@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../Body/Body.hpp"
+#include "../SolidBody/SolidBody.hpp"
 
-class Parallelepiped: public Body
+class Parallelepiped: public SolidBody
 {
 private:
     double height;
@@ -10,7 +10,7 @@ private:
     double width;
 public:
     Parallelepiped(double density, double volume, double height, double depth, double width):
-    Body(density, volume), height(height), depth(depth), width(width) {}
+    SolidBody(density, volume), height(height), depth(depth), width(width) {}
 
     double GetHeight() const;
     double GetWidht() const;

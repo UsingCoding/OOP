@@ -1,14 +1,25 @@
 #pragma once
 
 #include "../Body/Body.hpp"
+#include <memory>
+#include <vector>
+#include <functional>
 
 class Compound: public Body
 {
-public:
-    Compound();
+private:
+    typedef std::shared_ptr<Body> body;
 
-    virtual double GetDensity() = 0;
-    virtual double GetVolume() = 0;
-    virtual double GetMass() = 0;
-    virtual operator std::string() = 0;
+    std::vector<body> bodies;
+    std::shared_ptr<Compound> parentBody = nullptr;
+
+    double GetFromAll(std::function<double(body)> getter) const;
+
+    bool CheckForPresence(body body);
+public:
+    double GetDensity() const override;
+    double GetVolume() const override;
+    double GetMass() const override;
+    operator std::string() const override;
+    void AddBody(body body);
 };

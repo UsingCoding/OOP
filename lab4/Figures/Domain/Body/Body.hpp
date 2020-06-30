@@ -4,14 +4,11 @@
 
 class Body
 {
-protected:
-    double density;
-    double volume;
 public:
-    Body(double density, double volume): density(density), volume(volume) {}
+    Body() {}
     virtual ~Body(){}
-    double GetDensity() const;
-    double GetVolume() const;
-    double GetMass() const;
+    virtual double GetDensity() const = 0;
+    virtual double GetVolume() const = 0;
+    virtual double GetMass() const = 0;
     virtual operator std::string() const = 0;
 };
