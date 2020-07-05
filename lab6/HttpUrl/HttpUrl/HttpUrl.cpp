@@ -33,8 +33,7 @@ void HttpUrl::ParseURL(const std::string & url)
 
     if (matches.empty())
     {
-        // throw UrlParsingError("No correct url info found");
-        throw std::invalid_argument("Incorrect url provided");
+        throw UrlParsingError("No correct url info found");
     }
 
     protocol = RetrieveProtocolFromString(matches[1]);
@@ -58,7 +57,7 @@ HttpUrl::Protocol HttpUrl::RetrieveProtocolFromString(std::string protocol)
 		return Protocol::HTTP;
 	}
 
-    throw std::invalid_argument("Bad protocol");
+    throw UrlParsingError("Bad protocol");
 }
 
 std::string HttpUrl::GetURL() const

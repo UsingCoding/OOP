@@ -5,8 +5,6 @@
 
 class UrlParsingError : public std::invalid_argument
 {
-private:
-    std::string message;
 public:
-    // explicit UrlParsingError(const std::string & message): message(message) {}
+    UrlParsingError(const std::string & message): std::invalid_argument(message) {}
 };
