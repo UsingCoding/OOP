@@ -64,7 +64,7 @@ private:
 
 	const static char SLASH;
 	const static char COLON;
-	const static int NON_SPECIFIED_PORT_VALUE = -1;
+	const static int NON_SPECIFIED_PORT_VALUE = 0;
 	const static int DEFAULT_HTTP_PORT = 80;
 	const static int DEFAULT_HTTPS_PORT = 443;
 

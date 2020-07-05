@@ -17,7 +17,8 @@ HttpUrl::HttpUrl(const std::string & url)
 }
 
 HttpUrl::HttpUrl(const std::string & domain, const std::string & document, Protocol protocol):
-domain(domain), document(document), port(NON_SPECIFIED_PORT_VALUE) {}
+domain(domain), document(document), protocol(protocol), port(NON_SPECIFIED_PORT_VALUE) {}
+
 
 HttpUrl::HttpUrl(const std::string & domain, const std::string & document, Protocol protocol, unsigned short port):
 domain(domain), document(document), protocol(protocol), port(port) {}
