@@ -1,0 +1,6 @@
+name: BodiesLab
+
+version: 1.0.0+1
+
+dependencies:
+    test: ^1.15.2
