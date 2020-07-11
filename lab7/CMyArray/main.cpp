@@ -6,13 +6,13 @@ template<class T>
 void PrintArray(const MyArray<T> & array)
 {
     std::cout << "Direct order" << std::endl;
-    for (auto it = array.rbegin(); it != array.rend(); it++)
+    for (auto it = array.begin(); it != array.end(); it++)
     {
         std::cout << *it << std::endl;
     }
 
     std::cout << "Reverse order" << std::endl;
-    for (auto it = array.begin(); it != array.end(); it++)
+    for (auto it = array.rbegin(); it != array.rend(); it++)
     {
         std::cout << *it << std::endl;
     }
@@ -30,13 +30,14 @@ int main(int argc, char const *argv[])
 
         PrintArray(array);
     }
-
     {
         MyArray<std::string> array;
 
         array.Push("vector");
         array.Push("string");
         array.Push("map");
+
+        PrintArray(array);
     }
 
     return 0;
