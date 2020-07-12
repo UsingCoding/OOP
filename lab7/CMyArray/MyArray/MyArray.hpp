@@ -9,17 +9,15 @@
 template <typename T>
 class MyArray
 {
-
 public:
 	MyArray() = default;
 
     // Copying
 	MyArray(const MyArray& other)
 	{
-		auto size = other.GetSize();
-		if (size != 0)
+		if (other.GetSize() != 0)
 		{
-			m_begin = Alloc(size);
+			m_begin = Alloc(other.GetSize());
 			try
 			{
 				CopyElements(other.m_begin, other.m_end, m_begin, m_end);
@@ -40,10 +38,20 @@ public:
 		    return *this;
 		}
 
-        MyArray tempArr(other);
-		std::swap(m_begin, tempArr.m_begin);
-		std::swap(m_end, tempArr.m_end);
-		std::swap(m_capacityEnd, tempArr.m_capacityEnd);
+		if (other.GetSize() != 0)
+		{
+			m_begin = Alloc(other.GetSize());
+			try
+			{
+				CopyElements(other.m_begin, other.m_end, m_begin, m_end);
+				m_capacityEnd = m_end;
+			}
+			catch (...)
+			{
+				DeleteElements(m_begin, m_end);
+				throw;
+			}
+		}
 	}
 
     // Movement
