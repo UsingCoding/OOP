@@ -1,6 +1,6 @@
 import '../Body/Body.dart';
 
-abstract class SolidBody extends Body
+abstract class SolidBody implements Body
 {
   double _density;
   double _volume;

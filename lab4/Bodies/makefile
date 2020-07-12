@@ -1,8 +1,8 @@
 all: run
 
-.PHONY: build
-build:
-	sh build
+.PHONY: test
+test:
+	pub run test test/main.dart
 
 .PHONY: run
 run:

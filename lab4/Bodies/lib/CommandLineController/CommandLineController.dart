@@ -1,12 +1,13 @@
 import 'dart:io';
 
+import 'package:BodiesLab/Figures/BodiesCalculations.dart';
 import 'package:BodiesLab/Figures/Body/Body.dart';
 import 'package:BodiesLab/Figures/Compound/Compound.dart';
 import 'package:BodiesLab/Figures/ShapesFactory/ShapesFactory.dart';
 
 class CommandLineController
 {
-  final List<String> _availabelTypesOfShapes = [
+  static const List<String> _availabelTypesOfShapes = [
     ShapesFactory.COMPOUND,
     ShapesFactory.CONE,
     ShapesFactory.CYLINDER,
@@ -14,9 +15,12 @@ class CommandLineController
     ShapesFactory.SPHERE
   ];
 
-  final String _STOP_COMMAND = 'Stop';
+  static const _FIND_MAX_MASS = 'FindMaxMass';
+  static const _FIND_MIN_WEIGHT = 'FindMinWeight';
 
-  final List<Body> bodies = [];
+  static const _STOP_COMMAND = 'Stop';
+
+  final List<Body> _bodies = [];
 
   void _WriteInvitation()
   {
@@ -28,12 +32,14 @@ class CommandLineController
 
     stdout.writeln('To create a Compound use command: Compound <SHAPE_TYPE> arg [..args], [..<SHAPE_TYPE> arg [..args]]');
 
+    stdout.writeln('To find out which body has MaxMass or Min weight in water write: ' + _FIND_MAX_MASS + ' or ' + _FIND_MIN_WEIGHT);
+
     stdout.writeln('To stop execution write "Stop"');
   }
 
   void _HandleBodyCreation(List<String> inputSegments)
   {
-    bodies.add(ShapesFactory.Create(inputSegments));
+    _bodies.add(ShapesFactory.Create(inputSegments));
     stdout.writeln('Shape created - ' + inputSegments[0]);
   }
 
@@ -42,7 +48,7 @@ class CommandLineController
     inputSegments.removeRange(0, 1);
     inputSegments = inputSegments.join(' ').split(', ');
 
-    final Compound lastCompound = bodies.last;
+    final Compound lastCompound = _bodies.last;
 
     inputSegments.forEach((String element) {
       final segments = element.split(' ');
@@ -73,6 +79,30 @@ class CommandLineController
       }
 
       final inputSegments = input.split(' ');
+
+      if (inputSegments[0] == _FIND_MAX_MASS)
+      {
+        if (_bodies.length == 0)
+        {
+          stdout.writeln('No body created');
+          continue;
+        }
+
+        stdout.writeln(BodiesCalculations.FindMaxMassBody(_bodies));
+        continue;
+      }
+
+      if (inputSegments[0] == _FIND_MIN_WEIGHT)
+      {
+        if (_bodies.length == 0)
+        {
+          stdout.writeln('No body created');
+          continue;
+        }
+
+        stdout.writeln(BodiesCalculations.FindMinWeightInWaterBody(_bodies));
+        continue;
+      }
 
       try
       {

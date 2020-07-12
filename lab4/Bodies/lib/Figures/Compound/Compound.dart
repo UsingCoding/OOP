@@ -1,8 +1,8 @@
-import 'dart:ffi';
+import 'package:BodiesLab/Figures/Compound/SelfInsertException.dart';
 
 import '../Body/Body.dart';
 
-class Compound extends Body
+class Compound implements Body
 {
   final List<Body> _bodies = [];
   Compound _parentBody = null;
@@ -60,7 +60,7 @@ class Compound extends Body
     {
       if (_CheckForPresence(body))
       {
-        throw Exception("Self insert detected");
+        throw SelfInsertException();
       }
 
       body._parentBody = this;
