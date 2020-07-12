@@ -54,6 +54,9 @@ class Compound implements Body
     return _GetFromAll((Body body) => body.GetMass());
   }
 
+  @override
+  String toString() => _bodies.map((Body e) => e.toString()).join('\n');
+
   void AddBody(Body body)
   {
     if (body is Compound)

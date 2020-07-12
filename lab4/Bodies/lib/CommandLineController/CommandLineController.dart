@@ -15,9 +15,6 @@ class CommandLineController
     ShapesFactory.SPHERE
   ];
 
-  static const _FIND_MAX_MASS = 'FindMaxMass';
-  static const _FIND_MIN_WEIGHT = 'FindMinWeight';
-
   static const _STOP_COMMAND = 'Stop';
 
   final List<Body> _bodies = [];
@@ -31,8 +28,6 @@ class CommandLineController
     stdout.writeln('To create a Shape use command: <SHAPE_TYPE> arg [..args]');
 
     stdout.writeln('To create a Compound use command: Compound <SHAPE_TYPE> arg [..args], [..<SHAPE_TYPE> arg [..args]]');
-
-    stdout.writeln('To find out which body has MaxMass or Min weight in water write: ' + _FIND_MAX_MASS + ' or ' + _FIND_MIN_WEIGHT);
 
     stdout.writeln('To stop execution write "Stop"');
   }
@@ -80,30 +75,6 @@ class CommandLineController
 
       final inputSegments = input.split(' ');
 
-      if (inputSegments[0] == _FIND_MAX_MASS)
-      {
-        if (_bodies.length == 0)
-        {
-          stdout.writeln('No body created');
-          continue;
-        }
-
-        stdout.writeln(BodiesCalculations.FindMaxMassBody(_bodies));
-        continue;
-      }
-
-      if (inputSegments[0] == _FIND_MIN_WEIGHT)
-      {
-        if (_bodies.length == 0)
-        {
-          stdout.writeln('No body created');
-          continue;
-        }
-
-        stdout.writeln(BodiesCalculations.FindMinWeightInWaterBody(_bodies));
-        continue;
-      }
-
       try
       {
         _HandleBodyCreation(inputSegments);
@@ -120,5 +91,18 @@ class CommandLineController
       }
 
     }
+
+    if (_bodies.length != 0)
+    {
+      stdout.writeln('Created Shapes:');
+      stdout.writeln(_bodies.map((Body e) => e.toString()).join('\n'));
+
+      stdout.writeln('Max mass: ' + BodiesCalculations.FindMaxMassBody(_bodies).toString());
+      stdout.writeln('Max weight in water' + BodiesCalculations.FindMinWeightInWaterBody(_bodies).toString());
+
+      return;
+    }
+
+    stdout.writeln('No shape created');
   }
 }
