@@ -27,7 +27,7 @@ public:
 			}
 			catch (...)
 			{
-				DeleteItems(m_begin, m_end);
+				DeleteElements(m_begin, m_end);
 				throw;
 			}
 		}
@@ -62,7 +62,7 @@ public:
     		return *this;
 		}
 
-        DeleteItems(m_begin, m_end);
+        DeleteElements(m_begin, m_end);
 
 		m_begin = other.m_begin;
 		m_end = other.m_end;
@@ -75,7 +75,7 @@ public:
 
 	~MyArray()
 	{
-		DeleteItems(m_begin, m_end);
+		DeleteElements(m_begin, m_end);
 	}
 
 	void Push(const T & value)
@@ -137,11 +137,11 @@ public:
 			}
 			catch (...)
 			{
-				DeleteItems(newBegin, newEnd);
+				DeleteElements(newBegin, newEnd);
 				throw;
 			}
 		}
-		DeleteItems(m_begin, m_end);
+		DeleteElements(m_begin, m_end);
 
 		m_begin = newBegin;
 		m_end = newEnd;
@@ -171,7 +171,7 @@ public:
 
 	void Clear()
 	{
-		DeleteItems(m_begin, m_end);
+		DeleteElements(m_begin, m_end);
 
 		m_begin = nullptr;
 		m_end = nullptr;
@@ -308,7 +308,7 @@ private:
 	T *m_end = nullptr;
 	T *m_capacityEnd = nullptr;
 
-	static void DeleteItems(T *begin, T *end)
+	static void DeleteElements(T *begin, T *end)
 	{
 		DestroyElements(begin, end);
 		Free(begin);
