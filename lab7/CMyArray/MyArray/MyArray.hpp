@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdexcept>
+#include <algorithm>
+#include <new>
+
 
 #include <iostream>
 
@@ -9,103 +12,174 @@ template<class T>
 class MyArray
 {
 private:
-    T* buffer;
-    size_t size;
+    T* begin;
+    T* end;
+    T* capacityEnd;
+
+    static T* Alloc(size_t n)
+    {
+        size_t memSize = n * sizeof(T);
+		T *ptr = static_cast<T*>(malloc(memSize));
+		if (ptr == nullptr)
+		{
+			throw std::bad_alloc();
+		}
+		return ptr;
+    }
+
+    static void DeleteElements(T* begin, T* end)
+    {
+        DestroyElements(begin, end);
+        Free(begin);
+    }
+
+    static void DestroyElements(T* src, T* dest)
+	{
+		while (dest != src)
+		{
+			--dest;
+			dest->~T();
+		}
+	}
+
+    static void Free(T* ptr)
+    {
+        free(ptr);
+    }
 
 public:
-	MyArray()
-    {
-        size = 0;
-        buffer = nullptr;
-    }
+	MyArray(): begin(nullptr), end(nullptr), capacityEnd(nullptr) {}
 
 	// Copying
-	MyArray(MyArray<T> const& other)
-    {
-        buffer = new T[other.size];
-        size = other.size;
-        memcpy(buffer, other.buffer, sizeof(T) * size);
-    }
+	// MyArray(MyArray<T> const& other)
+    // {
+    //     begin = new T[other.size];
+    //     size = other.size;
+    //     memcpy(begin, other.begin, sizeof(T) * size);
+    // }
 
-	MyArray<T>& operator=(const MyArray<T>& other)
-    {
-        if (std::addressof(other) == std::addressof(*this))
-        {
-            return *this;
-        }
+	// MyArray<T>& operator=(const MyArray<T>& other)
+    // {
+    //     if (std::addressof(other) == std::addressof(*this))
+    //     {
+    //         return *this;
+    //     }
 
-        size = other.size;
+    //     size = other.size;
 
-        delete[] buffer;
+    //     delete[] begin;
 
-        buffer = new T[size];
-        memcpy(buffer, other.buffer, sizeof(T) * size);
+    //     begin = new T[size];
+    //     memcpy(begin, other.begin, sizeof(T) * size);
 
-        return *this;
-    }
+    //     return *this;
+    // }
 
-	// Movement
-	MyArray(MyArray<T> && other)
-    {
-        size = other.size;
-        buffer = other.buffer;
-        other.buffer = nullptr;
-        other.size = 0;
-    }
+	// // Movement
+	// MyArray(MyArray<T> && other)
+    // {
+    //     size = other.size;
+    //     begin = other.begin;
+    //     other.begin = nullptr;
+    //     other.size = 0;
+    // }
 
-	MyArray<T>& operator=(MyArray<T>&& other)
-    {
-        if (std::addressof(other) == std::addressof(*this))
-        {
-            return *this;
-        }
+	// MyArray<T>& operator=(MyArray<T>&& other)
+    // {
+    //     if (std::addressof(other) == std::addressof(*this))
+    //     {
+    //         return *this;
+    //     }
 
-	    delete[] buffer;
+	//     delete[] begin;
 
-        size = other.size;
-        buffer = other.buffer;
-	    other.buffer = nullptr;
-        other.size = 0;
+    //     size = other.size;
+    //     begin = other.begin;
+	//     other.begin = nullptr;
+    //     other.size = 0;
 
-	    return *this;
-    }
+	//     return *this;
+    // }
 
 	~MyArray()
     {
-        delete[] buffer;
-    }
-
-	size_t GetLength() const
-    {
-        return size;
-    }
-
-	void Resize(size_t newSize)
-    {
-        T* tempBuffer = new T[newSize]();
-
-        if (buffer != nullptr)
-        {
-            memcpy(tempBuffer, buffer, newSize < size ? sizeof(T) * newSize : sizeof(T) * size);
-        }
-
-        delete[] buffer;
-
-        size = newSize;
-        buffer = tempBuffer;
+        DeleteElements(begin, end);
+        // delete[] begin;
     }
 
 	void Clear()
     {
-        delete[] buffer;
-        size = 0;
-        buffer = nullptr;
+        DeleteElements(begin, end);
+
+        begin = nullptr;
+        end = nullptr;
+        capacityEnd = nullptr;
     }
 
-    void Push(T element)
+    void Push(const T & element)
     {
-        Resize(size + 1);
-        buffer[size - 1] = element;
+        if (capacityEnd == end)
+        {
+            auto newCapacity = std::max(size_t(1), GetCapacity() * 2);
+            Reserve(newCapacity);
+        }
+
+        new (end) T(element);
+        ++end;
+    }
+
+    size_t GetCapacity() const
+    {
+        return capacityEnd - end;
+    }
+
+    size_t GetSize() const
+    {
+        return end - begin;
+    }
+
+    void Reserve(size_t newCapacity)
+    {
+        if (GetCapacity() >= newCapacity)
+        {
+            return;
+        }
+
+        auto newBegin = Alloc(newCapacity);
+
+        if (GetSize() != 0)
+        {
+            memcpy(newBegin, begin, GetSize());
+        }
+
+        DeleteElements(begin, end);
+
+        auto size = (GetSize() == 0 ? newCapacity : GetSize());
+        begin = newBegin;
+        end = begin + size;
+        capacityEnd = begin + newCapacity;
+    }
+
+    void Resize(size_t size)
+    {
+        if (size != GetSize())
+        {
+            size_t minSize = std::min(GetSize(), size);
+            auto tempBuffer = Alloc(minSize);
+
+            memcpy(tempBuffer, begin, minSize);
+
+            for (size_t i = GetSize(); i < size; i++)
+            {
+                tempBuffer[i] = new T();
+            }
+
+            DeleteElements(begin, end);
+
+            begin = tempBuffer;
+            end = begin + size;
+            capacityEnd = end > capacityEnd ? end : capacityEnd;
+        }
     }
 
 	template<bool reverse>
@@ -117,64 +191,64 @@ public:
     typedef iterator<true> IteratorReverse;
 	typedef const iterator<true> ConstIteratorReverse;
 
-	Iterator begin()
-    {
-        return buffer;
-    }
+	// Iterator begin()
+    // {
+    //     return begin;
+    // }
 
-	Iterator end()
-    {
-        return buffer + size;
-    }
+	// Iterator end()
+    // {
+    //     return end;
+    // }
 
-	ConstIterator begin() const
-    {
-        return buffer;
-    }
+	// ConstIterator begin() const
+    // {
+    //     return begin;
+    // }
 
-	ConstIterator end() const
-    {
-        return buffer + size;
-    }
+	// ConstIterator end() const
+    // {
+    //     return end;
+    // }
 
-    IteratorReverse rbegin()
-    {
-        return buffer + size - 1;
-    }
+    // IteratorReverse rbegin()
+    // {
+    //     return end - 1;
+    // }
 
-	IteratorReverse rend()
-    {
-        return buffer;
-    }
+	// IteratorReverse rend()
+    // {
+    //     return begin;
+    // }
 
-	ConstIteratorReverse rbegin() const
-    {
-        return buffer + size - 1;
-    }
+	// ConstIteratorReverse rbegin() const
+    // {
+    //     return end - 1;
+    // }
 
-	ConstIteratorReverse rend() const
-    {
-        return buffer;
-    }
+	// ConstIteratorReverse rend() const
+    // {
+    //     return begin;
+    // }
 
 	T& operator[] (const int index)
     {
-        if (index >= size)
+        if (index >= GetSize())
         {
             throw std::out_of_range("");
         }
 
-        return buffer[index];
+        return begin[index];
     }
 
     const T& operator[] (const int index) const
     {
-        if (index >= size)
+        if (index >= GetSize())
         {
             throw std::out_of_range("");
         }
 
-        return buffer[index];
+        return begin[index];
     }
 
     template<bool reverse>
