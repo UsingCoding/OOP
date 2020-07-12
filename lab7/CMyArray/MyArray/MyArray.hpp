@@ -40,10 +40,10 @@ public:
 		    return *this;
 		}
 
-        MyArray newArr(other);
-		std::swap(m_begin, newArr.m_begin);
-		std::swap(m_end, newArr.m_end);
-		std::swap(m_capacityEnd, newArr.m_capacityEnd);
+        MyArray tempArr(other);
+		std::swap(m_begin, tempArr.m_begin);
+		std::swap(m_end, tempArr.m_end);
+		std::swap(m_capacityEnd, tempArr.m_capacityEnd);
 	}
 
     // Movement
@@ -103,7 +103,7 @@ public:
 	{
 		if (index >= GetSize())
 		{
-			throw std::out_of_range("Out of range!");
+			throw std::out_of_range("Out of range");
 		}
 
 		return *(m_begin + index);
@@ -113,7 +113,7 @@ public:
 	{
 		if (index >= GetSize())
 		{
-			throw std::out_of_range("Out of range!");
+			throw std::out_of_range("Out of range");
 		}
 
 		return *(m_begin + index);

@@ -11,14 +11,6 @@ void PrintArray(const MyArray<T> & array)
         std::cout << *it << std::endl;
     }
 
-    // for (size_t i = 0; i < array.GetSize(); i++)
-    // {
-    //     std::cout << array[i] << std::endl;
-    // }
-
-
-    // std::cout << "Size " << array.GetSize() << std::endl;
-
     std::cout << "Reverse order" << std::endl;
     for (auto it = array.rbegin(); it != array.rend(); it++)
     {
@@ -31,24 +23,33 @@ int main(int argc, char const *argv[])
     MyArray<double> array;
 
     array.Push(4.4);
-    array.Push(5.5);
-    array.Push(1.4);
+    array.Push(4.3);
 
-    int i = array.GetSize() - 1;
-    for (auto it = array.rbegin(); it != array.rend(); it++, i--)
+    return 0;
+}
+
+
+int main1(int argc, char const *argv[])
+{
     {
-        // std::cout << (*it == array[i]) << std::endl;
-        std::cout << *it << std::endl;
+        MyArray<double> array;
+
+        array.Push(4.4);
+        array.Push(1.4);
+        array.Push(9.4);
+        array.Push(6.4);
+
+        PrintArray(array);
     }
+    {
+        MyArray<std::string> array;
 
-    // MyArray<std::string> array;
+        array.Push("vector");
+        array.Push("string");
+        array.Push("map");
 
-    // array.Push("vector");
-    // array.Push("string");
-    // array.Push("map");
-    // // std::cout << array.GetSize() << std::endl;
-    // std::cout << array[array.GetSize() - 1] << std::endl;
-    // // PrintArray(array);
+        PrintArray(array);
+    }
 
     return 0;
 }
