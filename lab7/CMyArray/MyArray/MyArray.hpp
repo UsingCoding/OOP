@@ -1,67 +1,22 @@
 #pragma once
+
 #include <stdio.h>
 #include <string.h>
 #include <stdexcept>
 #include <algorithm>
 #include <new>
 
-
-#include <iostream>
-
-template<class T>
+template <typename T>
 class MyArray
 {
-private:
-    T* m_begin;
-    T* m_end;
-    T* m_capacityEnd;
-
-    static T* Alloc(size_t n)
-    {
-        size_t memSize = n * sizeof(T);
-		T *ptr = static_cast<T*>(malloc(memSize));
-		if (ptr == nullptr)
-		{
-			throw std::bad_alloc();
-		}
-		return ptr;
-    }
-
-    static void CopyElements(const T * srcBegin, T * srcEnd, T * const dstBegin, T * & dstEnd)
-	{
-		for (dstEnd = dstBegin; srcBegin != srcEnd; ++srcBegin, ++dstEnd)
-		{
-			new (dstEnd)T(*srcBegin);
-		}
-	}
-
-    static void DeleteElements(T* begin, T* end)
-    {
-        DestroyElements(begin, end);
-        Free(begin);
-    }
-
-    static void DestroyElements(T* src, T* dest)
-	{
-		while (dest != src)
-		{
-			--dest;
-			dest->~T();
-		}
-	}
-
-    static void Free(T* ptr)
-    {
-        free(ptr);
-    }
 
 public:
-	MyArray(): m_begin(nullptr), m_end(nullptr), m_capacityEnd(nullptr) {}
+	MyArray() = default;
 
-	// Copying
-	MyArray(MyArray<T> const& other)
-    {
-        auto size = other.GetSize();
+    // Copying
+	MyArray(const MyArray& other)
+	{
+		auto size = other.GetSize();
 		if (size != 0)
 		{
 			m_begin = Alloc(size);
@@ -72,29 +27,27 @@ public:
 			}
 			catch (...)
 			{
-				DeleteElements(m_begin, m_end);
+				DeleteItems(m_begin, m_end);
 				throw;
 			}
 		}
-    }
+	}
 
-	MyArray<T>& operator=(const MyArray<T>& other)
-    {
-        if (std::addressof(other) == std::addressof(*this))
-        {
-            return *this;
-        }
+    MyArray& operator=(const MyArray & other)
+	{
+		if (std::addressof(other) == std::addressof(*this))
+		{
+		    return *this;
+		}
 
         MyArray newArr(other);
 		std::swap(m_begin, newArr.m_begin);
 		std::swap(m_end, newArr.m_end);
 		std::swap(m_capacityEnd, newArr.m_capacityEnd);
+	}
 
-        return *this;
-    }
-
-	// Movement
-	MyArray(MyArray&& other):
+    // Movement
+	MyArray(MyArray && other):
     m_begin(other.m_begin), m_end(other.m_end), m_capacityEnd(other.m_capacityEnd)
 	{
 		other.m_begin = nullptr;
@@ -102,14 +55,14 @@ public:
 		other.m_capacityEnd = nullptr;
 	}
 
-	MyArray<T>& operator=(MyArray<T>&& other)
-    {
-        if (std::addressof(other) == std::addressof(*this))
-        {
-            return *this;
-        }
+    MyArray& operator=(MyArray && other)
+	{
+		if (std::addressof(other) == std::addressof(*this))
+		{
+    		return *this;
+		}
 
-	    DeleteElements(m_begin, m_end);
+        DeleteItems(m_begin, m_end);
 
 		m_begin = other.m_begin;
 		m_end = other.m_end;
@@ -118,80 +71,88 @@ public:
 		other.m_begin = nullptr;
 		other.m_end = nullptr;
 		other.m_capacityEnd = nullptr;
-	    return *this;
-    }
+	}
 
 	~MyArray()
-    {
-        DeleteElements(m_begin, m_end);
-    }
+	{
+		DeleteItems(m_begin, m_end);
+	}
 
-	void Clear()
-    {
-        DeleteElements(m_begin, m_end);
+	void Push(const T & value)
+	{
+		if (m_end == m_capacityEnd)
+		{
+			size_t newCapacity = std::max(size_t(1), GetCapacity() * 2);
+			Reserve(newCapacity);
+		}
+		new (m_end) T(value);
+		++m_end;
+	}
 
-        m_begin = nullptr;
-        m_end = nullptr;
-        m_capacityEnd = nullptr;
-    }
+	size_t GetSize() const
+	{
+		return m_end - m_begin;
+	}
 
-    void Push(const T & element)
-    {
-        if (m_capacityEnd == m_end)
-        {
-            auto newCapacity = std::max(size_t(1), GetCapacity() * 2);
-            Reserve(newCapacity);
-        }
+	size_t GetCapacity() const
+	{
+		return m_capacityEnd - m_begin;
+	}
 
-        new (m_end) T(element);
-        ++m_end;
-    }
+	const T& operator[](const size_t index) const
+	{
+		if (index >= GetSize())
+		{
+			throw std::out_of_range("Out of range!");
+		}
 
-    size_t GetCapacity() const
-    {
-        return m_capacityEnd - m_end;
-    }
+		return *(m_begin + index);
+	}
 
-    size_t GetSize() const
-    {
-        return m_end - m_begin;
-    }
+	T& operator[](const size_t index)
+	{
+		if (index >= GetSize())
+		{
+			throw std::out_of_range("Out of range!");
+		}
 
-    void Reserve(size_t newCapacity)
-    {
-        if (GetCapacity() >= newCapacity)
-        {
-            return;
-        }
+		return *(m_begin + index);
+	}
 
-        auto newBegin = Alloc(newCapacity);
-        T* newEnd = newBegin;
+	void Reserve(size_t newCapacity)
+	{
+		if (GetCapacity() >= newCapacity)
+		{
+			return;
+		}
 
-        if (GetSize() != 0)
-        {
-            try
+		auto newBegin = Alloc(newCapacity);
+		T *newEnd = newBegin;
+
+		if (GetSize() != 0)
+		{
+			try
 			{
 				CopyElements(m_begin, m_end, newBegin, newEnd);
 			}
 			catch (...)
 			{
-				DeleteElements(newBegin, newEnd);
+				DeleteItems(newBegin, newEnd);
 				throw;
 			}
-        }
+		}
+		DeleteItems(m_begin, m_end);
 
-        DeleteElements(m_begin, m_end);
-
-        m_begin = newBegin;
+		m_begin = newBegin;
 		m_end = newEnd;
 		m_capacityEnd = m_begin + newCapacity;
-    }
+	}
 
-    void Resize(size_t size)
-    {
-        if (size != GetSize())
-        {
-            MyArray newArr;
+	void Resize(size_t size)
+	{
+		if (size != GetSize())
+		{
+			MyArray newArr;
 			newArr.Reserve(size);
 
 			size_t minSize = std::min(GetSize(), size);
@@ -205,8 +166,17 @@ public:
 			}
 
 			*this = std::move(newArr);
-        }
-    }
+		}
+	}
+
+	void Clear()
+	{
+		DeleteItems(m_begin, m_end);
+
+		m_begin = nullptr;
+		m_end = nullptr;
+		m_capacityEnd = nullptr;
+	}
 
 	template<bool reverse>
 	class iterator;
@@ -237,65 +207,43 @@ public:
         return m_end;
     }
 
-    // IteratorReverse rbegin()
-    // {
-    //     return end - 1;
-    // }
-
-	// IteratorReverse rend()
-    // {
-    //     return begin;
-    // }
-
-	// ConstIteratorReverse rbegin() const
-    // {
-    //     return end - 1;
-    // }
-
-	// ConstIteratorReverse rend() const
-    // {
-    //     return begin;
-    // }
-
-	T& operator[] (const int index)
+    IteratorReverse rbegin()
     {
-        if (index >= GetSize())
-        {
-            throw std::out_of_range("");
-        }
-
-        return m_begin[index];
+        return m_end - 1;
     }
 
-    const T& operator[] (const int index) const
+	IteratorReverse rend()
     {
-        if (index >= GetSize())
-        {
-            throw std::out_of_range("");
-        }
+        return m_begin - 1;
+    }
 
-        return m_begin[index];
+	ConstIteratorReverse rbegin() const
+    {
+        return m_end -1;
+    }
+
+	ConstIteratorReverse rend() const
+    {
+        return m_begin - 1;
     }
 
     template<bool reverse>
 	class iterator
 	{
 	private:
-        T* beginPtr;
-        T* endPtr;
-		mutable T* curr;
+		mutable T* m_curr;
 	public:
-		iterator(T* curr): curr(curr){}
+		iterator(T* curr): m_curr(curr){}
 
 		iterator<reverse> operator++(int) const
         {
             if (reverse)
             {
-                return curr--;
+                return m_curr--;
             }
             else
             {
-                return curr++;
+                return m_curr++;
             }
         }
 
@@ -303,11 +251,11 @@ public:
         {
             if (reverse)
             {
-                return curr++;
+                return m_curr++;
             }
             else
             {
-                return curr--;
+                return m_curr--;
             }
         }
 
@@ -315,11 +263,11 @@ public:
         {
             if (reverse)
             {
-                return --curr;
+                return --m_curr;
             }
             else
             {
-                return ++curr;
+                return ++m_curr;
             }
         }
 
@@ -327,31 +275,75 @@ public:
         {
             if (reverse)
             {
-                return ++curr;
+                return ++m_curr;
             }
             else
             {
-                return --curr;
+                return --m_curr;
             }
         }
 
 		bool operator!=(const iterator<reverse> & it) const
         {
-            return curr != it.curr;
+            return m_curr != it.m_curr;
         }
 
 		bool operator==(const iterator<reverse> & it) const
         {
-            return curr == it.curr;
+            return m_curr == it.m_curr;
         }
 
 		T& operator*()
         {
-            return *curr;
+            return *m_curr;
         }
 		const T& operator*() const
         {
-            return *curr;
+            return *m_curr;
         }
 	};
+
+private:
+    T *m_begin = nullptr;
+	T *m_end = nullptr;
+	T *m_capacityEnd = nullptr;
+
+	static void DeleteItems(T *begin, T *end)
+	{
+		DestroyElements(begin, end);
+		Free(begin);
+	}
+
+	static void CopyElements(T* srcBegin, T* srcEnd, T * dstBegin, T * & dstEnd)
+	{
+		for (dstEnd = dstBegin; srcBegin != srcEnd; ++srcBegin, ++dstEnd)
+		{
+			new (dstEnd)T(*srcBegin);
+		}
+	}
+
+	static void DestroyElements(T *stc, T *dest)
+	{
+		while (dest != stc)
+		{
+			--dest;
+			dest->~T();
+		}
+	}
+
+	static T* Alloc(size_t n)
+	{
+		size_t memSize = n * sizeof(T);
+		T *p = static_cast<T*>(malloc(memSize));
+		if (!p)
+		{
+			throw std::bad_alloc();
+		}
+		return p;
+	}
+
+	static void Free(T *p)
+	{
+		free(p);
+	}
 };

@@ -15,7 +15,7 @@ SCENARIO("Creating empty array templated by double")
 
         THEN("Lenght of array become 1 and at zero position we got our value")
         {
-            REQUIRE(array.GetLength() == 1);
+            REQUIRE(array.GetSize() == 1);
             REQUIRE(array[0] == 4.4);
         }
     }
@@ -41,7 +41,7 @@ SCENARIO("Creating empty array templated by double")
 
             THEN("Length of array now is 2 and we loose other values after second element")
             {
-                REQUIRE(array.GetLength() == 2);
+                REQUIRE(array.GetSize() == 2);
             }
         }
 
@@ -51,7 +51,7 @@ SCENARIO("Creating empty array templated by double")
 
             THEN("We got empty array")
             {
-                REQUIRE(array.GetLength() == 0);
+                REQUIRE(array.GetSize() == 0);
                 REQUIRE_THROWS(array[0]);
             }
         }
@@ -76,7 +76,7 @@ SCENARIO("Copying array and moving to other var")
 
                 THEN("We got copy of the array")
                 {
-                    for (size_t i = 0; i < array.GetLength(); i++)
+                    for (size_t i = 0; i < array.GetSize(); i++)
                     {
                         REQUIRE(excellentCopy[i] == array[i]);
                     }
@@ -97,7 +97,7 @@ SCENARIO("Copying array and moving to other var")
 
             THEN("We got copy of array")
             {
-                for (size_t i = 0; i < array.GetLength(); i++)
+                for (size_t i = 0; i < array.GetSize(); i++)
                 {
                     REQUIRE(excellentCopy[i] == array[i]);
                 }
@@ -121,21 +121,21 @@ SCENARIO("Copying array and moving to other var")
 
             THEN("We got array without content and dest with array data")
             {
-                REQUIRE(array.GetLength() == 0);
-                REQUIRE(dest.GetLength() == 3);
+                REQUIRE(array.GetSize() == 0);
+                REQUIRE(dest.GetSize() == 3);
             }
         }
 
         WHEN("We move array to dest by assign operator")
         {
             MyArray<double> dest;
-            REQUIRE(dest.GetLength() == 0);
+            REQUIRE(dest.GetSize() == 0);
             dest = std::move(array);
 
             THEN("We got array without content and dest with array data")
             {
-                REQUIRE(array.GetLength() == 0);
-                REQUIRE(dest.GetLength() == 3);
+                REQUIRE(array.GetSize() == 0);
+                REQUIRE(dest.GetSize() == 3);
             }
         }
     }
@@ -167,7 +167,7 @@ SCENARIO("Iterate array forward and backward")
         {
             THEN("We got elements in reverse order")
             {
-                int i = array.GetLength() - 1;
+                int i = array.GetSize() - 1;
                 for (auto it = array.rbegin(); it != array.rend(); it++, i--)
                 {
                     REQUIRE(*it == array[i]);
