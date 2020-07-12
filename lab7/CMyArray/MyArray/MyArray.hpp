@@ -12,9 +12,9 @@ template<class T>
 class MyArray
 {
 private:
-    T* begin;
-    T* end;
-    T* capacityEnd;
+    T* m_begin;
+    T* m_end;
+    T* m_capacityEnd;
 
     static T* Alloc(size_t n)
     {
@@ -26,6 +26,14 @@ private:
 		}
 		return ptr;
     }
+
+    static void CopyElements(const T * srcBegin, T * srcEnd, T * const dstBegin, T * & dstEnd)
+	{
+		for (dstEnd = dstBegin; srcBegin != srcEnd; ++srcBegin, ++dstEnd)
+		{
+			new (dstEnd)T(*srcBegin);
+		}
+	}
 
     static void DeleteElements(T* begin, T* end)
     {
@@ -48,94 +56,105 @@ private:
     }
 
 public:
-	MyArray(): begin(nullptr), end(nullptr), capacityEnd(nullptr) {}
+	MyArray(): m_begin(nullptr), m_end(nullptr), m_capacityEnd(nullptr) {}
 
 	// Copying
-	// MyArray(MyArray<T> const& other)
-    // {
-    //     begin = new T[other.size];
-    //     size = other.size;
-    //     memcpy(begin, other.begin, sizeof(T) * size);
-    // }
+	MyArray(MyArray<T> const& other)
+    {
+        auto size = other.GetSize();
+		if (size != 0)
+		{
+			m_begin = Alloc(size);
+			try
+			{
+				CopyElements(other.m_begin, other.m_end, m_begin, m_end);
+				m_capacityEnd = m_end;
+			}
+			catch (...)
+			{
+				DeleteElements(m_begin, m_end);
+				throw;
+			}
+		}
+    }
 
-	// MyArray<T>& operator=(const MyArray<T>& other)
-    // {
-    //     if (std::addressof(other) == std::addressof(*this))
-    //     {
-    //         return *this;
-    //     }
+	MyArray<T>& operator=(const MyArray<T>& other)
+    {
+        if (std::addressof(other) == std::addressof(*this))
+        {
+            return *this;
+        }
 
-    //     size = other.size;
+        MyArray newArr(other);
+		std::swap(m_begin, newArr.m_begin);
+		std::swap(m_end, newArr.m_end);
+		std::swap(m_capacityEnd, newArr.m_capacityEnd);
 
-    //     delete[] begin;
+        return *this;
+    }
 
-    //     begin = new T[size];
-    //     memcpy(begin, other.begin, sizeof(T) * size);
+	// Movement
+	MyArray(MyArray&& other):
+    m_begin(other.m_begin), m_end(other.m_end), m_capacityEnd(other.m_capacityEnd)
+	{
+		other.m_begin = nullptr;
+		other.m_end = nullptr;
+		other.m_capacityEnd = nullptr;
+	}
 
-    //     return *this;
-    // }
+	MyArray<T>& operator=(MyArray<T>&& other)
+    {
+        if (std::addressof(other) == std::addressof(*this))
+        {
+            return *this;
+        }
 
-	// // Movement
-	// MyArray(MyArray<T> && other)
-    // {
-    //     size = other.size;
-    //     begin = other.begin;
-    //     other.begin = nullptr;
-    //     other.size = 0;
-    // }
+	    DeleteElements(m_begin, m_end);
 
-	// MyArray<T>& operator=(MyArray<T>&& other)
-    // {
-    //     if (std::addressof(other) == std::addressof(*this))
-    //     {
-    //         return *this;
-    //     }
+		m_begin = other.m_begin;
+		m_end = other.m_end;
+		m_capacityEnd = other.m_capacityEnd;
 
-	//     delete[] begin;
-
-    //     size = other.size;
-    //     begin = other.begin;
-	//     other.begin = nullptr;
-    //     other.size = 0;
-
-	//     return *this;
-    // }
+		other.m_begin = nullptr;
+		other.m_end = nullptr;
+		other.m_capacityEnd = nullptr;
+	    return *this;
+    }
 
 	~MyArray()
     {
-        DeleteElements(begin, end);
-        // delete[] begin;
+        DeleteElements(m_begin, m_end);
     }
 
 	void Clear()
     {
-        DeleteElements(begin, end);
+        DeleteElements(m_begin, m_end);
 
-        begin = nullptr;
-        end = nullptr;
-        capacityEnd = nullptr;
+        m_begin = nullptr;
+        m_end = nullptr;
+        m_capacityEnd = nullptr;
     }
 
     void Push(const T & element)
     {
-        if (capacityEnd == end)
+        if (m_capacityEnd == m_end)
         {
             auto newCapacity = std::max(size_t(1), GetCapacity() * 2);
             Reserve(newCapacity);
         }
 
-        new (end) T(element);
-        ++end;
+        new (m_end) T(element);
+        ++m_end;
     }
 
     size_t GetCapacity() const
     {
-        return capacityEnd - end;
+        return m_capacityEnd - m_end;
     }
 
     size_t GetSize() const
     {
-        return end - begin;
+        return m_end - m_begin;
     }
 
     void Reserve(size_t newCapacity)
@@ -146,39 +165,46 @@ public:
         }
 
         auto newBegin = Alloc(newCapacity);
+        T* newEnd = newBegin;
 
         if (GetSize() != 0)
         {
-            memcpy(newBegin, begin, GetSize());
+            try
+			{
+				CopyElements(m_begin, m_end, newBegin, newEnd);
+			}
+			catch (...)
+			{
+				DeleteElements(newBegin, newEnd);
+				throw;
+			}
         }
 
-        DeleteElements(begin, end);
+        DeleteElements(m_begin, m_end);
 
-        auto size = (GetSize() == 0 ? newCapacity : GetSize());
-        begin = newBegin;
-        end = begin + size;
-        capacityEnd = begin + newCapacity;
+        m_begin = newBegin;
+		m_end = newEnd;
+		m_capacityEnd = m_begin + newCapacity;
     }
 
     void Resize(size_t size)
     {
         if (size != GetSize())
         {
-            size_t minSize = std::min(GetSize(), size);
-            auto tempBuffer = Alloc(minSize);
+            MyArray newArr;
+			newArr.Reserve(size);
 
-            memcpy(tempBuffer, begin, minSize);
+			size_t minSize = std::min(GetSize(), size);
+			for (size_t i = 0; i < minSize; ++i)
+			{
+				newArr.Push(*(m_begin + i));
+			}
+			for (size_t i = GetSize(); i < size; ++i)
+			{
+				newArr.Push(T());
+			}
 
-            for (size_t i = GetSize(); i < size; i++)
-            {
-                tempBuffer[i] = new T();
-            }
-
-            DeleteElements(begin, end);
-
-            begin = tempBuffer;
-            end = begin + size;
-            capacityEnd = end > capacityEnd ? end : capacityEnd;
+			*this = std::move(newArr);
         }
     }
 
@@ -191,25 +217,25 @@ public:
     typedef iterator<true> IteratorReverse;
 	typedef const iterator<true> ConstIteratorReverse;
 
-	// Iterator begin()
-    // {
-    //     return begin;
-    // }
+	Iterator begin()
+    {
+        return m_begin;
+    }
 
-	// Iterator end()
-    // {
-    //     return end;
-    // }
+	Iterator end()
+    {
+        return m_end;
+    }
 
-	// ConstIterator begin() const
-    // {
-    //     return begin;
-    // }
+	ConstIterator begin() const
+    {
+        return m_begin;
+    }
 
-	// ConstIterator end() const
-    // {
-    //     return end;
-    // }
+	ConstIterator end() const
+    {
+        return m_end;
+    }
 
     // IteratorReverse rbegin()
     // {
@@ -238,7 +264,7 @@ public:
             throw std::out_of_range("");
         }
 
-        return begin[index];
+        return m_begin[index];
     }
 
     const T& operator[] (const int index) const
@@ -248,13 +274,15 @@ public:
             throw std::out_of_range("");
         }
 
-        return begin[index];
+        return m_begin[index];
     }
 
     template<bool reverse>
 	class iterator
 	{
 	private:
+        T* beginPtr;
+        T* endPtr;
 		mutable T* curr;
 	public:
 		iterator(T* curr): curr(curr){}
