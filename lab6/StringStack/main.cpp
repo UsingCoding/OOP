@@ -1,17 +1,32 @@
-#include "Stack/Stack.hpp"
+#include "Stack/HStack.hpp"
 #include <string>
 #include <iostream>
 
 
 int main(int argc, char const *argv[])
 {
-    StringStack stack;
+    HStack<std::string> stack;
 
     stack.Push("stack");
     stack.Push("Slack");
 
-    std::cout << stack.Pop() << std::endl;
-    std::cout << stack.Pop() << std::endl;
+    HStack<std::string> stack1 = stack;
+
+    try
+    {
+        std::cout << stack.Pop() << std::endl;
+        std::cout << stack.Pop() << std::endl;
+
+    }
+    catch(const std::exception& e)
+    {
+        std::cerr << e.what() << '\n';
+    }
+
+
+    std::cout << stack1.Pop() << std::endl;
+    std::cout << stack1.Pop() << std::endl;
+
 
     return 0;
 }
