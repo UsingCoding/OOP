@@ -1,29 +1,32 @@
 #include "./VectorHandling.hpp"
 #include <iostream>
 #include <algorithm>
+#include <vector>
+#include <numeric>
+#include <functional>
 
 void HandleVector(std::vector<int> & vector)
 {
-    int sumOfNeg = 0;
-    std::for_each(vector.begin(), vector.end(), [&sumOfNeg](int value) {
+    int sumOfNeg = std::accumulate(vector.begin(), vector.end(), 0, [](int sum, int value){
         if (value >= 0)
         {
-            sumOfNeg += value;
+            sum += value;
         }
+
+        return sum;
     });
 
-
     bool odd = true;
-    std::for_each(vector.begin(), vector.end(), [&sumOfNeg, &odd](int & value) {
+    std::transform(vector.begin(), vector.end(), vector.begin(), [&sumOfNeg, &odd](int value) -> int {
         if (odd)
         {
-            value -= sumOfNeg;
             odd = false;
+            return value -= sumOfNeg;
         }
         else
         {
-            value *= 2;
             odd = true;
+            return value *= 2;
         }
     });
 }
