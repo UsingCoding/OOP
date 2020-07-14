@@ -4,120 +4,114 @@
 #include <string.h>
 #include <stdexcept>
 #include <iostream>
+#include<string>
+
+#include "StackNode.hpp"
 
 template<class T>
 class Stack;
 
-// typedef Stack<std::string> StringStack;
-typedef Stack<int> StringStack;
+typedef Stack<std::string> StringStack;
 
 template<class T>
 class Stack
 {
-private:
-    T* buffer;
-    size_t size;
 public:
-    Stack(): buffer(nullptr), size(0) {}
+    Stack() = default;
 
     // Copying
-	Stack(Stack<T> const& other)
+	Stack(const Stack<T> & other)
     {
-        buffer = new T[other.size];
-        size = other.size;
-        memcpy(buffer, other.buffer, sizeof(T) * size);
+        if (other.top == nullptr)
+        {
+            return;
+        }
+
+        top = new StackNode<T>((T) *(other.top), nullptr);
+        StackNode<T>* ptrOther = other.top->GetNext();
+        StackNode<T>* ptr = top;
+
+        try
+        {
+            while (ptrOther != nullptr)
+            {
+                auto newPtr = new StackNode<T>((T) *(ptrOther), nullptr);
+                ptr->SetNext(newPtr);
+                ptr = newPtr;
+                ptrOther = ptrOther->GetNext();
+            }
+        }
+        catch(...)
+        {
+            DeleteElements();
+        }
     }
 
-	Stack<T>& operator=(const Stack<T>& other)
+    Stack<T>& operator=(const Stack<T>& other)
     {
         if (std::addressof(other) == std::addressof(*this))
         {
             return *this;
         }
 
-        size = other.size;
+        Stack<T> newStack(other);
 
-        delete[] buffer;
-
-        buffer = new T[size];
-        memcpy(buffer, other.buffer, sizeof(T) * size);
-
-        return *this;
+        std::swap(top, newStack.top);
     }
 
-	// Movement
-	Stack(Stack<T> && other)
+    Stack(Stack<T> && other)
     {
-        size = other.size;
-        buffer = other.buffer;
-        other.buffer = nullptr;
-        other.size = 0;
+        top = other.top;
+        other.top = nullptr;
     }
 
-	Stack<T>& operator=(Stack<T>&& other)
+    Stack<T>& operator=(Stack<T>&& other)
     {
         if (std::addressof(other) == std::addressof(*this))
         {
             return *this;
         }
 
-	    delete[] buffer;
-
-        size = other.size;
-        buffer = other.buffer;
-	    other.buffer = nullptr;
-        other.size = 0;
-
-	    return *this;
-    }
-
-    void Push(T element)
-    {
-        T* tempBuffer = new T[size + 1]();
-
-        if (buffer != nullptr)
-        {
-            memcpy(tempBuffer, buffer, size);
-        }
-
-        delete[] buffer;
-
-        size = size + 1;
-        buffer = tempBuffer;
-
-        buffer[size - 1] = element;
-    }
-
-    T Pop()
-    {
-        if (size == 0)
-        {
-            throw std::logic_error("Trying to pop empty stack");
-        }
-
-        T* tempBuffer = new T[size - 1]();
-
-        if (buffer != nullptr)
-        {
-            memcpy(tempBuffer, buffer + 1, size - 1);
-        }
-
-        T result = *buffer;
-        delete[] buffer;
-
-        size = size - 1;
-        buffer = tempBuffer;
-
-        return result;
-    }
-
-    size_t GetSize()
-    {
-        return size;
+        top = other.top;
+        other.top = nullptr;
     }
 
     ~Stack()
     {
-        delete[] buffer;
+        DeleteElements();
+    }
+
+    void Push(const T & element)
+    {
+        auto newTop = new StackNode<T>(element, top);
+        top = newTop;
+    }
+
+    T Pop()
+    {
+        if (top == nullptr)
+        {
+            throw std::logic_error("Pop empty stack");
+        }
+
+        T data = *top;
+        auto newTop = top->GetNext();
+        delete top;
+        top = newTop;
+
+        return data;
+    }
+
+private:
+    StackNode<T>* top = nullptr;
+
+    void DeleteElements()
+    {
+        while (top != nullptr)
+        {
+            auto nextPtr = top->GetNext();
+            delete top;
+            top = nextPtr;
+        }
     }
 };

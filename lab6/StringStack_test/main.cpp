@@ -5,23 +5,27 @@
 
 #include "../StringStack/Stack/Stack.hpp"
 
+#include <string>
+
 SCENARIO("Creating StringStack and pushing elements there")
 {
     GIVEN("StringStack")
     {
-        Stack<int> stack;
+        StringStack stack;
 
         WHEN("We adding element")
         {
             THEN("We have no errors")
             {
-                REQUIRE_NOTHROW(stack.Push(4));
+                REQUIRE_NOTHROW(stack.Push("Stack pushed"));
 
                 AND_WHEN("We pop element")
                 {
                     THEN("We have no errors")
                     {
-                        REQUIRE_NOTHROW(stack.Pop());
+                        std::string value;
+                        REQUIRE_NOTHROW(value = stack.Pop());
+                        REQUIRE(value == "Stack pushed");
                     }
                 }
             }
@@ -31,10 +35,11 @@ SCENARIO("Creating StringStack and pushing elements there")
 
 SCENARIO("Creating a StringStack and moving, and copying it")
 {
-    GIVEN("String stack with element")
+    GIVEN("String stack with two elements")
     {
-        Stack<int> stack;
-        stack.Push(4);
+        StringStack stack;
+        stack.Push("Stack is not empty");
+        stack.Push("Stack pushed");
 
         WHEN("We copying stack in constructor")
         {
@@ -42,15 +47,22 @@ SCENARIO("Creating a StringStack and moving, and copying it")
 
             try
             {
-                Stack<int> copyStack = stack;
+                StringStack copyStack = stack;
 
                 AND_WHEN("We pop value from copy")
                 {
-                    REQUIRE_NOTHROW(copyStack.Pop());
+                    std::string valueFromCopy;
+                    REQUIRE_NOTHROW(valueFromCopy = copyStack.Pop());
 
                     THEN("Stack size of original didn`t change")
                     {
-                        REQUIRE_NOTHROW(stack.GetSize() == 1);
+                        std::string valueFromOriginal;
+                        REQUIRE_NOTHROW(valueFromOriginal = stack.Pop());
+
+                        AND_THEN("Values from original and copy is equal")
+                        {
+                            REQUIRE(valueFromOriginal == valueFromCopy);
+                        }
                     }
                 }
             }
@@ -64,16 +76,23 @@ SCENARIO("Creating a StringStack and moving, and copying it")
 
         WHEN("We copying stack")
         {
-            Stack<int> copyStack;
+            StringStack copyStack;
             REQUIRE_NOTHROW(copyStack = stack);
 
             AND_WHEN("We pop value from copy")
             {
-                REQUIRE_NOTHROW(copyStack.Pop());
+                std::string valueFromCopy;
+                REQUIRE_NOTHROW(valueFromCopy = copyStack.Pop());
 
                 THEN("Stack size of original didn`t change")
                 {
-                    REQUIRE_NOTHROW(stack.GetSize() == 1);
+                    std::string valueFromOriginal;
+                    REQUIRE_NOTHROW(valueFromOriginal = stack.Pop());
+
+                    AND_THEN("Values from original and copy is equal")
+                    {
+                        REQUIRE(valueFromOriginal == valueFromCopy);
+                    }
                 }
             }
         }
@@ -84,13 +103,12 @@ SCENARIO("Creating a StringStack and moving, and copying it")
 
             try
             {
-                Stack<int> newOwner = std::move(stack);
+                StringStack newOwner = std::move(stack);
 
-                THEN("newOwner has data and size = 1, but prev owner has no data")
+                THEN("newOwner has data and size = 1, but prev owner has no data and throws exception")
                 {
-                    REQUIRE(newOwner.GetSize() == 1);
-                    REQUIRE(stack.GetSize() == 0);
                     REQUIRE_NOTHROW(newOwner.Pop());
+                    REQUIRE_THROWS(stack.Pop());
                 }
             }
             catch(const std::exception& e)
@@ -103,14 +121,13 @@ SCENARIO("Creating a StringStack and moving, and copying it")
 
         WHEN("We moving stack")
         {
-            Stack<int> newOwner;
+            StringStack newOwner;
             REQUIRE_NOTHROW(newOwner = std::move(stack));
 
-            THEN("newOwner has data and size = 1, but prev owner has no data")
+            THEN("newOwner has data and size = 1, but prev owner has no data and throws exception")
             {
-                REQUIRE(newOwner.GetSize() == 1);
-                REQUIRE(stack.GetSize() == 0);
                 REQUIRE_NOTHROW(newOwner.Pop());
+                REQUIRE_THROWS(stack.Pop());
             }
         }
     }
