@@ -6,6 +6,7 @@ class Sphere extends BodyRotation
 
   @override
   String toString() {
-    return 'Sphere';
+    return 'Sphere: ' + 'V = ' + GetVolume().toString() + ' R = ' + GetBaseRadius().toString() +
+    ' Dens = ' + GetDensity().toString();
   }
 }

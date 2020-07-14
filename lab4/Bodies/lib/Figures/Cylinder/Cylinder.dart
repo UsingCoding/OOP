@@ -10,6 +10,7 @@ class Cylinder extends BodyRotation
 
   @override
   String toString() {
-    return 'Cylinder';
+    return 'Cylinder: ' + 'V = ' + GetVolume().toString() + ' R = ' + GetBaseRadius().toString() +
+    ' Dens = ' + GetDensity().toString() + ' H = ' + _height.toString();
   }
 }

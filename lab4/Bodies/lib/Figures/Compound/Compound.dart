@@ -9,7 +9,7 @@ class Compound implements Body
 
   double _GetFromAll(double Function(Body body) getter)
   {
-    double result;
+    double result = 0;
 
     for (Body body in _bodies)
     {
@@ -54,8 +54,7 @@ class Compound implements Body
     return _GetFromAll((Body body) => body.GetMass());
   }
 
-  @override
-  String toString() => _bodies.map((Body e) => e.toString()).join('\n');
+  String toString() => 'Compound: \n' + _bodies.map((Body e) => e.toString()).join('\n');
 
   void AddBody(Body body)
   {

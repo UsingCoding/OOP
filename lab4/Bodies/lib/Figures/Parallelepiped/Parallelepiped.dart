@@ -15,6 +15,7 @@ class Parallelepiped extends SolidBody
 
     @override
   String toString() {
-    return 'Parallelepiped';
+    return 'Parallelepiped: ' + 'V = ' + GetVolume().toString() + ' W = ' + _width.toString() +
+    ' Depth = ' + _depth.toString() + ' Dens = ' + GetDensity().toString() + ' H = ' + _height.toString();
   }
 }

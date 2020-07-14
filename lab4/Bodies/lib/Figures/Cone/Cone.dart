@@ -10,6 +10,7 @@ class Cone extends BodyRotation
 
   @override
   String toString() {
-    return 'Cone:';
+    return 'Cone: ' + 'V = ' + GetVolume().toString() + ' R = ' + GetBaseRadius().toString() +
+    ' Dens = ' + GetDensity().toString() + ' H = ' + _height.toString();
   }
 }

@@ -15,7 +15,7 @@ class BodiesCalculations
     return bodies.last;
   }
 
-  static Body FindMinWeightInWaterBody(final List<Body>   bodies)
+  static Body FindMinWeightInWaterBody(final List<Body> bodies)
   {
     bodies.sort((Body body1, Body body2) {
       if (body1.GetVolume() == body2.GetVolume())

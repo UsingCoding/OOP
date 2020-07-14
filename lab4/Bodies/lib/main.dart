@@ -1,6 +1,6 @@
 #!/usr/bin/dart
 
-import 'package:BodiesLab/CommandLineController/CommandLineController.dart';
+import 'package:BodiesLab/CLC/CommandLineController.dart';
 
 void main(List<String> args)
 {
