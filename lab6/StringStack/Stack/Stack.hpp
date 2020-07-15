@@ -44,6 +44,7 @@ public:
         catch(...)
         {
             DeleteElements();
+            throw;
         }
     }
 
