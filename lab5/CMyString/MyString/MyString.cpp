@@ -211,7 +211,7 @@ bool MyString::operator==(const MyString & string) const
 
 bool MyString::operator!=(const MyString & string) const
 {
-    return (*this == string);
+    return !(*this == string);
 }
 
 bool MyString::operator<(const MyString & string) const
